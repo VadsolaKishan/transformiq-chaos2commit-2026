@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: transformiq-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: transformiq_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transformiq-backend
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:///./transformiq.db
+      ENVIRONMENT: production
+      JWT_SECRET: transformiq-super-secret-jwt-key-for-chaos2commit-2026-production
+      AI_PROVIDER: deterministic_smart
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/exports_generated:/app/exports_generated
+    depends_on:
+      - postgres
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transformiq-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  postgres_data:
