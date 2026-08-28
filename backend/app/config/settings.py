@@ -35,12 +35,9 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE_MB: int = 25
     
     class Config:
-        env_file = (
-            str(ROOT_DIR / ".env") if (ROOT_DIR / ".env").exists()
-            else str(BASE_DIR / ".env") if (BASE_DIR / ".env").exists()
-            else ".env"
-        )
+        env_file = str(BASE_DIR / ".env") if (BASE_DIR / ".env").exists() else ".env"
         extra = "allow"
+
 
 settings = Settings()
 
