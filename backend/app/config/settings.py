@@ -1,6 +1,9 @@
-import os
+from pathlib import Path
 from pydantic_settings import BaseSettings
 from typing import Optional
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+ROOT_DIR = BASE_DIR.parent
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "TransformIQ — Business Transformation AI"
@@ -8,7 +11,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     
     # Environment & Database
-    ENVIRONMENT: str = "development"
+    ENVIRONMENT: str = "production"
     DATABASE_URL: str = "sqlite+aiosqlite:///./transformiq.db"
     
     # JWT Auth
@@ -32,7 +35,12 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE_MB: int = 25
     
     class Config:
-        env_file = ".env"
+        env_file = (
+            str(ROOT_DIR / ".env") if (ROOT_DIR / ".env").exists()
+            else str(BASE_DIR / ".env") if (BASE_DIR / ".env").exists()
+            else ".env"
+        )
         extra = "allow"
 
 settings = Settings()
+
