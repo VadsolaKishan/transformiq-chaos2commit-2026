@@ -153,7 +153,7 @@
     "area": "Project Testing",
     "test": "Fetch Project Details",
     "status": "PASS",
-    "details": "Name: Test' OR '1'='1, Status: DISCOVERY"
+    "details": "Name: Test' OR '1'='1, Status: APPROVED"
   },
   {
     "area": "Project Testing",
@@ -357,7 +357,7 @@
     "area": "Governance",
     "test": "Fetch Master Blueprint",
     "status": "PASS",
-    "details": "Status: UNDER_REVIEW, Components: 7"
+    "details": "Status: APPROVED, Components: 7"
   },
   {
     "area": "Governance",
@@ -375,7 +375,7 @@
     "area": "Governance",
     "test": "List Blueprint Version Snapshots",
     "status": "PASS",
-    "details": "Found 1 immutable version snapshots"
+    "details": "Found 2 immutable version snapshots"
   },
   {
     "area": "Collaboration",
@@ -387,7 +387,7 @@
     "area": "Collaboration",
     "test": "Fetch Discussion Comments",
     "status": "PASS",
-    "details": "Retrieved 1 thread comments"
+    "details": "Retrieved 3 thread comments"
   },
   {
     "area": "Collaboration",
@@ -399,7 +399,7 @@
     "area": "Collaboration",
     "test": "Fetch Project Audit Logs",
     "status": "PASS",
-    "details": "Retrieved 14 immutable audit log entries"
+    "details": "Retrieved 25 immutable audit log entries"
   },
   {
     "area": "Export Engine",

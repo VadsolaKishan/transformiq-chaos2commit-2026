@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, Navigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
@@ -31,8 +31,10 @@ import {
   Zap
 } from 'lucide-react';
 import api from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 
 export const AdminPage: React.FC = () => {
+  const { role, isLoading: authLoading } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'dashboard';
 
@@ -185,6 +187,10 @@ export const AdminPage: React.FC = () => {
     const matchesRole = userRoleFilter === 'ALL' || u.role === userRoleFilter;
     return matchesSearch && matchesRole;
   });
+
+  if (!authLoading && role !== 'ADMIN') {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn max-w-7xl mx-auto pb-12 font-sans">

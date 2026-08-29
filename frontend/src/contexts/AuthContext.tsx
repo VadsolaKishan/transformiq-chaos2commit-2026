@@ -33,11 +33,11 @@ export interface AuthContextType {
   canCreate: (moduleName: string) => boolean;
   canDelete: (moduleName: string) => boolean;
   canApprove: (moduleName: string) => boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User | undefined>;
   setEvaluationRole: (targetRole: string) => Promise<void>;
   switchRole: (targetRole: string) => Promise<void>; // Alias for setEvaluationRole
   exitEvaluationMode: () => Promise<void>;
-  register: (email: string, password: string, full_name: string, org_name?: string, industry?: string) => Promise<void>;
+  register: (email: string, password: string, full_name: string, org_name?: string, industry?: string) => Promise<User | undefined>;
   logout: () => void;
 }
 
@@ -60,11 +60,11 @@ const AuthContext = createContext<AuthContextType>({
   canCreate: () => false,
   canDelete: () => false,
   canApprove: () => false,
-  login: async () => {},
+  login: async () => undefined,
   setEvaluationRole: async () => {},
   switchRole: async () => {},
   exitEvaluationMode: async () => {},
-  register: async () => {},
+  register: async () => undefined,
   logout: () => {},
 });
 
@@ -149,7 +149,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(res.data.user);
         const roleUpper = res.data.user.role.toUpperCase();
         setEvalRole(roleUpper);
+        return res.data.user;
       }
+      throw new Error(res?.message || 'Login failed');
     } finally {
       setIsLoading(false);
     }
@@ -230,8 +232,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sessionStorage.removeItem('transformiq_eval_role');
         setToken(authToken);
         setUser(res.data.user);
-        setEvalRole(res.data.user.role.toUpperCase());
+        const roleUpper = res.data.user.role.toUpperCase();
+        setEvalRole(roleUpper);
+        return res.data.user;
       }
+      throw new Error(res?.message || 'Registration failed');
     } finally {
       setIsLoading(false);
     }

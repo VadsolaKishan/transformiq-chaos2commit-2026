@@ -20,8 +20,12 @@ export const RegisterPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      await register(email, password, fullName, orgName, industry);
-      navigate('/dashboard');
+      const regUser = await register(email, password, fullName, orgName, industry);
+      if (regUser?.role?.toUpperCase() === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err?.detail || err?.message || 'Registration failed. Please check your details.');
     }

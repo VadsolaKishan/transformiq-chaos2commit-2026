@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import {
   Sparkles,
   Plus,
@@ -94,7 +94,7 @@ const ROLE_DASHBOARD_INFO: Record<string, { title: string; subtitle: string; bad
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { role, user } = useAuth();
+  const { role, user, isLoading: authLoading } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -137,6 +137,10 @@ export const DashboardPage: React.FC = () => {
     : 0;
 
   const firstProjId = projects[0]?.id || 'new';
+
+  if (!authLoading && role === 'ADMIN') {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <div className="space-y-8 animate-fadeIn max-w-7xl mx-auto">

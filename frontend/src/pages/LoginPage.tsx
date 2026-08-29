@@ -17,8 +17,12 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      await login(email, password);
-      navigate('/dashboard');
+      const loggedUser = await login(email, password);
+      if (loggedUser?.role?.toUpperCase() === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err?.detail || err?.message || 'Invalid credentials. Please check your corporate email and password.');
     }
