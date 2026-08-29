@@ -25,34 +25,64 @@ async def get_ux_design(
     wfs = wf_res.scalars().all()
     
     if not wfs:
-        return ApiResponse(
-            success=True,
-            data={
-                "design_principles": ["Zero-Friction Ingestion", "Transparent AI Rationale", "One-Click Escalation"],
-                "target_personas": [],
-                "wireframes": []
-            }
-        )
+        context_data = {
+            "name": project.name,
+            "industry": project.industry,
+            "business_problem": project.business_problem,
+            "business_objective": project.business_objective
+        }
+        gen_data = await orchestrator.generate_ux_design(context_data)
+        for w in gen_data.get("wireframes", []):
+            wf_obj = Wireframe(
+                id=str(uuid.uuid4()),
+                project_id=project_id,
+                screen_name=w.get("screen_name", "Screen"),
+                purpose=w.get("purpose", "User interface screen"),
+                target_users=w.get("target_users", []),
+                layout_type=w.get("layout_type", "DASHBOARD"),
+                components_json=w.get("components", []),
+                user_actions=w.get("user_actions", []),
+                preview_mockup=w.get("preview_mockup", {})
+            )
+            db.add(wf_obj)
+        await db.commit()
+        wf_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project_id))
+        wfs = wf_res.scalars().all()
         
     return ApiResponse(
         success=True,
         data={
-            "design_principles": [
-                "Zero-Friction Ingestion: Drag-and-drop any enterprise artifact with real-time feedback.",
-                "Transparent AI Rationale: Every AI decision exposes confidence score and citation links.",
-                "One-Click Escalation: Frontline specialists can override or approve with minimal clicks."
+            "ux_strategy": "High-density enterprise design system emphasizing zero-cognitive-friction, dark/light theme harmony, responsive layout, and instant explainability.",
+            "personas": [
+                {
+                    "name": "Elena Rostova",
+                    "role": "Chief Operating Officer / Executive Sponsor",
+                    "goals": ["Monitor transformation ROI", "Track SLA compliance across departments", "Identify operational bottlenecks early"],
+                    "pain_points": ["Static monthly reports", "Lack of real-time drill-down visibility"]
+                },
+                {
+                    "name": "Devin Clark",
+                    "role": "Frontline Operations Lead",
+                    "goals": ["Process flagged cases with minimal clicks", "Review AI suggestions quickly", "Manage agent shift queues"],
+                    "pain_points": ["Context switching between multiple legacy tools", "Repetitive manual categorization"]
+                }
             ],
-            "target_personas": [
-                {"name": "Operations Lead", "role": "Triages complex exceptions and oversees straight-through queue."},
-                {"name": "Business Executive", "role": "Tracks real-time transformation ROI and SLA compliance."}
+            "user_journey_stages": [
+                {"stage": "1. Discovery & Ingestion", "description": "User enters business problem or uploads enterprise SOP/BRD document."},
+                {"stage": "2. Intelligence Generation", "description": "AI generates gap analysis, recommendations, and transformation score."},
+                {"stage": "3. Interactive Design", "description": "Architect refines React Flow HLD/LLD diagrams, ER schema, and API catalog."},
+                {"stage": "4. What-If Simulation", "description": "User tunes budget/team sliders to recalculate timeline and ROI."},
+                {"stage": "5. Blueprint Approval & Export", "description": "Executive reviews and exports one-click PDF, Word, Excel, or PPT reports."}
             ],
             "wireframes": [{
                 "id": w.id,
                 "screen_name": w.screen_name,
-                "route_path": w.route_path,
-                "persona": w.persona,
-                "description": w.description,
-                "layout_json": w.layout_json
+                "purpose": w.purpose,
+                "target_users": w.target_users or ["Operations Specialist"],
+                "layout_type": w.layout_type or "DASHBOARD",
+                "components": w.components_json or [],
+                "user_actions": w.user_actions or ["Inspect", "Approve", "Export"],
+                "preview_mockup": w.preview_mockup or {}
             } for w in wfs]
         }
     )

@@ -60,8 +60,8 @@ async def get_process_workflow(
             } for n in nodes],
             "edges": [{
                 "id": e.id,
-                "source": e.source_node_id,
-                "target": e.target_node_id,
+                "source": e.source_node_key,
+                "target": e.target_node_key,
                 "label": e.label,
                 "condition": e.condition
             } for e in edges]

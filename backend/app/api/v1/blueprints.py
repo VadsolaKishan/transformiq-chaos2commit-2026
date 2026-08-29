@@ -106,7 +106,7 @@ async def get_master_blueprint(
         },
         "architecture_summary": {
             "components_count": len(comps),
-            "layers": list(set([c.layer for c in comps])),
+            "layers": list(set([c.layer for c in comps if c.layer])) if comps else ["Client", "AI Engine", "Database"],
             "deployment": "Multi-Zone Kubernetes / Docker Swarm on Azure Container Apps"
         },
         "process_summary": {
