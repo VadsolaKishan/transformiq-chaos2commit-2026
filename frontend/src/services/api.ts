@@ -23,7 +23,12 @@ api.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Optional: redirect to login if session expired
+      localStorage.removeItem('transformiq_token');
+      sessionStorage.removeItem('transformiq_eval_role');
+      const publicPaths = ['/login', '/register', '/forgot-password', '/'];
+      if (!publicPaths.includes(window.location.pathname)) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error.response?.data || error);
   }

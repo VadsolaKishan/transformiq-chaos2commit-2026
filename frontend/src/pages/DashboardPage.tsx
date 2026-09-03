@@ -94,7 +94,7 @@ const ROLE_DASHBOARD_INFO: Record<string, { title: string; subtitle: string; bad
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { role, user, isLoading: authLoading } = useAuth();
+  const { role, user, token, isLoading: authLoading } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -138,8 +138,13 @@ export const DashboardPage: React.FC = () => {
 
   const firstProjId = projects[0]?.id || 'new';
 
-  if (!authLoading && role === 'ADMIN') {
-    return <Navigate to="/admin" replace />;
+  if (!authLoading) {
+    if (!token || !user) {
+      return <Navigate to="/login" replace />;
+    }
+    if (role === 'ADMIN') {
+      return <Navigate to="/admin" replace />;
+    }
   }
 
   return (

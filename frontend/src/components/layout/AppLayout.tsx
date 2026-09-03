@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Outlet, Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate, useParams, Navigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
@@ -45,11 +45,14 @@ export const AppLayout: React.FC = () => {
   const params = useParams();
   const {
     user,
+    token,
     role,
     actualRole,
     evaluationRole,
     isEvaluationMode,
     isRealAdmin,
+    isAuthenticated,
+    isLoading,
     isReadOnly,
     hasPermission,
     setEvaluationRole,
@@ -113,9 +116,9 @@ export const AppLayout: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    logout();
     setIsProfileOpen(false);
-    navigate('/login');
+    logout();
+    navigate('/login', { replace: true });
   };
 
   const handleRoleSelect = async (targetRole: string) => {
@@ -134,6 +137,19 @@ export const AppLayout: React.FC = () => {
     setIsRoleMenuOpen(false);
     navigate('/admin');
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center space-y-4">
+        <div className="w-10 h-10 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs text-slate-400 font-medium">Validating session...</p>
+      </div>
+    );
+  }
+
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
 
   const activeProject = projects.find(p => p.id === selectedProjectId) || projects[0];
   const activeProjectId = activeProject?.id || 'default';

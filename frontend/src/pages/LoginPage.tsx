@@ -1,27 +1,41 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, AlertCircle, ArrowRight, Eye, EyeOff, Sparkles, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { TransformIQLogo } from '../components/common/TransformIQLogo';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, isLoading } = useAuth();
+  const location = useLocation();
+  const { login, isLoading, user, token, role } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!isLoading && user && token) {
+      if (role?.toUpperCase() === 'ADMIN') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+    }
+  }, [isLoading, user, token, role, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
       const loggedUser = await login(email, password);
-      if (loggedUser?.role?.toUpperCase() === 'ADMIN') {
-        navigate('/admin');
+      const from = (location.state as any)?.from?.pathname;
+      if (from && from !== '/login') {
+        navigate(from, { replace: true });
+      } else if (loggedUser?.role?.toUpperCase() === 'ADMIN') {
+        navigate('/admin', { replace: true });
       } else {
-        navigate('/dashboard');
+        navigate('/dashboard', { replace: true });
       }
     } catch (err: any) {
       setError(err?.detail || err?.message || 'Invalid credentials. Please check your corporate email and password.');

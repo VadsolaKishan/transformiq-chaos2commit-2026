@@ -5,6 +5,8 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AppLayout } from './components/layout/AppLayout';
 
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+
 // Pages
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
@@ -51,9 +53,14 @@ export const App: React.FC = () => {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-
-              {/* Main Application Layout */}
-              <Route element={<AppLayout />}>
+              {/* Main Application Layout (Protected) */}
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/projects" element={<ProjectsPage />} />
 
@@ -74,7 +81,14 @@ export const App: React.FC = () => {
 
                 {/* Governance & Admin */}
                 <Route path="/projects/:id/collaboration" element={<CollaborationPage />} />
-                <Route path="/admin" element={<AdminPage />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminPage />
+                    </ProtectedRoute>
+                  }
+                />
               </Route>
 
               {/* Fallback to Landing Page */}

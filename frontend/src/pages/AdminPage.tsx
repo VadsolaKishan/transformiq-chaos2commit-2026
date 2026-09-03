@@ -34,7 +34,7 @@ import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export const AdminPage: React.FC = () => {
-  const { role, isLoading: authLoading } = useAuth();
+  const { role, user, token, isLoading: authLoading } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'dashboard';
 
@@ -188,8 +188,13 @@ export const AdminPage: React.FC = () => {
     return matchesSearch && matchesRole;
   });
 
-  if (!authLoading && role !== 'ADMIN') {
-    return <Navigate to="/dashboard" replace />;
+  if (!authLoading) {
+    if (!token || !user) {
+      return <Navigate to="/login" replace />;
+    }
+    if (role !== 'ADMIN') {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   return (
