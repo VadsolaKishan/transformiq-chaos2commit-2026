@@ -28,9 +28,14 @@ async def test_login_and_projects():
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
         login_resp = await client.post("/api/v1/auth/login", json={
-            "email": "demo@transformiq.ai",
-            "password": "Demo@12345"
+            "email": "admin@transformiq.local",
+            "password": "TransformIQ@2026"
         })
+        if login_resp.status_code != 200:
+            login_resp = await client.post("/api/v1/auth/login", json={
+                "email": "demo@transformiq.ai",
+                "password": "Demo@12345"
+            })
         assert login_resp.status_code == 200
         token = login_resp.json()["data"]["token"]["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -44,19 +49,36 @@ async def test_login_and_projects():
 async def test_what_if_simulation():
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-        proj_resp = await client.get("/api/v1/projects")
+        login_resp = await client.post("/api/v1/auth/login", json={
+            "email": "admin@transformiq.local",
+            "password": "TransformIQ@2026"
+        })
+        if login_resp.status_code != 200:
+            login_resp = await client.post("/api/v1/auth/login", json={
+                "email": "demo@transformiq.ai",
+                "password": "Demo@12345"
+            })
+        assert login_resp.status_code == 200
+        token = login_resp.json()["data"]["token"]["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        proj_resp = await client.get("/api/v1/projects", headers=headers)
         assert proj_resp.status_code == 200
         projects = proj_resp.json()["data"]
         assert len(projects) > 0
         project_id = projects[0]["id"]
         
-        sim_resp = await client.post(f"/api/v1/simulations/project/{project_id}/run", json={
-            "automation_level": 80,
-            "team_size": 7,
-            "budget": 160000.0,
-            "timeline_months": 4,
-            "ai_adoption_level": "HIGH"
-        })
+        sim_resp = await client.post(
+            f"/api/v1/simulations/project/{project_id}/run",
+            headers=headers,
+            json={
+                "automation_level": 80,
+                "team_size": 7,
+                "budget": 160000.0,
+                "timeline_months": 4,
+                "ai_adoption_level": "HIGH"
+            }
+        )
         assert sim_resp.status_code == 200
         sim_data = sim_resp.json()["data"]
         assert "expected_roi_percentage" in sim_data

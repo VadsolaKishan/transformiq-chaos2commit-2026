@@ -73,7 +73,9 @@ export const BlueprintPage: React.FC = () => {
     if (!projectId) return;
     setDownloadingFormat(format);
     try {
-      const url = `http://localhost:8000/api/v1/exports/project/${projectId}/download?format=${format}`;
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+      const cleanBase = baseUrl.endsWith('/api/v1') ? baseUrl : `${baseUrl.replace(/\/+$/, '')}/api/v1`;
+      const url = `${cleanBase}/exports/project/${projectId}/download?format=${format}`;
       // Open / trigger real file download
       window.open(url, '_blank');
     } catch (e) {

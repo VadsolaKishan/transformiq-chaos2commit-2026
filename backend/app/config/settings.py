@@ -16,8 +16,13 @@ class Settings(BaseSettings):
     
     # JWT Auth
     SECRET_KEY: str = "transformiq-super-secret-jwt-key-for-chaos2commit-2026-production"
+    JWT_SECRET: Optional[str] = None
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+
+    def model_post_init(self, __context):
+        if self.JWT_SECRET:
+            self.SECRET_KEY = self.JWT_SECRET
     
     # AI Provider settings
     AI_PROVIDER: str = "deterministic_smart"  # options: deterministic_smart, openai, azure_openai
