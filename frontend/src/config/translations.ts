@@ -157,6 +157,31 @@ export const extraTranslations: TranslationDictionary = {
     hi: "रूपांतरण पोर्टफोलियो",
     gu: "રૂપાંતરણ પોર્ટફોલિયો"
   },
+  "manage_and_launch_initiatives": {
+    en: "Manage and launch AI-driven enterprise transformation initiatives.",
+    hi: "एआई-संचालित एंटरप्राइज रूपांतरण पहलों का प्रबंधन और शुभारंभ करें।",
+    gu: "એઆઈ-સંચાલિત એન્ટરપ્રાઇઝ રૂપાંતરણ પહેલોનું સંચાલન અને શુભારંભ કરો."
+  },
+  "budget": {
+    en: "Budget",
+    hi: "बजट",
+    gu: "બજેટ"
+  },
+  "timeline": {
+    en: "Timeline",
+    hi: "समय-सीमा",
+    gu: "સમયમર્યાદા"
+  },
+  "months": {
+    en: "Months",
+    hi: "महीने",
+    gu: "મહિના"
+  },
+  "ai_discovery": {
+    en: "AI Discovery",
+    hi: "एआई खोज",
+    gu: "એઆઈ શોધ"
+  },
   "view_all_projects": {
     en: "View All Projects",
     hi: "सभी परियोजनाएं देखें",
