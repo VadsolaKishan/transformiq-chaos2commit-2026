@@ -32,9 +32,11 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const AdminPage: React.FC = () => {
   const { role, user, token, isLoading: authLoading } = useAuth();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'dashboard';
 
@@ -216,10 +218,10 @@ export const AdminPage: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl md:text-2xl font-black text-white tracking-tight">
-                Enterprise Administration & Governance
+                {t('Enterprise Administration & Governance', 'Enterprise Administration & Governance')}
               </h1>
               <p className="text-xs text-slate-400">
-                Chaos2Commit 2026 Platform Control Center • Centralized RBAC, Multi-Tenant Hierarchy & AI Telemetry
+                {t('platform_control_center', 'Chaos2Commit 2026 Platform Control Center • Centralized RBAC, Multi-Tenant Hierarchy & AI Telemetry')}
               </p>
             </div>
           </div>
@@ -230,11 +232,11 @@ export const AdminPage: React.FC = () => {
             className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition border border-slate-700"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>Sync</span>
+            <span>{t('sync', 'Sync')}</span>
           </button>
           <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 flex items-center space-x-1">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Platform Status: Healthy (99.98%)</span>
+            <span>{t('platform_status_healthy', 'Platform Status: Healthy (99.98%)')}</span>
           </span>
         </div>
       </div>
@@ -251,9 +253,9 @@ export const AdminPage: React.FC = () => {
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Users</span>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('total_users', 'Total Users')}</span>
                 <h3 className="text-2xl font-black text-white">{metrics?.platform_summary.total_users || users.length || 7}</h3>
-                <span className="text-[10px] text-emerald-400 font-semibold">All 7 Roles Active</span>
+                <span className="text-[10px] text-emerald-400 font-semibold">{t('all_7_roles_active', 'All 7 Roles Active')}</span>
               </div>
             </div>
 
@@ -262,9 +264,9 @@ export const AdminPage: React.FC = () => {
                 <Building2 className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Organizations</span>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('organizations', 'Organizations')}</span>
                 <h3 className="text-2xl font-black text-white">{metrics?.platform_summary.total_organizations || 1}</h3>
-                <span className="text-[10px] text-slate-400">Multi-Tenant Scoped</span>
+                <span className="text-[10px] text-slate-400">{t('multi_tenant_scoped', 'Multi-Tenant Scoped')}</span>
               </div>
             </div>
 
@@ -273,9 +275,9 @@ export const AdminPage: React.FC = () => {
                 <FolderKanban className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Initiatives</span>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('initiatives', 'Initiatives')}</span>
                 <h3 className="text-2xl font-black text-white">{metrics?.platform_summary.total_projects || projects.length || 1}</h3>
-                <span className="text-[10px] text-purple-400 font-semibold">13 Pipeline Stages</span>
+                <span className="text-[10px] text-purple-400 font-semibold">{t('13_pipeline_stages', '13 Pipeline Stages')}</span>
               </div>
             </div>
 
@@ -284,9 +286,9 @@ export const AdminPage: React.FC = () => {
                 <Cpu className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">AI Invocations</span>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('ai_invocations', 'AI Invocations')}</span>
                 <h3 className="text-2xl font-black text-white">{metrics?.ai_usage_analytics.total_ai_runs || 142}</h3>
-                <span className="text-[10px] text-amber-400 font-semibold">${metrics?.ai_usage_analytics.estimated_ai_cost_mtd_usd || '4.82'} MTD Spend</span>
+                <span className="text-[10px] text-amber-400 font-semibold">${metrics?.ai_usage_analytics.estimated_ai_cost_mtd_usd || '4.82'} {t('mtd_spend', 'MTD Spend')}</span>
               </div>
             </div>
           </div>
@@ -297,25 +299,25 @@ export const AdminPage: React.FC = () => {
             <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <Activity className="w-4 h-4 text-emerald-400" />
-                <span>Security & RBAC Enforcement Status</span>
+                <span>{t('security__rbac_enforcement_status', 'Security & RBAC Enforcement Status')}</span>
               </h3>
               <div className="space-y-2.5 text-xs">
                 <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
-                  <span className="text-slate-300">Tenant Isolation Policy</span>
+                  <span className="text-slate-300">{t('tenant_isolation_policy', 'Tenant Isolation Policy')}</span>
                   <span className="font-bold text-emerald-400 flex items-center space-x-1">
                     <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> ORGANIZATION_SCOPED
                   </span>
                 </div>
                 <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
-                  <span className="text-slate-300">Data Encryption Standard</span>
+                  <span className="text-slate-300">{t('data_encryption_standard', 'Data Encryption Standard')}</span>
                   <span className="font-mono text-blue-400">AES-256 (At Rest) / TLS 1.3</span>
                 </div>
                 <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
-                  <span className="text-slate-300">Vector Search Engine</span>
+                  <span className="text-slate-300">{t('vector_search_engine', 'Vector Search Engine')}</span>
                   <span className="font-mono text-purple-400">PostgreSQL 16 + pgvector</span>
                 </div>
                 <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
-                  <span className="text-slate-300">Immutable Audit Logging</span>
+                  <span className="text-slate-300">{t('immutable_audit_logging', 'Immutable Audit Logging')}</span>
                   <span className="font-bold text-emerald-400">ENABLED (Realtime Append-Only)</span>
                 </div>
               </div>
@@ -325,7 +327,7 @@ export const AdminPage: React.FC = () => {
             <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <Zap className="w-4 h-4 text-amber-400" />
-                <span>Quick Administration Workflows</span>
+                <span>{t('quick_administration_workflows', 'Quick Administration Workflows')}</span>
               </h3>
               <div className="grid grid-cols-2 gap-2.5 text-xs">
                 <button
@@ -334,8 +336,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <Users className="w-4 h-4 text-blue-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">Manage Users</span>
-                    <span className="text-[10px] text-slate-400">Assign roles & status</span>
+                    <span className="font-bold text-slate-200 block">{t('manage_users', 'Manage Users')}</span>
+                    <span className="text-[10px] text-slate-400">{t('assign_roles__status', 'Assign roles & status')}</span>
                   </div>
                 </button>
 
@@ -345,8 +347,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <Building2 className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">Organization</span>
-                    <span className="text-[10px] text-slate-400">Profile & compliance</span>
+                    <span className="font-bold text-slate-200 block">{t('organization', 'Organization')}</span>
+                    <span className="text-[10px] text-slate-400">{t('profile__compliance', 'Profile & compliance')}</span>
                   </div>
                 </button>
 
@@ -356,8 +358,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <Bot className="w-4 h-4 text-purple-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">AI Token Telemetry</span>
-                    <span className="text-[10px] text-slate-400">Monitor model spend</span>
+                    <span className="font-bold text-slate-200 block">{t('ai_token_telemetry', 'AI Token Telemetry')}</span>
+                    <span className="text-[10px] text-slate-400">{t('monitor_model_spend', 'Monitor model spend')}</span>
                   </div>
                 </button>
 
@@ -367,8 +369,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <ScrollText className="w-4 h-4 text-amber-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">Audit Trail</span>
-                    <span className="text-[10px] text-slate-400">Review security logs</span>
+                    <span className="font-bold text-slate-200 block">{t('audit_trail', 'Audit Trail')}</span>
+                    <span className="text-[10px] text-slate-400">{t('review_security_logs', 'Review security logs')}</span>
                   </div>
                 </button>
               </div>
@@ -380,13 +382,13 @@ export const AdminPage: React.FC = () => {
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <ScrollText className="w-4 h-4 text-blue-400" />
-                <span>Recent Platform Governance Events</span>
+                <span>{t('recent_platform_governance_events', 'Recent Platform Governance Events')}</span>
               </h3>
               <button
                 onClick={() => setSearchParams({ tab: 'audit-logs' })}
                 className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center space-x-1"
               >
-                <span>View Full Audit Log</span>
+                <span>{t('view_full_audit_log', 'View Full Audit Log')}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>

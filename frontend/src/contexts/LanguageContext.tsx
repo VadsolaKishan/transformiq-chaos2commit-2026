@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { extraTranslations } from '../config/translations';
 
 export type Language = 'en' | 'hi' | 'gu';
 
@@ -9,6 +10,7 @@ interface Translations {
 }
 
 export const translations: Translations = {
+  ...extraTranslations,
   // Brand & General
   app_name: {
     en: "TransformIQ",
@@ -252,6 +254,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     if (translations[key] && translations[key][language]) {
       return translations[key][language];
+    }
+    if (defaultText) {
+      const cleanDefault = defaultText.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+      if (translations[cleanDefault] && translations[cleanDefault][language]) {
+        return translations[cleanDefault][language];
+      }
     }
     return defaultText || key;
   };
