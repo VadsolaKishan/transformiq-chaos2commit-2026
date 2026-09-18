@@ -4,6 +4,7 @@ import {
   Plus,
   Layers,
   Upload,
+  Globe,
   ArrowRight,
   Sparkles,
   Building2,
@@ -38,6 +39,7 @@ export const ProjectsPage: React.FC = () => {
   const [budget, setBudget] = useState(150000);
   const [timeline, setTimeline] = useState(4);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [referenceUrl, setReferenceUrl] = useState('');
 
   const fetchProjects = async () => {
     try {
@@ -93,6 +95,18 @@ export const ProjectsPage: React.FC = () => {
             });
           } catch (uploadErr) {
             console.warn('Document upload warning:', uploadErr);
+          }
+        }
+
+        // 4. Ingest URL reference if provided
+        if (referenceUrl.trim()) {
+          try {
+            await api.post('/documents/ingest-url', {
+              project_id: newProjId,
+              url: referenceUrl.trim()
+            });
+          } catch (urlErr) {
+            console.warn('URL ingestion warning:', urlErr);
           }
         }
 
@@ -285,23 +299,44 @@ export const ProjectsPage: React.FC = () => {
                 />
               </div>
 
-              {/* Upload BRD / SOP Document */}
-              <div className="p-4 rounded-xl bg-slate-800/40 border border-dashed border-slate-700">
-                <label className="block font-semibold text-slate-300 mb-1 flex items-center">
-                  <Upload className="w-4 h-4 text-blue-400 mr-1.5" />
-                  {t('upload_enterprise_document', 'Upload Enterprise Document (PDF, Word, PPTX, TXT)')}
-                </label>
-                <input
-                  type="file"
-                  accept=".pdf,.docx,.pptx,.txt"
-                  onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
-                  className="text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
-                />
-                {uploadedFile && (
-                  <p className="text-[11px] text-emerald-400 mt-1">
-                    ✓ Attached: {uploadedFile.name} ({(uploadedFile.size / 1024).toFixed(1)} KB)
-                  </p>
-                )}
+              {/* Upload BRD / SOP Document or Paste Web URL */}
+              <div className="p-4 rounded-xl bg-slate-800/40 border border-dashed border-slate-700 space-y-3">
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1 flex items-center">
+                    <Upload className="w-4 h-4 text-blue-400 mr-1.5" />
+                    {t('upload_enterprise_document', 'Upload Enterprise Document (PDF, Word, PPTX, TXT)')}
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf,.docx,.pptx,.txt"
+                    onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
+                    className="text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
+                  />
+                  {uploadedFile && (
+                    <p className="text-[11px] text-emerald-400 mt-1">
+                      ✓ Attached: {uploadedFile.name} ({(uploadedFile.size / 1024).toFixed(1)} KB)
+                    </p>
+                  )}
+                </div>
+
+                <div className="pt-2 border-t border-slate-800">
+                  <label className="block font-semibold text-slate-300 mb-1 flex items-center">
+                    <Globe className="w-4 h-4 text-emerald-400 mr-1.5" />
+                    {t('reference_web_url', 'Reference Web / BRD URL (Website, Online Spec, Documentation)')}
+                  </label>
+                  <input
+                    type="url"
+                    value={referenceUrl}
+                    onChange={(e) => setReferenceUrl(e.target.value)}
+                    placeholder="e.g. https://enterprise.com/brd-doc or http://..."
+                    className="w-full px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs"
+                  />
+                  {referenceUrl && (
+                    <p className="text-[11px] text-emerald-400 mt-1">
+                      ✓ Web URL set for AI RAG Scraping: {referenceUrl}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">

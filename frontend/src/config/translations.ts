@@ -388,6 +388,16 @@ export const extraTranslations: TranslationDictionary = {
     hi: "एंटरप्राइज दस्तावेज़ अपलोड करें (PDF, Word, PPTX, TXT)",
     gu: "એન્ટરપ્રાઇઝ દસ્તાવેજ અપલોડ કરો (PDF, Word, PPTX, TXT)"
   },
+  "reference_web_url": {
+    en: "Reference Web / BRD URL (Website, Online Spec, Documentation)",
+    hi: "संदर्भ वेब / बीआरडी यूआरएल (वेबसाइट, ऑनलाइन विशिष्टता, दस्तावेज)",
+    gu: "સંદર્ભ વેબ / BRD URL (વેબસાઇટ, ઓનલાઇન સ્પેક, દસ્તાવેજીકરણ)"
+  },
+  "grounded_documents": {
+    en: "Grounded Documents",
+    hi: "सत्यापित / संदर्भित दस्तावेज",
+    gu: "આધારભૂત દસ્તાવેજો"
+  },
   "initialize_ai_discovery": {
     en: "Initialize AI Discovery",
     hi: "एआई खोज प्रारंभ करें",
