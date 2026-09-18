@@ -62,8 +62,9 @@ export const BlueprintPage: React.FC = () => {
       if (res.success) {
         fetchBlueprint();
       }
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      console.error('Approve blueprint error:', e);
+      alert(e?.detail || e?.message || 'Failed to update approval status.');
     } finally {
       setIsApproving(false);
     }
@@ -75,13 +76,34 @@ export const BlueprintPage: React.FC = () => {
     try {
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
       const cleanBase = baseUrl.endsWith('/api/v1') ? baseUrl : `${baseUrl.replace(/\/+$/, '')}/api/v1`;
-      const url = `${cleanBase}/exports/project/${projectId}/download?format=${format}`;
-      // Open / trigger real file download
-      window.open(url, '_blank');
-    } catch (e) {
-      console.error(e);
+      const token = localStorage.getItem('transformiq_token');
+      
+      const downloadUrl = `${cleanBase}/exports/project/${projectId}/download?format=${format}${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+
+      const res = await fetch(downloadUrl, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Export download failed (${res.status}): ${errText}`);
+      }
+
+      const blob = await res.blob();
+      const objectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      const safeName = data?.project_name ? data.project_name.replace(/[^a-zA-Z0-9_-]/g, '_') : 'Blueprint';
+      link.setAttribute('download', `${safeName}_Blueprint.${format}`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (e: any) {
+      console.error('Download blueprint error:', e);
+      alert(e?.message || 'Failed to download blueprint.');
     } finally {
-      setTimeout(() => setDownloadingFormat(null), 1500);
+      setTimeout(() => setDownloadingFormat(null), 1000);
     }
   };
 
