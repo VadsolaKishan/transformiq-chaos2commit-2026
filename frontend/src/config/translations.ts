@@ -277,6 +277,272 @@ export const extraTranslations: TranslationDictionary = {
     gu: "સ્ટેકહોલ્ડર રીડ-ઓન્લી ટ્રાન્સફોર્મેશન વિહંગાવલોકન"
   },
 
+  // --- Workspaces & Projects Tabs ---
+  "enterprise_workspaces_directory": {
+    en: "Enterprise Workspaces Directory",
+    hi: "एंटरप्राइज कार्यक्षेत्र निर्देशिका",
+    gu: "એન્ટરપ્રાઇઝ કાર્યક્ષેત્ર ડિરેક્ટરી"
+  },
+  "hierarchical_groupings_of_transformation_initiatives": {
+    en: "Hierarchical groupings of transformation initiatives within organization.",
+    hi: "संगठन के भीतर रूपांतरण पहलों का पदानुक्रमित समूहन।",
+    gu: "સંસ્થાની અંદર રૂપાંતરણ પહેલોનું પદાનુક્રમિત જૂથીકરણ."
+  },
+  "main_transformation_workspace": {
+    en: "Main Transformation Workspace",
+    hi: "मुख्य रूपांतरण कार्यक्षेत्र",
+    gu: "મુખ્ય ટ્રાન્સફોર્મેશન કાર્યક્ષેત્ર"
+  },
+  "customer_experience_transformation": {
+    en: "Customer Experience Transformation",
+    hi: "ग्राहक अनुभव रूपांतरण",
+    gu: "ગ્રાહક અનુભવ ટ્રાન્સફોર્મેશન"
+  },
+  "default_workspace_for_enterprise_initiatives": {
+    en: "Default workspace for enterprise initiatives",
+    hi: "एंटरप्राइज पहलों के लिए डिफ़ॉल्ट कार्यक्षेत्र",
+    gu: "એન્ટરપ્રાઇઝ પહેલો માટે ડિફોલ્ટ કાર્યક્ષેત્ર"
+  },
+  "ai_driven_customer_operations": {
+    en: "AI-driven customer operations, complaints resolution, and intelligent triage.",
+    hi: "एआई-संचालित ग्राहक संचालन, शिकायत निवारण और बुद्धिमान ट्राइएज।",
+    gu: "એઆઈ-સંચાલિત ગ્રાહક કામગીરી, ફરીયાદ નિવારણ અને બુદ્ધિશાળી ટ્રાયજ."
+  },
+  "projects_colon": {
+    en: "Projects:",
+    hi: "परियोजनाएं:",
+    gu: "પ્રોજેક્ટ્સ:"
+  },
+  "created_colon": {
+    en: "Created:",
+    hi: "निर्मित:",
+    gu: "બનાવ્યાની તારીખ:"
+  },
+  "global_transformation_initiatives": {
+    en: "Global Transformation Initiatives",
+    hi: "वैश्विक रूपांतरण पहल",
+    gu: "વૈશ્વિક ટ્રાન્સફોર્મેશન પહેલ"
+  },
+  "view_project": {
+    en: "View Project",
+    hi: "परियोजना देखें",
+    gu: "પ્રોજેક્ટ જુઓ"
+  },
+  "new_transformation_initiative": {
+    en: "New Transformation Initiative",
+    hi: "नई रूपांतरण पहल",
+    gu: "નવી ટ્રાન્સફોર્મેશન પહેલ"
+  },
+  "create_transformation_initiative": {
+    en: "Create Transformation Initiative",
+    hi: "रूपांतरण पहल बनाएं",
+    gu: "ટ્રાન્સફોર્મેશન પહેલ બનાવો"
+  },
+  "project_name_star": {
+    en: "Project Name *",
+    hi: "परियोजना का नाम *",
+    gu: "પ્રોજેક્ટનું નામ *"
+  },
+  "business_problem_description": {
+    en: "Business Problem / Chaos Description *",
+    hi: "व्यावसायिक समस्या / अराजकता विवरण *",
+    gu: "વ્યવસાયિક સમસ્યા / અરાજકતા વિગત *"
+  },
+  "target_budget": {
+    en: "Target Budget ($ USD)",
+    hi: "लक्ष्य बजट ($ USD)",
+    gu: "લક્ષ્ય બજેટ ($ USD)"
+  },
+  "timeline_months": {
+    en: "Timeline (Months)",
+    hi: "समय सीमा (महीने)",
+    gu: "સમયમર્યાદા (મહિના)"
+  },
+  "upload_enterprise_document": {
+    en: "Upload Enterprise Document (PDF, Word, PPTX, TXT)",
+    hi: "एंटरप्राइज दस्तावेज़ अपलोड करें (PDF, Word, PPTX, TXT)",
+    gu: "એન્ટરપ્રાઇઝ દસ્તાવેજ અપલોડ કરો (PDF, Word, PPTX, TXT)"
+  },
+  "initialize_ai_discovery": {
+    en: "Initialize AI Discovery",
+    hi: "एआई खोज प्रारंभ करें",
+    gu: "એઆઈ શોધ શરૂ કરો"
+  },
+
+  // --- Users & Roles Tabs ---
+  "enterprise_user_directory": {
+    en: "Enterprise User Directory & Role Assignment",
+    hi: "एंटरप्राइज उपयोगकर्ता निर्देशिका और भूमिका असाइनमेंट",
+    gu: "એન્ટરપ્રાઇઝ વપરાશકર્તા ડિરેક્ટરી અને ભૂમિકા સોંપણી"
+  },
+  "user": {
+    en: "User",
+    hi: "उपयोगकर्ता",
+    gu: "વપરાશકર્તા"
+  },
+  "email": {
+    en: "Email",
+    hi: "ईमेल",
+    gu: "ઇમેઇલ"
+  },
+  "current_role": {
+    en: "Current Role",
+    hi: "वर्तमान भूमिका",
+    gu: "વર્તમાન ભૂમિકા"
+  },
+  "change_role": {
+    en: "Change Role",
+    hi: "भूमिका बदलें",
+    gu: "ભૂમિકા બદલો"
+  },
+  "create_authorized_user": {
+    en: "Create Authorized User",
+    hi: "अधिकृत उपयोगकर्ता बनाएं",
+    gu: "અધિકૃત વપરાશકર્તા બનાવો"
+  },
+  "full_name": {
+    en: "Full Name",
+    hi: "पूरा नाम",
+    gu: "સંપૂર્ણ નામ"
+  },
+  "email_address": {
+    en: "Email Address",
+    hi: "ईमेल पता",
+    gu: "ઇમેઇલ સરનામું"
+  },
+  "password": {
+    en: "Password",
+    hi: "पासवर्ड",
+    gu: "પાસવર્ડ"
+  },
+  "assigned_role": {
+    en: "Assigned Role",
+    hi: "असाइन की गई भूमिका",
+    gu: "સોંપાયેલ ભૂમિકા"
+  },
+  "create_account": {
+    en: "Create Account",
+    hi: "खाता बनाएं",
+    gu: "ખાતું બનાવો"
+  },
+  "activate": {
+    en: "Activate",
+    hi: "सक्रिय करें",
+    gu: "સક્રિય કરો"
+  },
+  "disable": {
+    en: "Disable",
+    hi: "अक्षम करें",
+    gu: "નિષ્ક્રિય કરો"
+  },
+  "centralized_rbac_matrix": {
+    en: "Centralized Role-Based Access Control (RBAC) Matrix",
+    hi: "केंद्रीकृत भूमिका-आधारित पहुंच नियंत्रण (RBAC) मैट्रिक्स",
+    gu: "કેન્દ્રીયકૃત ભૂમિકા-આધારિત ઍક્સેસ કંટ્રોલ (RBAC) મેટ્રિક્સ"
+  },
+
+  // --- Telemetry, Analytics, Audit & Settings Tabs ---
+  "ai_token_telemetry_analytics": {
+    en: "AI Token Telemetry & LLM Consumption Analytics",
+    hi: "एआई टोकन टेलीमेट्री और एलएलएम खपत एनालिटिक्स",
+    gu: "એઆઈ ટોકન ટેલિમેટ્રી અને LLM વપરાશ એનાલિટિક્સ"
+  },
+  "total_token_ingestion": {
+    en: "Total Token Ingestion",
+    hi: "कुल टोकन अंतर्ग्रहण",
+    gu: "કુલ ટોકન વપરાશ"
+  },
+  "average_latency": {
+    en: "Average Latency",
+    hi: "औसत विलंबता (Latency)",
+    gu: "સરેરાશ લેટન્સી (Latency)"
+  },
+  "configured_model_deployments": {
+    en: "Configured Model Deployments",
+    hi: "कॉन्फ़िगर किए गए मॉडल परिनियोजन",
+    gu: "કોન્ફિગર કરેલ મોડેલ ડિપ્લોયમેન્ટ્સ"
+  },
+  "system_analytics_performance": {
+    en: "System Analytics & Performance Metrics",
+    hi: "सिस्टम एनालिटिक्स और प्रदर्शन मेट्रिक्स",
+    gu: "સિસ્ટમ એનાલિટિક્સ અને પ્રદર્શન મેટ્રિક્સ"
+  },
+  "system_uptime": {
+    en: "System Uptime",
+    hi: "सिस्टम अपटाइम",
+    gu: "સિસ્ટમ અપટાઇમ"
+  },
+  "p95_api_latency": {
+    en: "p95 API Latency",
+    hi: "p95 एपीआई विलंबता",
+    gu: "p95 એપીઆઈ લેટન્સી"
+  },
+  "database_pool_health": {
+    en: "Database Pool Health",
+    hi: "डेटाबेस पूल स्वास्थ्य",
+    gu: "ડેટાબેઝ પુલ હેલ્થ"
+  },
+  "rate_limit_headroom": {
+    en: "Rate Limit Headroom",
+    hi: "दर सीमा छूट",
+    gu: "રેટ લિમિટ હેડરૂમ"
+  },
+  "immutable_security_audit_trail": {
+    en: "Immutable Security & Governance Audit Trail",
+    hi: "अपरिवर्तनीय सुरक्षा और शासन ऑडिट ट्रेल",
+    gu: "અપરિવર્તનીય સુરક્ષા અને શાસન ઓડિટ ટ્રેઇલ"
+  },
+  "timestamp": {
+    en: "Timestamp",
+    hi: "समय-मुहर (Timestamp)",
+    gu: "સમય-છાપ (Timestamp)"
+  },
+  "actor": {
+    en: "Actor",
+    hi: "उपयोगकर्ता / एजेंट",
+    gu: "વપરાશકર્તા / એજન્ટ"
+  },
+  "action_event": {
+    en: "Action Event",
+    hi: "कार्रवाई घटना",
+    gu: "ક્રિયા ઇવેન્ટ"
+  },
+  "details": {
+    en: "Details",
+    hi: "विवरण",
+    gu: "વિગતો"
+  },
+  "ip_address": {
+    en: "IP Address",
+    hi: "आईपी पता",
+    gu: "આઈપી સરનામું"
+  },
+  "enterprise_connectors_integrations": {
+    en: "Enterprise Connectors & Service Integrations",
+    hi: "एंटरप्राइज कनेक्टर्स और सेवा एकीकरण",
+    gu: "એન્ટરપ્રાઇઝ કનેક્ટર્સ અને સેવા એકીકરણ"
+  },
+  "connected": {
+    en: "Connected",
+    hi: "कनेक्टेड",
+    gu: "કનેક્ટેડ"
+  },
+  "system_configuration_security": {
+    en: "System Configuration & Security Parameters",
+    hi: "सिस्टम कॉन्फ़िगरेशन और सुरक्षा पैरामीटर",
+    gu: "સિસ્ટમ કોન્ફિગરેશન અને સુરક્ષા પરિમાણો"
+  },
+  "security__authentication": {
+    en: "Security & Authentication",
+    hi: "सुरक्षा और प्रमाणीकरण",
+    gu: "સુરક્ષા અને પ્રમાણીકરણ"
+  },
+  "ai_orchestrator_engine": {
+    en: "AI Orchestrator Engine",
+    hi: "एआई ऑर्केस्ट्रेटर इंजन",
+    gu: "એઆઈ ઓર્કેસ્ટ્રેટર એન્જિન"
+  },
+
   // --- Pipeline & Studio Pages ---
   "requirements__business_analysis": {
     en: "Requirements & Business Analysis",

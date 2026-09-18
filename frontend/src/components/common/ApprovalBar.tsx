@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckCircle2, XCircle, Clock, ShieldAlert, Sparkles } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ApprovalBarProps {
   status: string; // APPROVED, UNDER_REVIEW, REJECTED, DRAFT
@@ -18,6 +19,7 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({
   onReject,
   isSubmitting = false,
 }) => {
+  const { t } = useLanguage();
   const isApproved = status === 'APPROVED';
   const isRejected = status === 'REJECTED';
 
@@ -37,19 +39,19 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-bold text-sm tracking-wide">Human-in-the-Loop Governance:</span>
+            <span className="font-bold text-sm tracking-wide">{t('human_in_the_loop_governance', 'Human-in-the-Loop Governance:')}</span>
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
               isApproved ? 'bg-emerald-500/30 text-emerald-300' : isRejected ? 'bg-rose-500/30 text-rose-300' : 'bg-amber-500/30 text-amber-300'
             }`}>
-              {status}
+              {t(status, status)}
             </span>
           </div>
           <p className="text-xs text-slate-300 mt-0.5">
             {isApproved 
-              ? `Approved by ${reviewedBy || 'Lead Architect'}. Ready for implementation blueprint export.`
+              ? `${t('Approved by', 'Approved by')} ${reviewedBy || t('Lead Architect', 'Lead Architect')}. ${t('Ready for implementation blueprint export.', 'Ready for implementation blueprint export.')}`
               : isRejected 
-                ? `Rejected during review. Please revise requirements or architecture before resubmitting.`
-                : `AI recommendations are advisory and require human validation before production commit.`}
+                ? t('Rejected during review. Please revise requirements or architecture before resubmitting.', 'Rejected during review. Please revise requirements or architecture before resubmitting.')
+                : t('AI recommendations are advisory and require human validation before production commit.', 'AI recommendations are advisory and require human validation before production commit.')}
           </p>
         </div>
       </div>
@@ -62,7 +64,7 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({
             className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition disabled:opacity-50"
           >
             <CheckCircle2 className="w-4 h-4" />
-            <span>Approve Blueprint</span>
+            <span>{t('approve_blueprint', 'Approve Blueprint')}</span>
           </button>
         )}
         {onReject && !isRejected && (
@@ -72,7 +74,7 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({
             className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-rose-900/50 text-rose-300 border border-slate-700 transition disabled:opacity-50"
           >
             <XCircle className="w-4 h-4" />
-            <span>Request Revision</span>
+            <span>{t('request_revision', 'Request Revision')}</span>
           </button>
         )}
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { X, Sparkles, ShieldCheck, Target, ArrowRight, BookOpen, AlertTriangle } from 'lucide-react';
+import { X, Sparkles, ShieldCheck, Target, BookOpen, AlertTriangle } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ExplainWhyModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface ExplainWhyModalProps {
 }
 
 export const ExplainWhyModal: React.FC<ExplainWhyModalProps> = ({ isOpen, onClose, data }) => {
+  const { t } = useLanguage();
   if (!isOpen || !data) return null;
 
   return (
@@ -36,46 +38,46 @@ export const ExplainWhyModal: React.FC<ExplainWhyModalProps> = ({ isOpen, onClos
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 uppercase">
-                {data.recommendation_category}
+                {t(data.recommendation_category, data.recommendation_category)}
               </span>
               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
-                Confidence: {data.confidence_score}
+                {t('Confidence', 'Confidence')}: {data.confidence_score}
               </span>
             </div>
-            <h3 className="text-lg font-bold text-slate-100 mt-1">Why this recommendation?</h3>
+            <h3 className="text-lg font-bold text-slate-100 mt-1">{t('why_this_recommendation', 'Why this recommendation?')}</h3>
           </div>
         </div>
 
         <p className="text-sm font-semibold text-blue-200 bg-blue-950/40 border border-blue-900/60 p-3.5 rounded-xl mb-5">
-          "{data.recommendation_title}"
+          "{t(data.recommendation_title, data.recommendation_title)}"
         </p>
 
         <div className="space-y-4 text-sm">
           <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60">
             <h4 className="font-semibold text-slate-200 flex items-center mb-1.5 text-xs uppercase tracking-wider text-blue-400">
-              <Target className="w-4 h-4 mr-1.5" /> Contextual Rationale
+              <Target className="w-4 h-4 mr-1.5" /> {t('contextual_rationale', 'Contextual Rationale')}
             </h4>
-            <p className="text-slate-300 leading-relaxed">{data.contextual_rationale}</p>
+            <p className="text-slate-300 leading-relaxed">{t(data.contextual_rationale, data.contextual_rationale)}</p>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60">
             <h4 className="font-semibold text-slate-200 flex items-center mb-1.5 text-xs uppercase tracking-wider text-emerald-400">
-              <ShieldCheck className="w-4 h-4 mr-1.5" /> Alignment with Business Problem
+              <ShieldCheck className="w-4 h-4 mr-1.5" /> {t('alignment_with_business_problem', 'Alignment with Business Problem')}
             </h4>
-            <p className="text-slate-300 leading-relaxed">{data.business_problem_alignment}</p>
+            <p className="text-slate-300 leading-relaxed">{t(data.business_problem_alignment, data.business_problem_alignment)}</p>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60">
             <h4 className="font-semibold text-slate-200 flex items-center mb-1.5 text-xs uppercase tracking-wider text-amber-400">
-              <AlertTriangle className="w-4 h-4 mr-1.5" /> Risk of Inaction
+              <AlertTriangle className="w-4 h-4 mr-1.5" /> {t('risk_of_inaction', 'Risk of Inaction')}
             </h4>
-            <p className="text-slate-300 leading-relaxed">{data.risk_of_inaction}</p>
+            <p className="text-slate-300 leading-relaxed">{t(data.risk_of_inaction, data.risk_of_inaction)}</p>
           </div>
 
           {data.citations && data.citations.length > 0 && (
             <div className="pt-2">
               <h4 className="font-semibold text-slate-400 text-xs uppercase tracking-wider flex items-center mb-2">
-                <BookOpen className="w-3.5 h-3.5 mr-1.5" /> Grounded Source Citations
+                <BookOpen className="w-3.5 h-3.5 mr-1.5" /> {t('grounded_source_citations', 'Grounded Source Citations')}
               </h4>
               <div className="flex flex-wrap gap-2">
                 {data.citations.map((c, i) => (
@@ -93,7 +95,7 @@ export const ExplainWhyModal: React.FC<ExplainWhyModalProps> = ({ isOpen, onClos
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition"
           >
-            Close Explanation
+            {t('close_explanation', 'Close Explanation')}
           </button>
         </div>
       </div>
