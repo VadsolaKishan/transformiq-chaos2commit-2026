@@ -6,7 +6,9 @@ from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.config.database import get_db
-from app.auth.deps import get_current_user, verify_project_access
+from fastapi.security import HTTPAuthorizationCredentials
+from app.auth.deps import get_current_user, verify_project_access, security_scheme
+from app.auth.security import decode_access_token
 from app.models.user import User
 from app.models.project import Project
 from app.models.transformation import Gap, Solution, Requirement
@@ -26,9 +28,24 @@ router = APIRouter(prefix="/exports", tags=["Export Engine"])
 async def download_export(
     project_id: str,
     format: str = Query("pdf", pattern="^(pdf|docx|xlsx|pptx)$"),
-    current_user: User = Depends(get_current_user),
+    token: Optional[str] = Query(None),
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
     db: AsyncSession = Depends(get_db)
 ):
+    jwt_token = token or (credentials.credentials if credentials else None)
+    if not jwt_token:
+        raise HTTPException(status_code=401, detail="Authentication token required to download blueprint.")
+        
+    payload = decode_access_token(jwt_token)
+    if not payload or not payload.get("sub"):
+        raise HTTPException(status_code=401, detail="Invalid or expired access token.")
+        
+    user_id = payload.get("sub")
+    user_res = await db.execute(select(User).filter(User.id == user_id))
+    current_user = user_res.scalars().first()
+    if not current_user:
+        raise HTTPException(status_code=401, detail="User account not found.")
+
     project = await verify_project_access(project_id, current_user, db)
     
     # Gather project data for exporter

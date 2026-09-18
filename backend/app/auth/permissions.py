@@ -104,6 +104,10 @@ ROLE_PERMISSIONS: Dict[str, Set[str]] = {
         Permission.DOCUMENT_VIEW.value,
         Permission.DOCUMENT_UPLOAD.value,
         Permission.DOCUMENT_DELETE.value,
+        Permission.BLUEPRINT_VIEW.value,
+        Permission.BLUEPRINT_GENERATE.value,
+        Permission.BLUEPRINT_EDIT.value,
+        Permission.BLUEPRINT_APPROVE.value,
         Permission.VERSION_VIEW.value,
         Permission.EXPORT_CREATE.value,
     },
@@ -205,6 +209,7 @@ ROLE_PERMISSIONS: Dict[str, Set[str]] = {
         Permission.SCORE_CALCULATE.value,
         Permission.SIMULATION_RUN.value,
         Permission.BLUEPRINT_VIEW.value,    # Read-only
+        Permission.BLUEPRINT_APPROVE.value,
         Permission.EXPORT_CREATE.value,
         Permission.COMMENT_CREATE.value,
         Permission.VERSION_VIEW.value,
@@ -246,6 +251,7 @@ ROLE_PERMISSIONS: Dict[str, Set[str]] = {
         Permission.SCORE_CALCULATE.value,
         Permission.SIMULATION_RUN.value,
         Permission.BLUEPRINT_VIEW.value,    # Read-only
+        Permission.BLUEPRINT_APPROVE.value,
         Permission.EXPORT_CREATE.value,
         Permission.COMMENT_CREATE.value,
         Permission.VERSION_VIEW.value,
