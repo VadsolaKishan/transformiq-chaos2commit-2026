@@ -1,5 +1,6 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface MetricCardProps {
   title: string;
@@ -59,15 +60,16 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   icon: Icon,
   variant = 'blue',
 }) => {
+  const { t } = useLanguage();
   const style = variantStyles[variant];
 
   return (
     <div className={`p-5 rounded-xl border ${style.border} ${style.bg} backdrop-blur-md relative overflow-hidden transition-all duration-200 hover:border-slate-600`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{title}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t(title, title)}</p>
           <h3 className="text-2xl font-bold text-slate-100 mt-1.5">{value}</h3>
-          {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-slate-400 mt-1">{t(subtitle, subtitle)}</p>}
         </div>
         <div className={`p-3 rounded-lg ${style.iconBg}`}>
           <Icon className="w-5 h-5" />
@@ -76,9 +78,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       {trend && (
         <div className="mt-3.5 pt-3 border-t border-slate-800/80 flex items-center text-xs">
           <span className={`font-semibold ${trendPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
-            {trend}
+            {t(trend, trend)}
           </span>
-          <span className="text-slate-500 ml-1.5">vs industry benchmark</span>
+          <span className="text-slate-500 ml-1.5">{t('vs industry benchmark', 'vs industry benchmark')}</span>
         </div>
       )}
     </div>

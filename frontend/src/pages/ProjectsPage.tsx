@@ -4,6 +4,7 @@ import {
   Plus,
   Layers,
   Upload,
+  Globe,
   ArrowRight,
   Sparkles,
   Building2,
@@ -16,9 +17,11 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 import { Project } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const ProjectsPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -36,6 +39,7 @@ export const ProjectsPage: React.FC = () => {
   const [budget, setBudget] = useState(150000);
   const [timeline, setTimeline] = useState(4);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [referenceUrl, setReferenceUrl] = useState('');
 
   const fetchProjects = async () => {
     try {
@@ -94,6 +98,18 @@ export const ProjectsPage: React.FC = () => {
           }
         }
 
+        // 4. Ingest URL reference if provided
+        if (referenceUrl.trim()) {
+          try {
+            await api.post('/documents/ingest-url', {
+              project_id: newProjId,
+              url: referenceUrl.trim()
+            });
+          } catch (urlErr) {
+            console.warn('URL ingestion warning:', urlErr);
+          }
+        }
+
         setIsModalOpen(false);
         navigate(`/projects/${newProjId}/discovery`);
       }
@@ -108,15 +124,15 @@ export const ProjectsPage: React.FC = () => {
     <div className="space-y-6 animate-fadeIn max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">Transformation Portfolio</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Manage and launch AI-driven enterprise transformation initiatives.</p>
+          <h1 className="text-2xl font-extrabold text-white">{t('transformation_portfolio', 'Transformation Portfolio')}</h1>
+          <p className="text-xs text-slate-400 mt-0.5">{t('Manage and launch AI-driven enterprise transformation initiatives.', 'Manage and launch AI-driven enterprise transformation initiatives.')}</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition shadow-lg flex items-center space-x-2 w-fit"
         >
           <Plus className="w-4 h-4" />
-          <span>New Transformation Initiative</span>
+          <span>{t('new_transformation_initiative', 'New Transformation Initiative')}</span>
         </button>
       </div>
 
@@ -127,10 +143,10 @@ export const ProjectsPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">
-                  {p.industry}
+                  {t(p.industry, p.industry)}
                 </span>
                 <span className="text-xs font-bold text-emerald-400">
-                  Score: {p.overall_score || 0}/100
+                  {t('Score', 'Score')}: {p.overall_score || 0}/100
                 </span>
               </div>
               <h3 className="text-base font-bold text-slate-100 group-hover:text-blue-400 transition mb-2">
@@ -144,12 +160,12 @@ export const ProjectsPage: React.FC = () => {
             <div className="pt-4 border-t border-slate-800/80">
               <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400 mb-4">
                 <div>
-                  <span className="block text-slate-500">Budget</span>
+                  <span className="block text-slate-500">{t('Budget', 'Budget')}</span>
                   <span className="font-semibold text-slate-200">${p.budget ? p.budget.toLocaleString() : '150,000'}</span>
                 </div>
                 <div>
-                  <span className="block text-slate-500">Timeline</span>
-                  <span className="font-semibold text-slate-200">{p.timeline_months || 4} Months</span>
+                  <span className="block text-slate-500">{t('Timeline', 'Timeline')}</span>
+                  <span className="font-semibold text-slate-200">{p.timeline_months || 4} {t('Months', 'Months')}</span>
                 </div>
               </div>
 
@@ -158,13 +174,13 @@ export const ProjectsPage: React.FC = () => {
                   to={`/projects/${p.id}/discovery`}
                   className="flex-1 py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold text-center transition"
                 >
-                  AI Discovery
+                  {t('AI Discovery', 'AI Discovery')}
                 </Link>
                 <Link
                   to={`/projects/${p.id}/blueprint`}
                   className="flex-1 py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold text-center transition flex items-center justify-center space-x-1"
                 >
-                  <span>Blueprint</span>
+                  <span>{t('final_blueprint', 'Blueprint')}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -175,16 +191,16 @@ export const ProjectsPage: React.FC = () => {
         {projects.length === 0 && !isLoading && (
           <div className="col-span-full py-16 text-center text-slate-400 p-8 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-3">
             <Layers className="w-12 h-12 text-slate-600 mx-auto" />
-            <h3 className="text-base font-bold text-white">No Transformation Initiatives Yet</h3>
+            <h3 className="text-base font-bold text-white">{t('No Transformation Initiatives Yet', 'No Transformation Initiatives Yet')}</h3>
             <p className="text-xs text-slate-400 max-w-md mx-auto">
-              Create your first enterprise transformation project by providing your business challenge or uploading BRD/SOP documents.
+              {t('Create your first enterprise transformation project by providing your business challenge or uploading BRD/SOP documents.', 'Create your first enterprise transformation project by providing your business challenge or uploading BRD/SOP documents.')}
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
               className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg mt-2"
             >
               <Plus className="w-4 h-4" />
-              <span>New Transformation Initiative</span>
+              <span>{t('new_transformation_initiative', 'New Transformation Initiative')}</span>
             </button>
           </div>
         )}
@@ -206,8 +222,8 @@ export const ProjectsPage: React.FC = () => {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Create Transformation Initiative</h3>
-                <p className="text-xs text-slate-400">Ingest business problem & documents into AI context engine</p>
+                <h3 className="text-lg font-bold text-white">{t('create_transformation_initiative', 'Create Transformation Initiative')}</h3>
+                <p className="text-xs text-slate-400">{t('Ingest business problem & documents into AI context engine', 'Ingest business problem & documents into AI context engine')}</p>
               </div>
             </div>
 
@@ -220,7 +236,7 @@ export const ProjectsPage: React.FC = () => {
 
             <form onSubmit={handleCreateProject} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Project Name *</label>
+                <label className="block font-semibold text-slate-300 mb-1">{t('project_name_star', 'Project Name *')}</label>
                 <input
                   type="text"
                   required
@@ -233,7 +249,7 @@ export const ProjectsPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Industry Vertical</label>
+                  <label className="block font-semibold text-slate-300 mb-1">{t('Industry Vertical', 'Industry Vertical')}</label>
                   <select
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
@@ -247,7 +263,7 @@ export const ProjectsPage: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Organization Size</label>
+                  <label className="block font-semibold text-slate-300 mb-1">{t('Organization Scale', 'Organization Size')}</label>
                   <select
                     value={orgSize}
                     onChange={(e) => setOrgSize(e.target.value)}
@@ -261,7 +277,7 @@ export const ProjectsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Business Problem / Chaos Description *</label>
+                <label className="block font-semibold text-slate-300 mb-1">{t('business_problem_description', 'Business Problem / Chaos Description *')}</label>
                 <textarea
                   rows={3}
                   required
@@ -273,7 +289,7 @@ export const ProjectsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-300 mb-1">Business Objective & Expected Outcome</label>
+                <label className="block font-semibold text-slate-300 mb-1">{t('Business Objective & Expected Outcome', 'Business Objective & Expected Outcome')}</label>
                 <input
                   type="text"
                   value={objective}
@@ -283,28 +299,49 @@ export const ProjectsPage: React.FC = () => {
                 />
               </div>
 
-              {/* Upload BRD / SOP Document */}
-              <div className="p-4 rounded-xl bg-slate-800/40 border border-dashed border-slate-700">
-                <label className="block font-semibold text-slate-300 mb-1 flex items-center">
-                  <Upload className="w-4 h-4 text-blue-400 mr-1.5" />
-                  Upload Enterprise Document (PDF, Word, PPTX, TXT)
-                </label>
-                <input
-                  type="file"
-                  accept=".pdf,.docx,.pptx,.txt"
-                  onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
-                  className="text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
-                />
-                {uploadedFile && (
-                  <p className="text-[11px] text-emerald-400 mt-1">
-                    ✓ Attached: {uploadedFile.name} ({(uploadedFile.size / 1024).toFixed(1)} KB)
-                  </p>
-                )}
+              {/* Upload BRD / SOP Document or Paste Web URL */}
+              <div className="p-4 rounded-xl bg-slate-800/40 border border-dashed border-slate-700 space-y-3">
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1 flex items-center">
+                    <Upload className="w-4 h-4 text-blue-400 mr-1.5" />
+                    {t('upload_enterprise_document', 'Upload Enterprise Document (PDF, Word, PPTX, TXT)')}
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf,.docx,.pptx,.txt"
+                    onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
+                    className="text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
+                  />
+                  {uploadedFile && (
+                    <p className="text-[11px] text-emerald-400 mt-1">
+                      ✓ Attached: {uploadedFile.name} ({(uploadedFile.size / 1024).toFixed(1)} KB)
+                    </p>
+                  )}
+                </div>
+
+                <div className="pt-2 border-t border-slate-800">
+                  <label className="block font-semibold text-slate-300 mb-1 flex items-center">
+                    <Globe className="w-4 h-4 text-emerald-400 mr-1.5" />
+                    {t('reference_web_url', 'Reference Web / BRD URL (Website, Online Spec, Documentation)')}
+                  </label>
+                  <input
+                    type="url"
+                    value={referenceUrl}
+                    onChange={(e) => setReferenceUrl(e.target.value)}
+                    placeholder="e.g. https://enterprise.com/brd-doc or http://..."
+                    className="w-full px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs"
+                  />
+                  {referenceUrl && (
+                    <p className="text-[11px] text-emerald-400 mt-1">
+                      ✓ Web URL set for AI RAG Scraping: {referenceUrl}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Target Budget ($ USD)</label>
+                  <label className="block font-semibold text-slate-300 mb-1">{t('target_budget', 'Target Budget ($ USD)')}</label>
                   <input
                     type="number"
                     value={budget}
@@ -313,7 +350,7 @@ export const ProjectsPage: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-300 mb-1">Timeline (Months)</label>
+                  <label className="block font-semibold text-slate-300 mb-1">{t('timeline_months', 'Timeline (Months)')}</label>
                   <input
                     type="number"
                     value={timeline}
@@ -329,14 +366,14 @@ export const ProjectsPage: React.FC = () => {
                   onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
                 >
-                  Cancel
+                  {t('cancel', 'Cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-emerald-500 hover:from-blue-500 hover:to-emerald-400 text-white font-bold shadow-lg transition disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Synthesizing...' : 'Initialize AI Discovery'}
+                  {isSubmitting ? t('Synthesizing...', 'Synthesizing...') : t('initialize_ai_discovery', 'Initialize AI Discovery')}
                 </button>
               </div>
             </form>

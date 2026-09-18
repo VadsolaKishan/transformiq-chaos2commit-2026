@@ -12,9 +12,14 @@ from app.auth.permissions import Permission, has_permission
 from app.models.user import User
 from app.models.project import Project, Document, DocumentChunk, BusinessContext
 from app.schemas.project import ApiResponse
-from app.documents.extractor import extract_text_from_file, chunk_text
+from pydantic import BaseModel
+from app.documents.extractor import extract_text_from_file, extract_text_from_url, chunk_text
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
+
+class IngestUrlRequest(BaseModel):
+    project_id: str
+    url: str
 
 @router.get("/project/{project_id}", response_model=ApiResponse)
 async def list_project_documents(
@@ -66,6 +71,84 @@ async def get_document(
             "status": doc.status,
             "created_at": doc.created_at
         }
+    )
+
+@router.post("/ingest-url", response_model=ApiResponse)
+async def ingest_url_document(
+    payload: IngestUrlRequest,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    project_id = payload.project_id
+    url = payload.url.strip()
+    if not url.startswith("http://") and not url.startswith("https://"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid URL format. URL must start with http:// or https://"
+        )
+        
+    extracted_text, pages = extract_text_from_url(url)
+    chunks = chunk_text(extracted_text)
+    
+    doc_id = str(uuid.uuid4())
+    summary = f"Scraped & indexed {len(extracted_text)} characters across {len(chunks)} contextual chunks from Web/BRD URL: {url}"
+    
+    document = Document(
+        id=doc_id,
+        project_id=project_id,
+        filename=url,
+        file_type="url",
+        file_size=len(extracted_text.encode('utf-8')),
+        storage_path=url,
+        extracted_text=extracted_text,
+        summary=summary,
+        status="PROCESSED"
+    )
+    db.add(document)
+    
+    for idx, c in enumerate(chunks):
+        chunk_obj = DocumentChunk(
+            id=str(uuid.uuid4()),
+            document_id=doc_id,
+            chunk_index=idx,
+            content=c,
+            page_number=1,
+            metadata_json={"source": url, "chunk_index": idx}
+        )
+        db.add(chunk_obj)
+        
+    # Update project business context
+    ctx_res = await db.execute(select(BusinessContext).filter(BusinessContext.project_id == project_id))
+    ctx = ctx_res.scalars().first()
+    if ctx:
+        current_summary = ctx.summary or ""
+        ctx.summary = f"{current_summary}\n\nWeb URL Context ({url}):\n{extracted_text[:400]}..."
+        
+    await record_audit_log(
+        db=db,
+        user=current_user,
+        action="INGEST_URL_DOCUMENT",
+        resource_type="DOCUMENT",
+        resource_id=doc_id,
+        project_id=project_id,
+        details=f"{current_user.full_name} ingested URL context from {url}",
+        request=request
+    )
+    
+    await db.commit()
+    
+    return ApiResponse(
+        success=True,
+        data={
+            "id": doc_id,
+            "filename": url,
+            "file_type": "url",
+            "file_size": len(extracted_text.encode('utf-8')),
+            "chunks_count": len(chunks),
+            "summary": summary
+        },
+        message="Web URL reference content analyzed and indexed into AI context successfully"
     )
 
 @router.post("/upload/{project_id}", response_model=ApiResponse)

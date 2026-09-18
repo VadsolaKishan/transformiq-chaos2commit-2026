@@ -155,17 +155,17 @@ export const DashboardPage: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2 mb-1.5">
               <span className="text-[11px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40">
-                {roleInfo.badge}
+                {t(roleInfo.badge, roleInfo.badge)}
               </span>
               <span className="text-xs text-slate-400">
-                Active User: <strong className="text-white">{user?.full_name || 'Enterprise User'}</strong>
+                {t('Active User', 'Active User')}: <strong className="text-white">{user?.full_name || 'Enterprise User'}</strong>
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              {roleInfo.title}
+              {t(roleInfo.title, roleInfo.title)}
             </h1>
             <p className="text-xs text-slate-300 mt-1 max-w-2xl">
-              {roleInfo.subtitle}
+              {t(roleInfo.subtitle, roleInfo.subtitle)}
             </p>
           </div>
 
@@ -176,7 +176,7 @@ export const DashboardPage: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-lg flex items-center space-x-1.5"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>Admin Governance</span>
+                <span>{t('Admin Governance', 'Admin Governance')}</span>
               </Link>
             )}
 
@@ -186,7 +186,7 @@ export const DashboardPage: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-lg flex items-center space-x-1.5"
               >
                 <FileSearch className="w-4 h-4" />
-                <span>Business Analysis</span>
+                <span>{t('Business Analysis', 'Business Analysis')}</span>
               </Link>
             )}
 
@@ -196,7 +196,7 @@ export const DashboardPage: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg flex items-center space-x-1.5"
               >
                 <Cpu className="w-4 h-4" />
-                <span>Architecture Studio</span>
+                <span>{t('Architecture Studio', 'Architecture Studio')}</span>
               </Link>
             )}
 
@@ -206,7 +206,7 @@ export const DashboardPage: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition shadow-lg flex items-center space-x-1.5"
               >
                 <FileCheck className="w-4 h-4" />
-                <span>Blueprint Approvals</span>
+                <span>{t('Blueprint Approvals', 'Blueprint Approvals')}</span>
               </Link>
             )}
 
@@ -216,7 +216,7 @@ export const DashboardPage: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center space-x-1.5 border border-slate-700"
               >
                 <Sparkles className="w-4 h-4 text-blue-400" />
-                <span>AI Discovery</span>
+                <span>{t('AI Discovery', 'AI Discovery')}</span>
               </Link>
             )}
 
@@ -226,7 +226,7 @@ export const DashboardPage: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg shadow-blue-600/30 flex items-center space-x-1.5"
               >
                 <Plus className="w-4 h-4" />
-                <span>New Initiative</span>
+                <span>{t('New Initiative', 'New Initiative')}</span>
               </Link>
             )}
           </div>

@@ -100,12 +100,12 @@ export const BlueprintPage: React.FC = () => {
         <div className="space-y-1">
           <div className="flex items-center space-x-2 flex-wrap gap-y-1">
             <span className="text-[10px] font-mono font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
-              STEP 13 • FINAL BLUEPRINT
+              {t('final_blueprint', 'STEP 13 • FINAL BLUEPRINT')}
             </span>
-            <h1 className="text-lg font-bold text-white tracking-tight">Implementation-Ready Solution Blueprint</h1>
+            <h1 className="text-lg font-bold text-white tracking-tight">{t('Implementation-Ready Solution Blueprint', 'Implementation-Ready Solution Blueprint')}</h1>
           </div>
           <p className="text-xs text-slate-400">
-            {data?.project_name} • {data?.industry} • Generated: {data?.generated_at}
+            {data?.project_name} • {data?.industry} • {t('Generated', 'Generated')}: {data?.generated_at}
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export const BlueprintPage: React.FC = () => {
             className="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-lg shadow-rose-600/20 flex items-center justify-center space-x-1.5 disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{downloadingFormat === 'pdf' ? 'Generating...' : 'Export PDF'}</span>
+            <span>{downloadingFormat === 'pdf' ? t('Generating...', 'Generating...') : t('export_pdf', 'Export PDF')}</span>
           </button>
           <button
             onClick={() => handleDownload('docx')}
@@ -125,7 +125,7 @@ export const BlueprintPage: React.FC = () => {
             className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg shadow-blue-600/20 flex items-center justify-center space-x-1.5 disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{downloadingFormat === 'docx' ? 'Generating...' : 'Export DOCX'}</span>
+            <span>{downloadingFormat === 'docx' ? t('Generating...', 'Generating...') : t('Export DOCX', 'Export DOCX')}</span>
           </button>
           <button
             onClick={() => handleDownload('xlsx')}
@@ -133,7 +133,7 @@ export const BlueprintPage: React.FC = () => {
             className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-1.5 disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{downloadingFormat === 'xlsx' ? 'Generating...' : 'Export XLSX'}</span>
+            <span>{downloadingFormat === 'xlsx' ? t('Generating...', 'Generating...') : t('Export XLSX', 'Export XLSX')}</span>
           </button>
           <button
             onClick={() => handleDownload('pptx')}
@@ -141,7 +141,7 @@ export const BlueprintPage: React.FC = () => {
             className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition shadow-lg shadow-amber-600/20 flex items-center justify-center space-x-1.5 disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{downloadingFormat === 'pptx' ? 'Generating...' : 'Export PPTX'}</span>
+            <span>{downloadingFormat === 'pptx' ? t('Generating...', 'Generating...') : t('Export PPTX', 'Export PPTX')}</span>
           </button>
         </div>
       </div>

@@ -10,10 +10,13 @@ import {
   Bot,
   User,
   Upload,
+  Globe,
+  Plus,
   CheckCircle2,
   HelpCircle,
   RefreshCw,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 import api from '../services/api';
 import { ChatMessage, Project, DocumentItem } from '../types';
@@ -29,8 +32,36 @@ export const DiscoveryPage: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [isUrlInputOpen, setIsUrlInputOpen] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const [isIngestingUrl, setIsIngestingUrl] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const handleIngestUrl = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!urlInput.trim() || !projectId || isIngestingUrl) return;
+
+    setIsIngestingUrl(true);
+    try {
+      const res: any = await api.post('/documents/ingest-url', {
+        project_id: projectId,
+        url: urlInput.trim()
+      });
+      if (res.success) {
+        setUrlInput('');
+        setIsUrlInputOpen(false);
+        const dRes: any = await api.get(`/documents/project/${projectId}`);
+        if (dRes.success && dRes.data) {
+          setDocuments(dRes.data);
+        }
+      }
+    } catch (err) {
+      console.error('URL ingestion error:', err);
+    } finally {
+      setIsIngestingUrl(false);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -148,28 +179,78 @@ export const DiscoveryPage: React.FC = () => {
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center">
               <FileText className="w-3.5 h-3.5 text-emerald-400 mr-1.5" />
-              Grounded Documents ({documents.length})
+              {t('grounded_documents', 'Grounded Documents')} ({documents.length})
             </h4>
+            <button
+              onClick={() => setIsUrlInputOpen(!isUrlInputOpen)}
+              className="px-2 py-0.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center space-x-1 transition"
+              title="Paste reference Web / BRD URL for RAG Indexing"
+            >
+              <Globe className="w-3 h-3" />
+              <span>+ {t('Add URL', 'Add URL')}</span>
+            </button>
           </div>
+
+          {/* INLINE URL INPUT FORM */}
+          {isUrlInputOpen && (
+            <form onSubmit={handleIngestUrl} className="mb-3 p-2.5 rounded-xl bg-slate-800/90 border border-emerald-500/40 text-xs animate-fadeIn space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-emerald-300 flex items-center text-[11px]">
+                  <Globe className="w-3.5 h-3.5 mr-1" /> {t('Paste Reference Web / BRD URL:', 'Paste Reference Web / BRD URL:')}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsUrlInputOpen(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <input
+                type="url"
+                required
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                placeholder="https://enterprise.com/brd-doc or http://..."
+                className="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-white placeholder-slate-500 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              />
+              <button
+                type="submit"
+                disabled={isIngestingUrl || !urlInput.trim()}
+                className="w-full py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition shadow flex items-center justify-center space-x-1 disabled:opacity-50"
+              >
+                {isIngestingUrl ? (
+                  <>
+                    <RefreshCw className="w-3 h-3 animate-spin mr-1" />
+                    <span>{t('Analyzing URL...', 'Analyzing URL...')}</span>
+                  </>
+                ) : (
+                  <span>{t('Ingest & Analyze URL', 'Ingest & Analyze URL')}</span>
+                )}
+              </button>
+            </form>
+          )}
 
           <div className="space-y-2">
             {documents.map((d) => (
               <div key={d.id} className="p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/60 text-xs">
                 <div className="flex items-center justify-between font-semibold text-slate-200">
-                  <span className="truncate max-w-[170px]">{d.filename}</span>
-                  <span className="text-[10px] uppercase font-mono px-1 rounded bg-blue-500/20 text-blue-300">
+                  <span className="truncate max-w-[170px]" title={d.filename}>{d.filename}</span>
+                  <span className={`text-[10px] uppercase font-mono px-1 rounded ${
+                    d.file_type === 'url' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-blue-500/20 text-blue-300'
+                  }`}>
                     {d.file_type}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{d.summary}</p>
                 <div className="mt-1.5 flex items-center text-[10px] text-emerald-400">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
-                  <span>RAG Indexed in Context</span>
+                  <span>{t('RAG Indexed in Context', 'RAG Indexed in Context')}</span>
                 </div>
               </div>
             ))}
             {documents.length === 0 && (
-              <p className="text-xs text-slate-500 text-center py-6">No documents uploaded yet.</p>
+              <p className="text-xs text-slate-500 text-center py-6">{t('No documents or URLs added yet.', 'No documents or URLs added yet.')}</p>
             )}
           </div>
         </div>
