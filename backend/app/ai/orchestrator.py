@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Dict, Any, Optional
 from app.config.settings import settings
 from app.ai.provider import GeminiProvider, OpenAIProvider, AzureOpenAIProvider
@@ -118,59 +119,97 @@ class AIOrchestrator:
 
         # Smart contextual response based on user query and project context
         msg_lower = message.lower()
-        proj_title = project_context.splitlines()[0] if project_context else "Enterprise Initiative"
+        proj_title = project_context.splitlines()[0] if project_context else "Enterprise Transformation Initiative"
         
-        if any(w in msg_lower for w in ["architecture", "tech stack", "hld", "lld", "cloud", "aws", "azure", "fastapi", "microservice"]):
+        # 1. Greetings & Introductory queries
+        if re.search(r'\b(hi|hello|hey|namaste|kem cho|greetings)\b', msg_lower) or any(phrase in msg_lower for phrase in ["who are you", "what can you do", "introduce yourself"]):
             return (
-                f"**Enterprise Architecture Recommendation for {proj_title}**:\n\n"
-                f"• **Gateway & Ingestion Layer**: Asynchronous FastAPI microservices behind an API Gateway with OAuth2 JWT tenant isolation.\n"
-                f"• **Cognitive AI Pipeline**: Hybrid RAG pipeline combining vector embeddings (pgvector / Chroma) with semantic re-ranking for enterprise grounding.\n"
-                f"• **Data & State Management**: PostgreSQL 16 for relational 3NF operational data, with Redis for sub-millisecond session caching and message queues.\n"
-                f"• **Reliability & Scalability**: Containerized deployment with horizontal pod autoscaling (HPA) targeting 99.95% uptime.\n\n"
-                f"You can explore the interactive diagram in the **Architecture** stage to inspect and customize each component."
+                f"**Welcome to TransformIQ AI Transformation Companion!**\n\n"
+                f"I am your dedicated enterprise solution architect for **{proj_title}**.\n\n"
+                f"**Here is how I can assist your transformation journey:**\n"
+                f"• **Discovery & Scoping**: Synthesize problem statements, legacy tech constraints, and operational goals.\n"
+                f"• **Requirements Engineering**: Generate Functional & Non-Functional requirements with stakeholder matrices.\n"
+                f"• **Architecture & BPMN**: Design decoupled cloud microservices, PostgreSQL schemas, and interactive BPMN workflows.\n"
+                f"• **Estimation & Roadmap**: Calculate agile sprint velocity, INR/USD budgets, and What-If ROI projections.\n\n"
+                f"Try asking: *\"What is the recommended tech stack?\"*, *\"What are our top process gaps?\"*, or *\"How much will this cost?\"*"
             )
-        elif any(w in msg_lower for w in ["gap", "bottleneck", "challenge", "problem", "friction"]):
+
+        # 2. Architecture & Technical Stacks
+        if any(w in msg_lower for w in ["architecture", "tech stack", "technology", "hld", "lld", "cloud", "aws", "azure", "fastapi", "microservice", "backend", "frontend", "infrastructure"]):
             return (
-                f"**Identified Operational Bottlenecks & Strategic Gaps**:\n\n"
-                f"1. **Triage & Routing Latency**: Manual categorization creates a multi-day cycle time bottleneck before tickets reach the correct department.\n"
-                f"2. **Data Silos**: Disconnected legacy systems prevent real-time status synchronization between customer portals and ERP databases.\n"
-                f"3. **Absence of Straight-Through Processing (STP)**: 100% of cases currently require manual employee touchpoints.\n\n"
-                f"**Strategic Remediation**: Automate standard tier-1 classification with >85% confidence threshold, routing only high-risk exceptions to human specialists. Check the **Gap Analysis** stage for the complete 8-dimension matrix."
+                f"**Enterprise Architecture Blueprint for {proj_title}**:\n\n"
+                f"• **API & Ingestion Gateway**: High-throughput FastAPI (Python 3.10+) asynchronous services behind Traefik/Nginx reverse proxy with OAuth2 JWT & RBAC security.\n"
+                f"• **AI & Semantic Intelligence Layer**: Hybrid RAG pipeline combining vector embeddings (pgvector / Chroma) with Gemini 2.0 Flash for sub-second NLP triage.\n"
+                f"• **Persistence & Event Streaming**: PostgreSQL 16 for ACID 3NF transactional data, Redis 7 for sub-millisecond session caching and message queues.\n"
+                f"• **Enterprise UX Studio**: React 18 + Vite + Tailwind CSS with interactive ReactFlow canvas and responsive mobile-first wireframes.\n"
+                f"• **High Availability & SLA**: Multi-zone containerized deployment with automatic horizontal scaling targeting 99.95% availability.\n\n"
+                f"👉 *Next Action: Open the **Architecture** stage to inspect, customize, and persist the interactive system component graph.*"
             )
-        elif any(w in msg_lower for w in ["cost", "budget", "price", "estimate", "hour", "timeline", "week", "month"]):
+
+        # 3. Gaps, Bottlenecks & Problems
+        if any(w in msg_lower for w in ["gap", "bottleneck", "challenge", "problem", "friction", "pain point", "delay", "issue"]):
             return (
-                f"**Preliminary Transformation Roadmap & Cost Estimation**:\n\n"
-                f"• **Delivery Timeline**: 16 Weeks across 4 Agile Sprints (Discovery, Core Engineering, Frontend & Review Hub, Production Hardening).\n"
-                f"• **Total Engineering Effort**: ~1,120 hours with a dedicated cross-functional team of 6 engineers.\n"
-                f"• **Estimated Investment**: ~$138,500 including engineering labor, cloud infrastructure, and AI inference capacity.\n"
-                f"• **Projected ROI**: 87% operational efficiency gain with estimated breakeven in 6.4 months post go-live.\n\n"
-                f"Review the full breakdown in the **Planning & Estimation** tab."
+                f"**Strategic Operational Gaps & Bottleneck Analysis**:\n\n"
+                f"1. **Manual Triage Latency**: Operational queue backlogs stretch ticket routing to 48+ hours, creating severe SLA violations.\n"
+                f"2. **Data Fragmentation**: Disconnected siloed systems force duplicate data entry across spreadsheets and legacy CRMs.\n"
+                f"3. **Absence of Autonomous STP**: 100% of standard transactions require manual employee touchpoints, driving high overhead.\n"
+                f"4. **Compliance & Visibility Deficit**: Lack of centralized telemetry prevents real-time tracking of process bottlenecks.\n\n"
+                f"**Remediation Blueprint**: Deploy AI intent parsing with >85% confidence routing, straight-through order updates, and exception queues.\n\n"
+                f"👉 *Next Action: View the **8-Dimension Gap Matrix** in the Gap Analysis stage.*"
             )
-        elif any(w in msg_lower for w in ["api", "endpoint", "rest", "integration"]):
+
+        # 4. Cost, Estimates & Roadmap
+        if any(w in msg_lower for w in ["cost", "budget", "price", "estimate", "hour", "timeline", "week", "month", "roi", "savings", "staffing"]):
             return (
-                f"**API Strategy & Integration Catalog**:\n\n"
-                f"• **Enterprise Gateway**: RESTful OpenAPI 3.0 compliant endpoints with zero-trust token authentication.\n"
-                f"• **Key Integration Contracts**: Webhooks for real-time ticket ingestion, bidirectional CRM sync, and automated resolution dispatch.\n"
-                f"• **Telemetry & Governance**: Rate-limited at 1,200 req/min with immutable audit logging on all mutating endpoints.\n\n"
-                f"Check the **APIs** stage to inspect schemas, headers, and mock response payloads."
+                f"**Transformation Roadmap, Budget & ROI Forecast**:\n\n"
+                f"• **Delivery Cadence**: 16 Weeks structured into 4 Agile Sprints (Foundation, Core Logic, Review Hub, Hardening).\n"
+                f"• **Engineering Capacity**: 6 Cross-functional Engineers (Architect, AI Engineer, Backend, Frontend, DevOps, QA).\n"
+                f"• **Total Effort**: ~1,120 engineering hours with estimated investment of ~$138,500.\n"
+                f"• **Financial Impact**: Projected 87% operational efficiency gain, generating estimated annual operational savings of $360,000+ with breakeven in 6.4 months.\n\n"
+                f"👉 *Next Action: Adjust live parameters in the **What-If Simulation** tab to model custom ROI scenarios.*"
             )
-        elif any(w in msg_lower for w in ["return", "support", "complaint", "customer"]):
+
+        # 5. Database, Schema & Models
+        if any(w in msg_lower for w in ["database", "db", "schema", "table", "sql", "ddl", "postgres", "entity", "er diagram", "relation"]):
             return (
-                f"**Customer Experience & Resolution Strategy**:\n\n"
-                f"1. **Real-Time Sentiment & Intent Parsing**: Immediate automated triage upon email/ticket ingestion within <3 seconds.\n"
-                f"2. **Automated Tier-1 Resolution**: Direct integration with order management systems to automate standard status lookups and low-risk returns.\n"
-                f"3. **Specialist Escalation**: Seamless handoff with pre-generated AI resolution draft for human-in-the-loop sign-off.\n\n"
-                f"Would you like to review the AS-IS versus TO-BE workflow in the **Process Workflow** stage?"
+                f"**Relational Database Design & Data Architecture**:\n\n"
+                f"• **Database Engine**: PostgreSQL 16 (Relational 3NF with JSONB flexibility and pgvector extension).\n"
+                f"• **Core Entities**: Accounts, Tickets/Workflows, AI Analysis Chunks, Audit Trails, and System Telemetry.\n"
+                f"• **Performance Indexing**: B-tree indices on foreign keys, GIN indices on JSONB payloads, and HNSW vector indices.\n"
+                f"• **Data Integrity & Privacy**: AES-256 at rest, strict tenant-scoped schemas, and automated point-in-time recovery (PITR).\n\n"
+                f"👉 *Next Action: Inspect and copy the executable SQL DDL in the **Database Design** stage.*"
             )
-        else:
+
+        # 6. APIs, Endpoints & Integration
+        if any(w in msg_lower for w in ["api", "endpoint", "rest", "integration", "webhook", "openapi", "swagger"]):
             return (
-                f"I have reviewed your query: *\"{message}\"*\n\n"
-                f"Based on the transformation blueprint for **{proj_title}**:\n\n"
-                f"• **Process Modernization**: Current workflows can be elevated from high manual overhead to event-driven straight-through processing.\n"
-                f"• **Target Metric**: Target >75% STP rate with automated NLP classification and contextual RAG knowledge grounding.\n"
-                f"• **Next Best Action**: Explore the **Business Analysis**, **Gap Analysis**, and **Architecture** stages to validate requirements and approve the master transformation blueprint.\n\n"
-                f"Feel free to ask for specific architecture recommendations, risk assessments, or timeline estimates!"
+                f"**API Architecture & Integration Strategy**:\n\n"
+                f"• **API Specification**: RESTful OpenAPI 3.0 standards with strict Pydantic v2 payload validation.\n"
+                f"• **Security Guardrails**: Bearer JWT authentication, OAuth2 scopes, and rate limiting (1,200 requests/minute).\n"
+                f"• **Event Hooks**: Webhook subscriptions for asynchronous status events, external CRM callbacks, and Slack/Teams alerts.\n\n"
+                f"👉 *Next Action: Explore mock responses and request schemas in the **APIs** stage.*"
             )
+
+        # 7. HR / Talent / Recruitment domain
+        if any(w in msg_lower for w in ["hr", "candidate", "resume", "recruit", "applicant", "attendance", "onboard"]):
+            return (
+                f"**HR & Recruitment Modernization Plan**:\n\n"
+                f"• **AI Resume Ingestion**: Automated sub-2s resume parsing extracting skills, experience, and contact details from PDF/DOCX.\n"
+                f"• **Centralized Candidate CRM**: Eliminates 5 duplicate Excel sheets with unified candidate and client pipeline tracking.\n"
+                f"• **Recruiter Attendance & Metrics**: Real-time daily check-in telemetry and placement analytics.\n"
+                f"• **Client Portal**: Self-service job requisition posting, candidate shortlisting, and 1-click digital contracts.\n\n"
+                f"👉 *Next Action: Generate the full ATS roadmap in the **Business Analysis** stage.*"
+            )
+
+        # 8. General domain response
+        return (
+            f"**TransformIQ Advisory for {proj_title}**:\n\n"
+            f"Regarding your query: *\"{message}\"*\n\n"
+            f"• **Strategic Recommendation**: Modernize manual operational dependencies into event-driven straight-through workflows.\n"
+            f"• **AI Integration**: Ground LLM intent extraction with enterprise SOP vector knowledge to ensure >90% precision.\n"
+            f"• **Measurable Target**: Compress cycle times by 65-80% while preserving full SOC2 audit logging.\n\n"
+            f"👉 *You can navigate to **Business Analysis**, **Solution Architecture**, or **Planning** to view and download full implementation artifacts.*"
+        )
 
     async def generate_business_analysis(self, context_data: Dict[str, Any]) -> Dict[str, Any]:
         return smart_engine.build_contextual_business_analysis(context_data)

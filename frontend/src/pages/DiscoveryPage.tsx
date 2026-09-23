@@ -51,6 +51,8 @@ export const DiscoveryPage: React.FC = () => {
   };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const baseVoiceTextRef = useRef<string>('');
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   const handleIngestUrl = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -524,6 +526,7 @@ export const DiscoveryPage: React.FC = () => {
             className="flex items-center space-x-2"
           >
             <input
+              ref={chatInputRef}
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
@@ -531,14 +534,23 @@ export const DiscoveryPage: React.FC = () => {
               className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <VoiceInputButton
-              onTranscript={(transcript) => {
-                setInputText((prev) => (prev ? `${prev} ${transcript}` : transcript));
+              onListeningStart={() => {
+                baseVoiceTextRef.current = inputText ? `${inputText.trim()} ` : '';
+                chatInputRef.current?.focus();
+              }}
+              onTranscript={(spokenText) => {
+                if (spokenText) {
+                  setInputText(`${baseVoiceTextRef.current}${spokenText}`);
+                }
+              }}
+              onListeningEnd={() => {
+                chatInputRef.current?.focus();
               }}
             />
             <button
               type="submit"
               disabled={isSending || !inputText.trim()}
-              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg disabled:opacity-50 transition flex items-center justify-center shrink-0"
+              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg disabled:opacity-50 transition flex items-center justify-center shrink-0 cursor-pointer"
             >
               <Send className="w-4 h-4" />
             </button>

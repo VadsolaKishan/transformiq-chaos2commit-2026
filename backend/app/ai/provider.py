@@ -39,21 +39,23 @@ class GeminiProvider(AIProvider):
 
         models_to_try = [
             model_override or self.model,
-            "gemini-3.5-flash-lite"
+            "gemini-1.5-flash",
+            "gemini-2.0-flash",
+            "gemini-flash-latest"
         ]
         # Remove duplicates while preserving order
         seen = set()
         models = [m for m in models_to_try if not (m in seen or seen.add(m))]
 
         last_err = None
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=3.0) as client:
             for m in models:
                 url = f"{self.base_url}/models/{m}:generateContent?key={self.api_key}"
                 try:
                     resp = await client.post(url, json=payload, headers={"Content-Type": "application/json"})
                     if resp.status_code == 200:
                         return resp.json()
-                    elif resp.status_code in [404, 400, 429, 503] and len(models) > 1:
+                    elif resp.status_code in [404, 400, 429, 503]:
                         last_err = f"Model {m} returned {resp.status_code}: {resp.text[:150]}"
                         continue
                     else:
