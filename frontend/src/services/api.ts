@@ -1,7 +1,21 @@
 import axios from 'axios';
 
+const getBaseUrl = (): string => {
+  let envUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  if (!envUrl) {
+    return 'http://localhost:8000/api/v1';
+  }
+  // Strip trailing slashes
+  envUrl = envUrl.replace(/\/+$/, '');
+  // Auto-append /api/v1 if not present
+  if (!envUrl.endsWith('/api/v1')) {
+    envUrl = `${envUrl}/api/v1`;
+  }
+  return envUrl;
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
