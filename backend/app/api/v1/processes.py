@@ -21,10 +21,10 @@ async def get_process_workflow(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    node_res = await db.execute(select(WorkflowNode).filter(WorkflowNode.project_id == project_id))
+    node_res = await db.execute(select(WorkflowNode).filter(WorkflowNode.project_id == project.id))
     nodes = node_res.scalars().all()
     
-    edge_res = await db.execute(select(WorkflowEdge).filter(WorkflowEdge.project_id == project_id))
+    edge_res = await db.execute(select(WorkflowEdge).filter(WorkflowEdge.project_id == project.id))
     edges = edge_res.scalars().all()
     
     if not nodes:
@@ -86,11 +86,11 @@ async def generate_process_workflow(
     result = await orchestrator.generate_process_workflow(context_data)
     
     # Clear existing
-    old_nodes = await db.execute(select(WorkflowNode).filter(WorkflowNode.project_id == project_id))
+    old_nodes = await db.execute(select(WorkflowNode).filter(WorkflowNode.project_id == project.id))
     for on in old_nodes.scalars().all():
         await db.delete(on)
         
-    old_edges = await db.execute(select(WorkflowEdge).filter(WorkflowEdge.project_id == project_id))
+    old_edges = await db.execute(select(WorkflowEdge).filter(WorkflowEdge.project_id == project.id))
     for oe in old_edges.scalars().all():
         await db.delete(oe)
         
@@ -100,7 +100,7 @@ async def generate_process_workflow(
         node_id_map[n["id"]] = new_id
         db.add(WorkflowNode(
             id=new_id,
-            project_id=project_id,
+            project_id=project.id,
             node_key=n["id"],
             label=n["label"],
             node_type=n["node_type"],
@@ -116,7 +116,7 @@ async def generate_process_workflow(
         tgt_id = node_id_map.get(e["target"], e["target"])
         db.add(WorkflowEdge(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             source_node_key=src_id,
             target_node_key=tgt_id,
             label=e.get("label"),
@@ -128,8 +128,8 @@ async def generate_process_workflow(
         user=current_user,
         action="GENERATE_PROCESS_WORKFLOW",
         resource_type="BPMN_PROCESS",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated BPMN process intelligence with {len(result['nodes'])} nodes",
         request=request
     )

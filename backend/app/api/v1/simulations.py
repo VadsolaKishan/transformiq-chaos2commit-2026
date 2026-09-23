@@ -20,8 +20,8 @@ async def list_simulations(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(project_id, current_user, db)
-    sim_res = await db.execute(select(SimulationScenario).filter(SimulationScenario.project_id == project_id).order_by(SimulationScenario.created_at.desc()))
+    project = await verify_project_access(project_id, current_user, db)
+    sim_res = await db.execute(select(SimulationScenario).filter(SimulationScenario.project_id == project.id).order_by(SimulationScenario.created_at.desc()))
     sims = sim_res.scalars().all()
     
     data = [{
@@ -58,7 +58,7 @@ async def run_simulation(
     # Save scenario to DB
     scenario = SimulationScenario(
         id=str(uuid.uuid4()),
-        project_id=project_id,
+        project_id=project.id,
         scenario_name=result["scenario_name"],
         automation_level=result["automation_level"],
         team_size=result["team_size"],

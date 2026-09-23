@@ -1,5 +1,6 @@
 import uuid
 from typing import List, Optional
+from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, Body, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -21,7 +22,7 @@ async def get_discovery_questions(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    q_res = await db.execute(select(Question).filter(Question.project_id == project_id).order_by(Question.created_at.asc()))
+    q_res = await db.execute(select(Question).filter(Question.project_id == project.id).order_by(Question.created_at.asc()))
     questions = q_res.scalars().all()
     
     if not questions:
@@ -44,25 +45,54 @@ async def get_discovery_questions(
         } for q in questions]
     )
 
+class ChatRequest(BaseModel):
+    message: str
+    conversation_id: Optional[str] = None
+    language: Optional[str] = "en"
+
 @router.post("/project/{project_id}/chat", response_model=ApiResponse)
 async def chat_with_ai_companion(
     project_id: str,
-    message: str = Body(..., embed=True),
+    req: ChatRequest,
     project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    ctx_res = await db.execute(select(BusinessContext).filter(BusinessContext.project_id == project_id))
+    ctx_res = await db.execute(select(BusinessContext).filter(BusinessContext.project_id == project.id))
     ctx = ctx_res.scalars().first()
     context_text = ctx.summary if ctx else (project.business_problem or "")
     
-    ai_reply = await orchestrator.chat_companion(
-        message=message,
-        project_context=f"Project: {project.name}\nIndustry: {project.industry}\nProblem: {project.business_problem}\nContext: {context_text[:1000]}"
+    project_context = (
+        f"Project Name: {project.name}\n"
+        f"Industry Vertical: {project.industry}\n"
+        f"Business Problem Statement: {project.business_problem or 'Operational bottlenecks and legacy manual workflows'}\n"
+        f"Business Objectives: {project.business_objective or 'Streamline processes and achieve autonomous straight-through processing'}\n"
+        f"Business Context Summary: {context_text[:1200]}"
     )
+    
+    ai_reply = await orchestrator.chat_companion(
+        message=req.message,
+        project_context=project_context,
+        language=req.language or "en"
+    )
+    
+    conv_id = req.conversation_id or str(uuid.uuid4())
+    
+    suggested_actions = [
+        "Analyze AS-IS process flow & bottlenecks",
+        "Extract functional & compliance requirements",
+        "Execute 8-dimension gap matrix",
+        "Calculate TransformIQ readiness score"
+    ]
     
     return ApiResponse(
         success=True,
-        data={"reply": ai_reply, "project_id": project_id},
+        data={
+            "message": ai_reply,
+            "reply": ai_reply,
+            "conversation_id": conv_id,
+            "project_id": project.id,
+            "suggested_actions": suggested_actions
+        },
         message="AI Companion response generated"
     )

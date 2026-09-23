@@ -96,20 +96,44 @@ async def get_user_project_role(
     # 3. Fallback to system role
     return user.role
 
+async def _resolve_project(project_id: str, current_user: User, db: AsyncSession) -> Optional[Project]:
+    if project_id == "default":
+        if current_user.role in [UserRole.ADMIN.value, "ADMIN"]:
+            proj_res = await db.execute(select(Project).order_by(Project.created_at.desc()))
+            return proj_res.scalars().first()
+        else:
+            member_res = await db.execute(
+                select(ProjectMember.project_id).filter(ProjectMember.user_id == current_user.id)
+            )
+            member_pids = member_res.scalars().all()
+            if member_pids:
+                proj_res = await db.execute(
+                    select(Project).filter(Project.id.in_(member_pids)).order_by(Project.created_at.desc())
+                )
+                return proj_res.scalars().first()
+            elif current_user.role in [UserRole.PROJECT_OWNER.value, UserRole.MANAGER.value]:
+                proj_res = await db.execute(select(Project).order_by(Project.created_at.desc()))
+                return proj_res.scalars().first()
+            else:
+                proj_res = await db.execute(select(Project).order_by(Project.created_at.desc()))
+                return proj_res.scalars().first()
+    else:
+        proj_res = await db.execute(select(Project).filter(Project.id == project_id))
+        return proj_res.scalars().first()
+
 async def verify_project_access(
     project_id: str,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ) -> Project:
     """Verifies that the current user has access to the given project."""
-    proj_res = await db.execute(select(Project).filter(Project.id == project_id))
-    project = proj_res.scalars().first()
+    project = await _resolve_project(project_id, current_user, db)
     if not project:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Project initiative not found."
         )
-    role = await get_user_project_role(project_id, current_user, db)
+    role = await get_user_project_role(project.id, current_user, db)
     if not role:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -126,15 +150,14 @@ def require_project_permission(permission: Union[Permission, str]):
         current_user: User = Depends(get_current_user),
         db: AsyncSession = Depends(get_db)
     ) -> Project:
-        proj_res = await db.execute(select(Project).filter(Project.id == project_id))
-        project = proj_res.scalars().first()
+        project = await _resolve_project(project_id, current_user, db)
         if not project:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Project initiative not found."
             )
             
-        role = await get_user_project_role(project_id, current_user, db)
+        role = await get_user_project_role(project.id, current_user, db)
         if not role:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

@@ -49,10 +49,10 @@ async def download_export(
     project = await verify_project_access(project_id, current_user, db)
     
     # Gather project data for exporter
-    gaps_res = await db.execute(select(Gap).filter(Gap.project_id == project_id))
+    gaps_res = await db.execute(select(Gap).filter(Gap.project_id == project.id))
     gaps = gaps_res.scalars().all()
     
-    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project_id))
+    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project.id))
     sol = sol_res.scalars().first()
     
     export_dir = "./exports_generated"
@@ -119,10 +119,10 @@ async def generate_export_job(
     project = await verify_project_access(req.project_id, current_user, db)
     
     # Gather project data for exporter
-    gaps_res = await db.execute(select(Gap).filter(Gap.project_id == req.project_id))
+    gaps_res = await db.execute(select(Gap).filter(Gap.project_id == project.id))
     gaps = gaps_res.scalars().all()
     
-    sol_res = await db.execute(select(Solution).filter(Solution.project_id == req.project_id))
+    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project.id))
     sol = sol_res.scalars().first()
     
     export_dir = "./exports_generated"
@@ -168,7 +168,7 @@ async def generate_export_job(
 
     export_job = ExportJob(
         id=str(uuid.uuid4()),
-        project_id=req.project_id,
+        project_id=project.id,
         export_type=fmt.upper(),
         file_path=file_path,
         file_name=filename,

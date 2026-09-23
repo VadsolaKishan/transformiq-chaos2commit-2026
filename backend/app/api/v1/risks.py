@@ -20,11 +20,11 @@ async def get_risks(
     db: AsyncSession = Depends(get_db)
 ):
     project = await verify_project_access(project_id, current_user, db)
-    r_res = await db.execute(select(Risk).filter(Risk.project_id == project_id))
+    r_res = await db.execute(select(Risk).filter(Risk.project_id == project.id))
     risks = r_res.scalars().all()
     
     if not risks:
-        return await generate_risks(project_id, current_user, db)
+        return await generate_risks(project.id, current_user, db)
         
     return ApiResponse(
         success=True,
@@ -64,14 +64,14 @@ async def generate_risks(
     result = await orchestrator.generate_risks(context_data)
     
     # Clear existing
-    old_risks = await db.execute(select(Risk).filter(Risk.project_id == project_id))
+    old_risks = await db.execute(select(Risk).filter(Risk.project_id == project.id))
     for ork in old_risks.scalars().all():
         await db.delete(ork)
         
     for rk in result["risks"]:
         db.add(Risk(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             category=rk["category"],
             title=rk["title"],
             description=rk["description"],

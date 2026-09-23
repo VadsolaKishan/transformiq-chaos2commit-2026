@@ -21,21 +21,52 @@ async def get_planning(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    rm_res = await db.execute(select(Roadmap).filter(Roadmap.project_id == project_id))
+    rm_res = await db.execute(select(Roadmap).filter(Roadmap.project_id == project.id))
     roadmap = rm_res.scalars().first()
     
-    est_res = await db.execute(select(Estimate).filter(Estimate.project_id == project_id))
+    est_res = await db.execute(select(Estimate).filter(Estimate.project_id == project.id))
     estimate = est_res.scalars().first()
     
-    if not roadmap or not estimate:
-        return ApiResponse(
-            success=True,
-            data={
-                "roadmap_phases": [],
-                "estimate": {"total_estimated_hours": 0, "total_estimated_cost": 0, "duration_months": 0},
-                "wbs_tasks": []
-            }
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+
+    # Auto-generate if not yet seeded/generated for this project
+    if not roadmap:
+        plan_data = await orchestrator.generate_planning(context_data)
+        roadmap = Roadmap(
+            id=str(uuid.uuid4()),
+            project_id=project.id,
+            name=plan_data.get("name", f"Roadmap for {project.name}"),
+            phases=plan_data.get("phases", []),
+            total_duration_weeks=plan_data.get("total_duration_weeks", 16)
         )
+        db.add(roadmap)
+        await db.commit()
+        await db.refresh(roadmap)
+
+    if not estimate:
+        est_data = await orchestrator.generate_estimates(context_data)
+        estimate = Estimate(
+            id=str(uuid.uuid4()),
+            project_id=project.id,
+            total_estimated_hours=est_data.get("total_estimated_hours", 1120),
+            total_estimated_cost=est_data.get("total_estimated_cost", 138500.0),
+            currency=est_data.get("currency", "USD"),
+            duration_months=est_data.get("duration_months", 4),
+            roles_breakdown=est_data.get("roles_breakdown", est_data.get("role_breakdown", [])),
+            infrastructure_cost=est_data.get("infrastructure_cost_monthly", est_data.get("infra_cost_monthly", 650.0)),
+            ai_api_cost_monthly=est_data.get("ai_api_cost_monthly", 420.0),
+            assumptions=est_data.get("assumptions", []),
+            confidence_level=est_data.get("confidence_level", "HIGH"),
+            disclaimer=est_data.get("disclaimer", "AI-generated preliminary estimate. Validated estimates require detailed technical discovery.")
+        )
+        db.add(estimate)
+        await db.commit()
+        await db.refresh(estimate)
         
     wbs = []
     if roadmap and roadmap.phases:
@@ -51,20 +82,33 @@ async def get_planning(
                     "status": "PLANNED"
                 })
                 
+    response_data = {
+        "roadmap": {
+            "name": roadmap.name if roadmap else f"Roadmap for {project.name}",
+            "total_duration_weeks": roadmap.total_duration_weeks if roadmap else 16,
+            "phases": roadmap.phases if roadmap else []
+        },
+        "estimate": {
+            "total_estimated_hours": estimate.total_estimated_hours if estimate else 1120,
+            "total_estimated_cost": estimate.total_estimated_cost if estimate else 138500.0,
+            "currency": getattr(estimate, "currency", "USD") or "USD",
+            "duration_months": estimate.duration_months if estimate else 4,
+            "roles_breakdown": estimate.roles_breakdown if estimate else [],
+            "infrastructure_cost_monthly": getattr(estimate, "infrastructure_cost", 650.0) or 650.0,
+            "ai_api_cost_monthly": getattr(estimate, "ai_api_cost_monthly", 420.0) or 420.0,
+            "assumptions": getattr(estimate, "assumptions", []) or [],
+            "confidence_level": getattr(estimate, "confidence_level", "HIGH") or "HIGH",
+            "disclaimer": getattr(estimate, "disclaimer", "AI-generated preliminary estimate. Validated estimates require detailed technical discovery.") or "AI-generated preliminary estimate. Validated estimates require detailed technical discovery."
+        },
+        # Legacy backwards compatibility keys
+        "roadmap_phases": roadmap.phases if roadmap else [],
+        "total_duration_weeks": roadmap.total_duration_weeks if roadmap else 16,
+        "wbs_tasks": wbs
+    }
+
     return ApiResponse(
         success=True,
-        data={
-            "roadmap_phases": roadmap.phases,
-            "total_duration_weeks": roadmap.total_duration_weeks,
-            "estimate": {
-                "total_estimated_hours": estimate.total_estimated_hours,
-                "total_estimated_cost": estimate.total_estimated_cost,
-                "duration_months": estimate.duration_months,
-                "role_breakdown": estimate.roles_breakdown,
-                "infra_cost_monthly": estimate.infrastructure_cost
-            },
-            "wbs_tasks": wbs
-        }
+        data=response_data
     )
 
 @router.post("/project/{project_id}/generate", response_model=ApiResponse)
@@ -82,58 +126,108 @@ async def generate_planning(
         "business_objective": project.business_objective
     }
     
-    result = await orchestrator.generate_planning(context_data)
+    plan_result = await orchestrator.generate_planning(context_data)
+    est_result = await orchestrator.generate_estimates(context_data)
     
-    phases = result.get("phases", result.get("roadmap_phases", []))
-    total_weeks = result.get("total_duration_weeks", 16)
-    estimate_info = result.get("estimate", result.get("estimates", {}))
+    phases = plan_result.get("phases", plan_result.get("roadmap_phases", []))
+    total_weeks = plan_result.get("total_duration_weeks", 16)
+    plan_name = plan_result.get("name", f"Roadmap for {project.name}")
     
     # Save Roadmap
-    rm_res = await db.execute(select(Roadmap).filter(Roadmap.project_id == project_id))
+    rm_res = await db.execute(select(Roadmap).filter(Roadmap.project_id == project.id))
     roadmap = rm_res.scalars().first()
     if not roadmap:
         roadmap = Roadmap(
             id=str(uuid.uuid4()),
-            project_id=project_id,
-            name=f"Roadmap for {project.name}",
+            project_id=project.id,
+            name=plan_name,
             phases=phases,
             total_duration_weeks=total_weeks
         )
         db.add(roadmap)
     else:
+        roadmap.name = plan_name
         roadmap.phases = phases
         roadmap.total_duration_weeks = total_weeks
         
     # Save Estimate
-    est_res = await db.execute(select(Estimate).filter(Estimate.project_id == project_id))
+    est_res = await db.execute(select(Estimate).filter(Estimate.project_id == project.id))
     estimate = est_res.scalars().first()
+    
+    roles = est_result.get("roles_breakdown", est_result.get("role_breakdown", []))
+    total_hours = est_result.get("total_estimated_hours", 1120)
+    total_cost = est_result.get("total_estimated_cost", 138500.0)
+    dur_months = est_result.get("duration_months", 4)
+    infra_cost = est_result.get("infrastructure_cost_monthly", est_result.get("infra_cost_monthly", 650.0))
+    ai_cost = est_result.get("ai_api_cost_monthly", 420.0)
+    assump = est_result.get("assumptions", [])
+    conf = est_result.get("confidence_level", "HIGH")
+    disc = est_result.get("disclaimer", "AI-generated preliminary estimate. Validated estimates require detailed technical discovery.")
+
     if not estimate:
         estimate = Estimate(
             id=str(uuid.uuid4()),
-            project_id=project_id,
-            total_estimated_hours=estimate_info.get("total_estimated_hours", 1200),
-            total_estimated_cost=estimate_info.get("total_estimated_cost", 145000.0),
-            duration_months=estimate_info.get("duration_months", 4),
-            roles_breakdown=estimate_info.get("role_breakdown", estimate_info.get("roles_breakdown", [])),
-            infrastructure_cost=estimate_info.get("infra_cost_monthly", estimate_info.get("infrastructure_cost", 450.0))
+            project_id=project.id,
+            total_estimated_hours=total_hours,
+            total_estimated_cost=total_cost,
+            currency=est_result.get("currency", "USD"),
+            duration_months=dur_months,
+            roles_breakdown=roles,
+            infrastructure_cost=infra_cost,
+            ai_api_cost_monthly=ai_cost,
+            assumptions=assump,
+            confidence_level=conf,
+            disclaimer=disc
         )
         db.add(estimate)
     else:
-        estimate.total_estimated_hours = estimate_info.get("total_estimated_hours", 1200)
-        estimate.total_estimated_cost = estimate_info.get("total_estimated_cost", 145000.0)
-        estimate.duration_months = estimate_info.get("duration_months", 4)
-        estimate.roles_breakdown = estimate_info.get("role_breakdown", estimate_info.get("roles_breakdown", []))
+        estimate.total_estimated_hours = total_hours
+        estimate.total_estimated_cost = total_cost
+        estimate.duration_months = dur_months
+        estimate.roles_breakdown = roles
+        estimate.infrastructure_cost = infra_cost
+        estimate.ai_api_cost_monthly = ai_cost
+        estimate.assumptions = assump
+        estimate.confidence_level = conf
+        estimate.disclaimer = disc
         
     await record_audit_log(
         db=db,
         user=current_user,
         action="GENERATE_PLANNING",
         resource_type="PLANNING_ROADMAP",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated implementation plan and roadmap",
         request=request
     )
         
     await db.commit()
-    return ApiResponse(success=True, data=result, message="Implementation roadmap and estimation generated successfully")
+
+    response_data = {
+        "roadmap": {
+            "name": roadmap.name,
+            "total_duration_weeks": roadmap.total_duration_weeks,
+            "phases": roadmap.phases
+        },
+        "estimate": {
+            "total_estimated_hours": estimate.total_estimated_hours,
+            "total_estimated_cost": estimate.total_estimated_cost,
+            "currency": getattr(estimate, "currency", "USD") or "USD",
+            "duration_months": estimate.duration_months,
+            "roles_breakdown": estimate.roles_breakdown,
+            "infrastructure_cost_monthly": getattr(estimate, "infrastructure_cost", 650.0) or 650.0,
+            "ai_api_cost_monthly": getattr(estimate, "ai_api_cost_monthly", 420.0) or 420.0,
+            "assumptions": getattr(estimate, "assumptions", []) or [],
+            "confidence_level": getattr(estimate, "confidence_level", "HIGH") or "HIGH",
+            "disclaimer": getattr(estimate, "disclaimer", "AI-generated preliminary estimate. Validated estimates require detailed technical discovery.") or "AI-generated preliminary estimate. Validated estimates require detailed technical discovery."
+        },
+        "roadmap_phases": roadmap.phases,
+        "total_duration_weeks": roadmap.total_duration_weeks
+    }
+
+    return ApiResponse(
+        success=True,
+        data=response_data,
+        message="Implementation roadmap and estimation generated successfully"
+    )

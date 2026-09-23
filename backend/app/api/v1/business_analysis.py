@@ -21,13 +21,13 @@ async def get_business_analysis(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    req_res = await db.execute(select(Requirement).filter(Requirement.project_id == project_id))
+    req_res = await db.execute(select(Requirement).filter(Requirement.project_id == project.id))
     reqs = req_res.scalars().all()
     
-    sh_res = await db.execute(select(Stakeholder).filter(Stakeholder.project_id == project_id))
+    sh_res = await db.execute(select(Stakeholder).filter(Stakeholder.project_id == project.id))
     stakeholders = sh_res.scalars().all()
     
-    bp_res = await db.execute(select(BusinessProcess).filter(BusinessProcess.project_id == project_id))
+    bp_res = await db.execute(select(BusinessProcess).filter(BusinessProcess.project_id == project.id))
     processes = bp_res.scalars().all()
     
     if not reqs and not processes:
@@ -115,14 +115,14 @@ async def generate_business_analysis(
     result = await orchestrator.generate_business_analysis(context_data)
     
     # Clear & Save Requirements
-    existing_reqs = await db.execute(select(Requirement).filter(Requirement.project_id == project_id))
+    existing_reqs = await db.execute(select(Requirement).filter(Requirement.project_id == project.id))
     for er in existing_reqs.scalars().all():
         await db.delete(er)
         
     for r in result["functional_requirements"]:
         db.add(Requirement(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             code=r["code"],
             title=r["title"],
             description=r["description"],
@@ -134,7 +134,7 @@ async def generate_business_analysis(
     for r in result["non_functional_requirements"]:
         db.add(Requirement(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             code=r["code"],
             title=r["title"],
             description=r["description"],
@@ -144,14 +144,14 @@ async def generate_business_analysis(
         ))
         
     # Clear & Save Processes
-    existing_procs = await db.execute(select(BusinessProcess).filter(BusinessProcess.project_id == project_id))
+    existing_procs = await db.execute(select(BusinessProcess).filter(BusinessProcess.project_id == project.id))
     for ep in existing_procs.scalars().all():
         await db.delete(ep)
         
     for p in result["as_is_process"]:
         db.add(BusinessProcess(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             step_number=p["step_number"],
             activity=p["activity"],
             actor=p["actor"],
@@ -162,14 +162,14 @@ async def generate_business_analysis(
         ))
         
     # Clear & Save Stakeholders
-    existing_sh = await db.execute(select(Stakeholder).filter(Stakeholder.project_id == project_id))
+    existing_sh = await db.execute(select(Stakeholder).filter(Stakeholder.project_id == project.id))
     for esh in existing_sh.scalars().all():
         await db.delete(esh)
         
     for s in result["stakeholders"]:
         db.add(Stakeholder(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             name=s["name"],
             role=s["role"],
             department=s["department"],
@@ -183,8 +183,8 @@ async def generate_business_analysis(
         user=current_user,
         action="GENERATE_BUSINESS_ANALYSIS",
         resource_type="BUSINESS_ANALYSIS",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} ({current_user.role}) executed AI business analysis for {project.name}",
         request=request
     )

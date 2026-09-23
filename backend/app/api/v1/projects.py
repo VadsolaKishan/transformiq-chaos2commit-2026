@@ -169,7 +169,7 @@ async def get_project_details(
     score_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project.id))
     score = score_res.scalars().first()
     
-    user_role = await get_user_project_role(project_id, current_user, db)
+    user_role = await get_user_project_role(project.id, current_user, db)
     
     p_dict = ProjectResponse.model_validate(project).model_dump()
     p_dict["overall_score"] = score.overall_score if score else 0
@@ -191,7 +191,7 @@ async def list_project_members(
     db: AsyncSession = Depends(get_db)
 ):
     members_res = await db.execute(
-        select(ProjectMember).filter(ProjectMember.project_id == project_id)
+        select(ProjectMember).filter(ProjectMember.project_id == project.id)
     )
     members = members_res.scalars().all()
     

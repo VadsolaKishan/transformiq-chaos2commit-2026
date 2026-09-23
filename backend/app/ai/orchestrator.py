@@ -1,7 +1,7 @@
 import logging
 from typing import Dict, Any, Optional
 from app.config.settings import settings
-from app.ai.provider import OpenAIProvider, AzureOpenAIProvider
+from app.ai.provider import GeminiProvider, OpenAIProvider, AzureOpenAIProvider
 from app.ai import smart_engine
 
 logger = logging.getLogger(__name__)
@@ -11,10 +11,21 @@ class AIOrchestrator:
         self.provider_name = settings.AI_PROVIDER
         
     def _get_provider(self):
-        if self.provider_name == "azure_openai" and settings.AZURE_OPENAI_API_KEY:
-            return AzureOpenAIProvider()
-        elif self.provider_name == "openai" and settings.OPENAI_API_KEY:
+        # 1. Check explicit provider preference
+        if settings.AI_PROVIDER == "gemini" and settings.GEMINI_API_KEY:
+            return GeminiProvider()
+        elif settings.AI_PROVIDER == "openai" and settings.OPENAI_API_KEY:
             return OpenAIProvider()
+        elif settings.AI_PROVIDER == "azure_openai" and settings.AZURE_OPENAI_API_KEY:
+            return AzureOpenAIProvider()
+
+        # 2. Auto-detection mode (prioritize Gemini for free-tier excellence)
+        if settings.GEMINI_API_KEY:
+            return GeminiProvider()
+        elif settings.OPENAI_API_KEY:
+            return OpenAIProvider()
+        elif settings.AZURE_OPENAI_API_KEY:
+            return AzureOpenAIProvider()
         return None
 
     async def run_discovery_chat(self, history: list, context_data: Dict[str, Any], language: str = "en") -> Dict[str, Any]:
@@ -85,31 +96,80 @@ class AIOrchestrator:
         provider = self._get_provider()
         if provider:
             try:
-                system_prompt = f"You are the TransformIQ AI Transformation Companion. Language: {language}. Provide executive AI and architecture guidance based on project context: {project_context}"
-                return await provider.generate_chat(
+                system_prompt = (
+                    f"You are the TransformIQ Enterprise AI Transformation Companion. "
+                    f"You are an expert Chief Digital Transformation Officer and Enterprise Solutions Architect. "
+                    f"Language: {language}. "
+                    f"Always answer directly, professionally, and dynamically based on the project context provided.\n\n"
+                    f"Project Context:\n{project_context}\n\n"
+                    f"Guidelines:\n"
+                    f"- Provide actionable, technically grounded advice (mention specific tech stacks, microservices, databases, API designs, or ROI figures when relevant).\n"
+                    f"- Structure your answer with clear markdown bullet points and sections.\n"
+                    f"- Suggest logical next steps in the TransformIQ transformation workflow."
+                )
+                reply = await provider.generate_chat(
                     [{"role": "system", "content": system_prompt}, {"role": "user", "content": message}],
                     {"context": project_context}
                 )
+                if reply and reply.strip():
+                    return reply.strip()
             except Exception as e:
-                logger.warning(f"Provider chat failed: {e}")
+                logger.warning(f"AI Provider ({type(provider).__name__}) call failed: {e}")
 
-        # Smart contextual response
+        # Smart contextual response based on user query and project context
         msg_lower = message.lower()
-        if "return" in msg_lower or "support" in msg_lower or "complaint" in msg_lower or "bottleneck" in msg_lower:
+        proj_title = project_context.splitlines()[0] if project_context else "Enterprise Initiative"
+        
+        if any(w in msg_lower for w in ["architecture", "tech stack", "hld", "lld", "cloud", "aws", "azure", "fastapi", "microservice"]):
             return (
-                "Based on the indexed business problem and enterprise artifacts, here is the AI Transformation strategy:\n\n"
-                "1. **Core Problem Analysis**: Manual triage and multi-tier routing introduce a 4.2-day cycle time bottleneck.\n"
-                "2. **AI Solution Architecture**: Implement a real-time NLP Intent Engine + Retrieval-Augmented Generation (RAG) agent for tier-1 autonomous resolution.\n"
-                "3. **Process Optimization**: Introduce an automated decision split: standard refunds (<$500) execute automatically via REST API; high-risk anomalies route to Tier-2 human investigation.\n"
-                "4. **Expected Impact**: 87.5% reduction in cycle time (from 4.2 days to ~18 minutes) and 65% operational cost savings.\n\n"
-                "Would you like to proceed with generating the full Business Analysis and BPMN process workflow?"
+                f"**Enterprise Architecture Recommendation for {proj_title}**:\n\n"
+                f"• **Gateway & Ingestion Layer**: Asynchronous FastAPI microservices behind an API Gateway with OAuth2 JWT tenant isolation.\n"
+                f"• **Cognitive AI Pipeline**: Hybrid RAG pipeline combining vector embeddings (pgvector / Chroma) with semantic re-ranking for enterprise grounding.\n"
+                f"• **Data & State Management**: PostgreSQL 16 for relational 3NF operational data, with Redis for sub-millisecond session caching and message queues.\n"
+                f"• **Reliability & Scalability**: Containerized deployment with horizontal pod autoscaling (HPA) targeting 99.95% uptime.\n\n"
+                f"You can explore the interactive diagram in the **Architecture** stage to inspect and customize each component."
+            )
+        elif any(w in msg_lower for w in ["gap", "bottleneck", "challenge", "problem", "friction"]):
+            return (
+                f"**Identified Operational Bottlenecks & Strategic Gaps**:\n\n"
+                f"1. **Triage & Routing Latency**: Manual categorization creates a multi-day cycle time bottleneck before tickets reach the correct department.\n"
+                f"2. **Data Silos**: Disconnected legacy systems prevent real-time status synchronization between customer portals and ERP databases.\n"
+                f"3. **Absence of Straight-Through Processing (STP)**: 100% of cases currently require manual employee touchpoints.\n\n"
+                f"**Strategic Remediation**: Automate standard tier-1 classification with >85% confidence threshold, routing only high-risk exceptions to human specialists. Check the **Gap Analysis** stage for the complete 8-dimension matrix."
+            )
+        elif any(w in msg_lower for w in ["cost", "budget", "price", "estimate", "hour", "timeline", "week", "month"]):
+            return (
+                f"**Preliminary Transformation Roadmap & Cost Estimation**:\n\n"
+                f"• **Delivery Timeline**: 16 Weeks across 4 Agile Sprints (Discovery, Core Engineering, Frontend & Review Hub, Production Hardening).\n"
+                f"• **Total Engineering Effort**: ~1,120 hours with a dedicated cross-functional team of 6 engineers.\n"
+                f"• **Estimated Investment**: ~$138,500 including engineering labor, cloud infrastructure, and AI inference capacity.\n"
+                f"• **Projected ROI**: 87% operational efficiency gain with estimated breakeven in 6.4 months post go-live.\n\n"
+                f"Review the full breakdown in the **Planning & Estimation** tab."
+            )
+        elif any(w in msg_lower for w in ["api", "endpoint", "rest", "integration"]):
+            return (
+                f"**API Strategy & Integration Catalog**:\n\n"
+                f"• **Enterprise Gateway**: RESTful OpenAPI 3.0 compliant endpoints with zero-trust token authentication.\n"
+                f"• **Key Integration Contracts**: Webhooks for real-time ticket ingestion, bidirectional CRM sync, and automated resolution dispatch.\n"
+                f"• **Telemetry & Governance**: Rate-limited at 1,200 req/min with immutable audit logging on all mutating endpoints.\n\n"
+                f"Check the **APIs** stage to inspect schemas, headers, and mock response payloads."
+            )
+        elif any(w in msg_lower for w in ["return", "support", "complaint", "customer"]):
+            return (
+                f"**Customer Experience & Resolution Strategy**:\n\n"
+                f"1. **Real-Time Sentiment & Intent Parsing**: Immediate automated triage upon email/ticket ingestion within <3 seconds.\n"
+                f"2. **Automated Tier-1 Resolution**: Direct integration with order management systems to automate standard status lookups and low-risk returns.\n"
+                f"3. **Specialist Escalation**: Seamless handoff with pre-generated AI resolution draft for human-in-the-loop sign-off.\n\n"
+                f"Would you like to review the AS-IS versus TO-BE workflow in the **Process Workflow** stage?"
             )
         else:
             return (
-                f"I have reviewed the transformation context for this initiative. "
-                f"Key opportunities include automating data pipelines, reducing operational latency with asynchronous message queues, "
-                f"and deploying zero-trust security postures with column-level encryption. "
-                f"Proceed to the Business Analysis and Gap Analysis stages to map the complete transformation blueprint."
+                f"I have reviewed your query: *\"{message}\"*\n\n"
+                f"Based on the transformation blueprint for **{proj_title}**:\n\n"
+                f"• **Process Modernization**: Current workflows can be elevated from high manual overhead to event-driven straight-through processing.\n"
+                f"• **Target Metric**: Target >75% STP rate with automated NLP classification and contextual RAG knowledge grounding.\n"
+                f"• **Next Best Action**: Explore the **Business Analysis**, **Gap Analysis**, and **Architecture** stages to validate requirements and approve the master transformation blueprint.\n\n"
+                f"Feel free to ask for specific architecture recommendations, risk assessments, or timeline estimates!"
             )
 
     async def generate_business_analysis(self, context_data: Dict[str, Any]) -> Dict[str, Any]:

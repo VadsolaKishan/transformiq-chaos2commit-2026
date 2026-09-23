@@ -89,10 +89,14 @@ export const AppLayout: React.FC = () => {
         const res: any = await api.get('/projects');
         if (res.success && res.data) {
           setProjects(res.data);
-          if (params.id) {
-            setSelectedProjectId(params.id);
-          } else if (res.data.length > 0 && !selectedProjectId) {
+          const hasValidParam = params.id && params.id !== 'default' && res.data.some((p: Project) => p.id === params.id);
+          if (hasValidParam) {
+            setSelectedProjectId(params.id!);
+          } else if (res.data.length > 0) {
             setSelectedProjectId(res.data[0].id);
+            if (params.id === 'default' && location.pathname.includes('/projects/default')) {
+              navigate(location.pathname.replace('/projects/default', `/projects/${res.data[0].id}`), { replace: true });
+            }
           }
         }
       } catch (e) {
@@ -100,7 +104,14 @@ export const AppLayout: React.FC = () => {
       }
     };
     fetchProjects();
-  }, [params.id, location.pathname]);
+  }, [params.id, location.pathname, navigate]);
+
+  // Auto-redirect if on /projects/default/* once projects are loaded
+  useEffect(() => {
+    if (projects.length > 0 && params.id === 'default' && location.pathname.includes('/projects/default')) {
+      navigate(location.pathname.replace('/projects/default', `/projects/${projects[0].id}`), { replace: true });
+    }
+  }, [projects, params.id, location.pathname, navigate]);
 
   // Fetch notifications
   useEffect(() => {
@@ -152,7 +163,7 @@ export const AppLayout: React.FC = () => {
   }
 
   const activeProject = projects.find(p => p.id === selectedProjectId) || projects[0];
-  const activeProjectId = activeProject?.id || 'default';
+  const activeProjectId = activeProject?.id || '';
 
   const roleDef = ROLE_DEFINITIONS[role] || ROLE_DEFINITIONS.VIEWER;
   const actualRoleDef = ROLE_DEFINITIONS[actualRole] || ROLE_DEFINITIONS.ADMIN;

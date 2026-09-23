@@ -21,10 +21,10 @@ async def get_architecture(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    comp_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project_id))
+    comp_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project.id))
     comps = comp_res.scalars().all()
     
-    conn_res = await db.execute(select(ArchitectureConnection).filter(ArchitectureConnection.project_id == project_id))
+    conn_res = await db.execute(select(ArchitectureConnection).filter(ArchitectureConnection.project_id == project.id))
     conns = conn_res.scalars().all()
     
     if not comps:
@@ -97,11 +97,11 @@ async def generate_architecture(
     result = await orchestrator.generate_architecture(context_data)
     
     # Clear existing
-    old_comps = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project_id))
+    old_comps = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project.id))
     for oc in old_comps.scalars().all():
         await db.delete(oc)
         
-    old_conns = await db.execute(select(ArchitectureConnection).filter(ArchitectureConnection.project_id == project_id))
+    old_conns = await db.execute(select(ArchitectureConnection).filter(ArchitectureConnection.project_id == project.id))
     for ocn in old_conns.scalars().all():
         await db.delete(ocn)
         
@@ -111,7 +111,7 @@ async def generate_architecture(
         comp_id_map[c["id"]] = new_id
         db.add(ArchitectureComponent(
             id=new_id,
-            project_id=project_id,
+            project_id=project.id,
             name=c["name"],
             layer=c["layer"],
             tech_stack=c["tech_stack"],
@@ -126,7 +126,7 @@ async def generate_architecture(
         tgt_id = comp_id_map.get(cn["target"], cn["target"])
         db.add(ArchitectureConnection(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             source_component_id=src_id,
             target_component_id=tgt_id,
             protocol=cn.get("protocol", "HTTPS/REST"),
@@ -139,8 +139,8 @@ async def generate_architecture(
         user=current_user,
         action="GENERATE_ARCHITECTURE",
         resource_type="ARCHITECTURE",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} ({current_user.role}) generated solution architecture with {len(result['components'])} components",
         request=request
     )
@@ -161,7 +161,7 @@ async def save_architecture_layout(
         node_id = n.get("id")
         pos = n.get("position", {})
         if node_id and pos:
-            comp_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.id == node_id, ArchitectureComponent.project_id == project_id))
+            comp_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.id == node_id, ArchitectureComponent.project_id == project.id))
             comp = comp_res.scalars().first()
             if comp:
                 comp.position_x = float(pos.get("x", comp.position_x))
@@ -172,8 +172,8 @@ async def save_architecture_layout(
         user=current_user,
         action="UPDATE_ARCHITECTURE_LAYOUT",
         resource_type="ARCHITECTURE_LAYOUT",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} updated React Flow layout positions for {len(nodes)} components",
         request=request
     )

@@ -21,7 +21,7 @@ async def get_database_design(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    ent_res = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project_id))
+    ent_res = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project.id))
     ents = ent_res.scalars().all()
     
     if not ents:
@@ -67,14 +67,14 @@ async def generate_database_design(
     result = await orchestrator.generate_database_design(context_data)
     
     # Clear existing
-    old_ents = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project_id))
+    old_ents = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project.id))
     for oe in old_ents.scalars().all():
         await db.delete(oe)
         
     for e in result["entities"]:
         db.add(DatabaseEntity(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             name=e["name"],
             description=e["description"],
             fields=e["fields"],
@@ -86,8 +86,8 @@ async def generate_database_design(
         user=current_user,
         action="GENERATE_DATABASE_DESIGN",
         resource_type="DATABASE_DESIGN",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated relational PostgreSQL schema with {len(result['entities'])} entities",
         request=request
     )

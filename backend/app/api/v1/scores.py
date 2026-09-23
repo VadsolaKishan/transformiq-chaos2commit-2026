@@ -20,11 +20,11 @@ async def get_score(
     db: AsyncSession = Depends(get_db)
 ):
     project = await verify_project_access(project_id, current_user, db)
-    s_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project_id))
+    s_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project.id))
     score = s_res.scalars().first()
     
     if not score:
-        return await calculate_score(project_id, current_user, db)
+        return await calculate_score(project.id, current_user, db)
         
     return ApiResponse(
         success=True,
@@ -61,12 +61,12 @@ async def calculate_score(
     result = await orchestrator.generate_score(context_data)
     
     # Save score
-    s_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project_id))
+    s_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project.id))
     score = s_res.scalars().first()
     if not score:
         score = TransformationScore(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             overall_score=result["overall_score"],
             ai_readiness=result["ai_readiness"],
             automation_potential=result["automation_potential"],

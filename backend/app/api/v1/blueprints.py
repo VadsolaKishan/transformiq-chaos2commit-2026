@@ -25,43 +25,43 @@ async def get_master_blueprint(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    score_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project_id))
+    score_res = await db.execute(select(TransformationScore).filter(TransformationScore.project_id == project.id))
     score = score_res.scalars().first()
     
-    gaps_res = await db.execute(select(Gap).filter(Gap.project_id == project_id))
+    gaps_res = await db.execute(select(Gap).filter(Gap.project_id == project.id))
     gaps = gaps_res.scalars().all()
     
-    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project_id))
+    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project.id))
     sol = sol_res.scalars().first()
     
-    recs_res = await db.execute(select(Recommendation).filter(Recommendation.project_id == project_id))
+    recs_res = await db.execute(select(Recommendation).filter(Recommendation.project_id == project.id))
     recs = recs_res.scalars().all()
     
-    comps_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project_id))
+    comps_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project.id))
     comps = comps_res.scalars().all()
     
-    nodes_res = await db.execute(select(WorkflowNode).filter(WorkflowNode.project_id == project_id))
+    nodes_res = await db.execute(select(WorkflowNode).filter(WorkflowNode.project_id == project.id))
     nodes = nodes_res.scalars().all()
     
-    ents_res = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project_id))
+    ents_res = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project.id))
     ents = ents_res.scalars().all()
     
-    apis_res = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project_id))
+    apis_res = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project.id))
     apis = apis_res.scalars().all()
     
-    wfs_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project_id))
+    wfs_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project.id))
     wfs = wfs_res.scalars().all()
     
-    rm_res = await db.execute(select(Roadmap).filter(Roadmap.project_id == project_id))
+    rm_res = await db.execute(select(Roadmap).filter(Roadmap.project_id == project.id))
     roadmap = rm_res.scalars().first()
     
-    est_res = await db.execute(select(Estimate).filter(Estimate.project_id == project_id))
+    est_res = await db.execute(select(Estimate).filter(Estimate.project_id == project.id))
     estimate = est_res.scalars().first()
     
-    risks_res = await db.execute(select(Risk).filter(Risk.project_id == project_id))
+    risks_res = await db.execute(select(Risk).filter(Risk.project_id == project.id))
     risks = risks_res.scalars().all()
     
-    app_res = await db.execute(select(Approval).filter(Approval.project_id == project_id, Approval.artifact_type == "BLUEPRINT"))
+    app_res = await db.execute(select(Approval).filter(Approval.project_id == project.id, Approval.artifact_type == "BLUEPRINT"))
     approval = app_res.scalars().first()
     
     blueprint_payload = {
@@ -161,13 +161,13 @@ async def approve_blueprint(
 ):
     new_status = "APPROVED" if action.upper() == "APPROVE" else "REJECTED"
     
-    app_res = await db.execute(select(Approval).filter(Approval.project_id == project_id, Approval.artifact_type == "BLUEPRINT"))
+    app_res = await db.execute(select(Approval).filter(Approval.project_id == project.id, Approval.artifact_type == "BLUEPRINT"))
     approval = app_res.scalars().first()
     
     if not approval:
         approval = Approval(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             artifact_type="BLUEPRINT",
             status=new_status,
             requested_by=current_user.full_name,

@@ -21,7 +21,7 @@ async def get_ux_design(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    wf_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project_id))
+    wf_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project.id))
     wfs = wf_res.scalars().all()
     
     if not wfs:
@@ -35,7 +35,7 @@ async def get_ux_design(
         for w in gen_data.get("wireframes", []):
             wf_obj = Wireframe(
                 id=str(uuid.uuid4()),
-                project_id=project_id,
+                project_id=project.id,
                 screen_name=w.get("screen_name", "Screen"),
                 purpose=w.get("purpose", "User interface screen"),
                 target_users=w.get("target_users", []),
@@ -46,7 +46,7 @@ async def get_ux_design(
             )
             db.add(wf_obj)
         await db.commit()
-        wf_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project_id))
+        wf_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project.id))
         wfs = wf_res.scalars().all()
         
     return ApiResponse(
@@ -105,14 +105,14 @@ async def generate_ux_design(
     result = await orchestrator.generate_ux_design(context_data)
     
     # Clear existing
-    old_wfs = await db.execute(select(Wireframe).filter(Wireframe.project_id == project_id))
+    old_wfs = await db.execute(select(Wireframe).filter(Wireframe.project_id == project.id))
     for ow in old_wfs.scalars().all():
         await db.delete(ow)
         
     for w in result.get("wireframes", []):
         db.add(Wireframe(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             screen_name=w.get("screen_name", "Screen"),
             purpose=w.get("purpose", "User interface screen"),
             target_users=w.get("target_users", []),
@@ -127,8 +127,8 @@ async def generate_ux_design(
         user=current_user,
         action="GENERATE_UX_DESIGN",
         resource_type="UX_WIREFRAMES",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated {len(result['wireframes'])} interactive UI wireframes",
         request=request
     )

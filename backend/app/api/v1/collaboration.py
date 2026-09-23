@@ -25,8 +25,8 @@ async def list_comments(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(project_id, current_user, db)
-    res = await db.execute(select(Comment).filter(Comment.project_id == project_id).order_by(Comment.created_at.desc()))
+    project = await verify_project_access(project_id, current_user, db)
+    res = await db.execute(select(Comment).filter(Comment.project_id == project.id).order_by(Comment.created_at.desc()))
     comments = res.scalars().all()
     
     data = []
@@ -52,27 +52,30 @@ async def create_comment(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(project_id, current_user, db)
+    project = await verify_project_access(project_id, current_user, db)
     
+    now = datetime.utcnow()
     comment = Comment(
         id=str(uuid.uuid4()),
-        project_id=project_id,
+        project_id=project.id,
         author_id=current_user.id,
         section=req.section,
         content=req.content,
         mentions=req.mentions,
-        resolved=False
+        resolved=False,
+        created_at=now
     )
     db.add(comment)
     
     # Audit log
     db.add(AuditLog(
         id=str(uuid.uuid4()),
-        project_id=project_id,
+        project_id=project.id,
         user_id=current_user.id,
         user_name=current_user.full_name,
         action="POSTED_COMMENT",
-        details=f"Commented on {req.section}: {req.content[:60]}..."
+        details=f"Commented on {req.section}: {req.content[:60]}...",
+        created_at=now
     ))
     
     await db.commit()
@@ -80,10 +83,13 @@ async def create_comment(
         success=True,
         data={
             "id": comment.id,
+            "author_id": current_user.id,
             "author_name": current_user.full_name,
             "section": comment.section,
             "content": comment.content,
-            "created_at": comment.created_at
+            "mentions": comment.mentions,
+            "resolved": comment.resolved,
+            "created_at": now.isoformat()
         },
         message="Comment posted successfully"
     )
@@ -94,8 +100,8 @@ async def list_approvals(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(project_id, current_user, db)
-    res = await db.execute(select(Approval).filter(Approval.project_id == project_id).order_by(Approval.created_at.desc()))
+    project = await verify_project_access(project_id, current_user, db)
+    res = await db.execute(select(Approval).filter(Approval.project_id == project.id).order_by(Approval.created_at.desc()))
     approvals = res.scalars().all()
     return ApiResponse(
         success=True,
@@ -123,11 +129,11 @@ async def create_or_update_approval(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(req.project_id, current_user, db)
+    project = await verify_project_access(req.project_id, current_user, db)
     
     appr = Approval(
         id=str(uuid.uuid4()),
-        project_id=req.project_id,
+        project_id=project.id,
         artifact_type=req.artifact_type,
         status=req.decision,
         requested_by=current_user.full_name or current_user.email,
@@ -140,7 +146,7 @@ async def create_or_update_approval(
     # Audit log
     db.add(AuditLog(
         id=str(uuid.uuid4()),
-        project_id=req.project_id,
+        project_id=project.id,
         user_id=current_user.id,
         user_name=current_user.full_name,
         action=f"APPROVAL_{req.decision}",
@@ -167,8 +173,8 @@ async def list_versions(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(project_id, current_user, db)
-    res = await db.execute(select(Version).filter(Version.project_id == project_id).order_by(Version.version_number.desc()))
+    project = await verify_project_access(project_id, current_user, db)
+    res = await db.execute(select(Version).filter(Version.project_id == project.id).order_by(Version.version_number.desc()))
     versions = res.scalars().all()
     
     return ApiResponse(
@@ -189,8 +195,8 @@ async def list_audit_logs(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    await verify_project_access(project_id, current_user, db)
-    res = await db.execute(select(AuditLog).filter(AuditLog.project_id == project_id).order_by(AuditLog.created_at.desc()).limit(25))
+    project = await verify_project_access(project_id, current_user, db)
+    res = await db.execute(select(AuditLog).filter(AuditLog.project_id == project.id).order_by(AuditLog.created_at.desc()).limit(25))
     logs = res.scalars().all()
     
     return ApiResponse(

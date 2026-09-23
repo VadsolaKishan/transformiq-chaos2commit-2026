@@ -21,10 +21,10 @@ async def get_recommendations(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    rec_res = await db.execute(select(Recommendation).filter(Recommendation.project_id == project_id))
+    rec_res = await db.execute(select(Recommendation).filter(Recommendation.project_id == project.id))
     recs = rec_res.scalars().all()
     
-    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project_id))
+    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project.id))
     sol = sol_res.scalars().first()
     
     if not recs or not sol:
@@ -85,12 +85,12 @@ async def generate_recommendations(
     result = await orchestrator.generate_recommendations(context_data)
     
     # Save solution
-    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project_id))
+    sol_res = await db.execute(select(Solution).filter(Solution.project_id == project.id))
     sol = sol_res.scalars().first()
     if not sol:
         sol = Solution(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             name=result["recommended_solution_name"],
             tagline=result["tagline"],
             executive_summary=result["executive_summary"],
@@ -108,14 +108,14 @@ async def generate_recommendations(
         sol.expected_roi = result["expected_roi"]
         
     # Clear & Save recommendations
-    existing_recs = await db.execute(select(Recommendation).filter(Recommendation.project_id == project_id))
+    existing_recs = await db.execute(select(Recommendation).filter(Recommendation.project_id == project.id))
     for er in existing_recs.scalars().all():
         await db.delete(er)
         
     for r in result["recommendations"]:
         db.add(Recommendation(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             category=r["category"],
             title=r["title"],
             description=r["description"],
@@ -134,8 +134,8 @@ async def generate_recommendations(
         user=current_user,
         action="GENERATE_RECOMMENDATIONS",
         resource_type="RECOMMENDATION_SET",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated AI recommendations suite for {project.name}",
         request=request
     )

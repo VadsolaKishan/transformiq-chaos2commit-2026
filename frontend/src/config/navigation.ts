@@ -546,7 +546,7 @@ export const ROLE_SIDEBAR_CONFIG: Record<string, string[]> = {
  */
 export function getSidebarItemsForRole(
   role: string,
-  projectId: string = 'default'
+  projectId: string = ''
 ): SidebarItemConfig[] {
   const roleKey = role?.toUpperCase() || 'VIEWER';
   const itemKeys = ROLE_SIDEBAR_CONFIG[roleKey] || ROLE_SIDEBAR_CONFIG.VIEWER;
@@ -557,7 +557,9 @@ export function getSidebarItemsForRole(
     .filter(item => hasPermission(roleKey, item.requiredPermission))
     .map(item => ({
       ...item,
-      route: item.route.replace(':projectId', projectId)
+      route: projectId && projectId !== 'default'
+        ? item.route.replace(':projectId', projectId)
+        : (item.route.includes(':projectId') ? '/projects' : item.route)
     }));
 }
 

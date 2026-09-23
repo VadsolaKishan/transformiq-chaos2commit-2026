@@ -91,26 +91,8 @@ class Permission(str, Enum):
 
 # Strict Page/Module Access Matrix as defined in Section 10 of Hackathon Specification
 ROLE_PERMISSIONS: Dict[str, Set[str]] = {
-    # 1. ADMIN
-    "ADMIN": {
-        Permission.ADMIN_ACCESS.value,
-        Permission.ORGANIZATION_MANAGE.value,
-        Permission.WORKSPACE_MANAGE.value,
-        Permission.USER_MANAGE.value,
-        Permission.AUDIT_VIEW.value,
-        Permission.PROJECT_VIEW.value,
-        Permission.PROJECT_MANAGE.value,
-        Permission.TEAM_MANAGE.value,
-        Permission.DOCUMENT_VIEW.value,
-        Permission.DOCUMENT_UPLOAD.value,
-        Permission.DOCUMENT_DELETE.value,
-        Permission.BLUEPRINT_VIEW.value,
-        Permission.BLUEPRINT_GENERATE.value,
-        Permission.BLUEPRINT_EDIT.value,
-        Permission.BLUEPRINT_APPROVE.value,
-        Permission.VERSION_VIEW.value,
-        Permission.EXPORT_CREATE.value,
-    },
+    # 1. ADMIN (Platform Superuser with full system & project access)
+    "ADMIN": {p.value for p in Permission},
     
     # 2. PROJECT_OWNER
     "PROJECT_OWNER": {
@@ -209,7 +191,6 @@ ROLE_PERMISSIONS: Dict[str, Set[str]] = {
         Permission.SCORE_CALCULATE.value,
         Permission.SIMULATION_RUN.value,
         Permission.BLUEPRINT_VIEW.value,    # Read-only
-        Permission.BLUEPRINT_APPROVE.value,
         Permission.EXPORT_CREATE.value,
         Permission.COMMENT_CREATE.value,
         Permission.VERSION_VIEW.value,

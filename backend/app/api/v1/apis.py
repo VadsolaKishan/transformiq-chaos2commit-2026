@@ -21,7 +21,7 @@ async def get_api_catalog(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    api_res = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project_id))
+    api_res = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project.id))
     apis = api_res.scalars().all()
     
     if not apis:
@@ -72,14 +72,14 @@ async def generate_api_catalog(
     result = await orchestrator.generate_api_design(context_data)
     
     # Clear existing
-    old_apis = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project_id))
+    old_apis = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project.id))
     for oa in old_apis.scalars().all():
         await db.delete(oa)
         
     for a in result["endpoints"]:
         db.add(ApiEndpoint(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             path=a["path"],
             method=a["method"],
             summary=a["summary"],
@@ -94,8 +94,8 @@ async def generate_api_catalog(
         user=current_user,
         action="GENERATE_API_CATALOG",
         resource_type="API_CATALOG",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated OpenAPI specifications with {len(result['endpoints'])} endpoints",
         request=request
     )

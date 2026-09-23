@@ -28,7 +28,7 @@ async def list_project_documents(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    result = await db.execute(select(Document).filter(Document.project_id == project_id).order_by(Document.created_at.desc()))
+    result = await db.execute(select(Document).filter(Document.project_id == project.id).order_by(Document.created_at.desc()))
     docs = result.scalars().all()
     
     data = []

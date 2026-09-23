@@ -21,7 +21,7 @@ async def get_gaps(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    gap_res = await db.execute(select(Gap).filter(Gap.project_id == project_id))
+    gap_res = await db.execute(select(Gap).filter(Gap.project_id == project.id))
     gaps = gap_res.scalars().all()
     
     if not gaps:
@@ -79,14 +79,14 @@ async def generate_gaps(
     result = await orchestrator.generate_gap_analysis(context_data)
     
     # Clear & Save Gaps
-    existing_gaps = await db.execute(select(Gap).filter(Gap.project_id == project_id))
+    existing_gaps = await db.execute(select(Gap).filter(Gap.project_id == project.id))
     for eg in existing_gaps.scalars().all():
         await db.delete(eg)
         
     for g in result["gaps"]:
         db.add(Gap(
             id=str(uuid.uuid4()),
-            project_id=project_id,
+            project_id=project.id,
             category=g["category"],
             title=g["title"],
             current_state=g["current_state"],
@@ -102,8 +102,8 @@ async def generate_gaps(
         user=current_user,
         action="GENERATE_GAP_ANALYSIS",
         resource_type="GAP_ANALYSIS",
-        resource_id=project_id,
-        project_id=project_id,
+        resource_id=project.id,
+        project_id=project.id,
         details=f"{current_user.full_name} generated 8-dimension gap matrix with {len(result['gaps'])} gaps",
         request=request
     )

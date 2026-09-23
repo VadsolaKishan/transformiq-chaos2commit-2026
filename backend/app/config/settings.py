@@ -25,9 +25,15 @@ class Settings(BaseSettings):
             self.SECRET_KEY = self.JWT_SECRET
     
     # AI Provider settings
-    AI_PROVIDER: str = "deterministic_smart"  # options: deterministic_smart, openai, azure_openai
+    AI_PROVIDER: str = "auto"  # options: auto, gemini, openai, azure_openai, deterministic_smart
+    
+    # Google Gemini (Free tier with generous quota at https://aistudio.google.com)
+    GEMINI_API_KEY: Optional[str] = None
+    GEMINI_MODEL: str = "gemini-3.6-flash"  # or gemini-3.5-flash-lite, gemini-3.5-flash
+    
+    # OpenAI Configuration (Optional)
     OPENAI_API_KEY: Optional[str] = None
-    OPENAI_MODEL: str = "gpt-4o"
+    OPENAI_MODEL: str = "gpt-4o-mini"
     OPENAI_API_BASE: Optional[str] = None
     
     AZURE_OPENAI_ENDPOINT: Optional[str] = None
