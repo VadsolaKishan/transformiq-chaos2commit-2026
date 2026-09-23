@@ -37,6 +37,7 @@ import {
 } from '../../config/navigation';
 import { VALID_ROLES } from '../../utils/permissions';
 import { TransformIQLogo } from '../common/TransformIQLogo';
+import { CreditBalanceBadge } from '../common/CreditBalanceBadge';
 
 
 export const AppLayout: React.FC = () => {
@@ -375,6 +376,9 @@ export const AppLayout: React.FC = () => {
             </Link>
 
           ) : null}
+
+          {/* AI Credits & Pricing Engine */}
+          <CreditBalanceBadge />
 
           {/* Multilingual Selector */}
           <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs">

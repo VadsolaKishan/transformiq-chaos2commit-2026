@@ -26,6 +26,7 @@ import api from '../services/api';
 import { MasterBlueprintData } from '../types';
 import { LoadingScreen } from '../components/common/LoadingScreen';
 import { ApprovalBar } from '../components/common/ApprovalBar';
+import { LiveDeploymentHub } from '../components/blueprint/LiveDeploymentHub';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export const BlueprintPage: React.FC = () => {
@@ -332,6 +333,15 @@ export const BlueprintPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* SECTION 6: ONE-CLICK CLOUD DEPLOYMENT & LIVE SYSTEM SANDBOX */}
+      {projectId && (
+        <LiveDeploymentHub
+          projectId={projectId}
+          data={data}
+          onRegenerateRequest={fetchBlueprint}
+        />
+      )}
     </div>
   );
 };

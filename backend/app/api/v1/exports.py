@@ -15,6 +15,8 @@ from app.models.transformation import Gap, Solution, Requirement
 from app.models.planning import TransformationScore, Estimate
 from app.models.collaboration import ExportJob
 from app.schemas.project import ApiResponse
+import io
+import zipfile
 from app.exports.generator import (
     generate_pdf_blueprint,
     generate_docx_blueprint,
@@ -188,4 +190,216 @@ async def generate_export_job(
             "status": "COMPLETED"
         },
         message=f"{fmt.upper()} export generated successfully"
+    )
+
+@router.get("/project/{project_id}/download-bundle")
+async def download_deployment_bundle(
+    project_id: str,
+    token: Optional[str] = Query(None),
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
+    db: AsyncSession = Depends(get_db)
+):
+    """Generates a complete, ready-to-deploy Production DevOps bundle (.zip) including Dockerfile, docker-compose, render.yaml, vercel.json, and k8s specs."""
+    jwt_token = token or (credentials.credentials if credentials else None)
+    if not jwt_token:
+        raise HTTPException(status_code=401, detail="Authentication token required.")
+        
+    payload = decode_access_token(jwt_token)
+    if not payload or not payload.get("sub"):
+        raise HTTPException(status_code=401, detail="Invalid access token.")
+        
+    user_id = payload.get("sub")
+    user_res = await db.execute(select(User).filter(User.id == user_id))
+    current_user = user_res.scalars().first()
+    if not current_user:
+        raise HTTPException(status_code=401, detail="User not found.")
+
+    project = await verify_project_access(project_id, current_user, db)
+    safe_name = "".join(c if c.isalnum() or c in "-_" else "_" for c in project.name).lower()
+
+    # Generate bundle files
+    dockerfile_content = f"""# Multi-stage Production Dockerfile for {project.name}
+FROM python:3.10-slim AS backend-builder
+WORKDIR /app
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+FROM python:3.10-slim
+WORKDIR /app
+COPY --from=backend-builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=backend-builder /usr/local/bin /usr/local/bin
+COPY backend/ ./backend
+COPY --from=frontend-builder /app/dist ./frontend/dist
+
+ENV ENVIRONMENT=production
+ENV PORT=8000
+EXPOSE 8000
+
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+"""
+
+    docker_compose_content = f"""version: '3.8'
+
+services:
+  {safe_name}-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: {safe_name}-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgrespassword@{safe_name}-db:5432/{safe_name}_db
+      - JWT_SECRET=transformiq-prod-jwt-secret-key-replace-in-production
+      - AI_PROVIDER=auto
+      - GEMINI_MODEL=gemini-3.6-flash
+    depends_on:
+      - {safe_name}-db
+    restart: unless-stopped
+
+  {safe_name}-db:
+    image: postgres:15-alpine
+    container_name: {safe_name}-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB={safe_name}_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+"""
+
+    render_yaml_content = f"""services:
+  - type: web
+    name: {safe_name}-backend
+    env: python
+    rootDir: backend
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.11
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: AI_PROVIDER
+        value: auto
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+"""
+
+    vercel_json_content = """{
+  "version": 2,
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+"""
+
+    k8s_content = f"""apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {safe_name}-app
+  labels:
+    app: {safe_name}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {safe_name}
+  template:
+    metadata:
+      labels:
+        app: {safe_name}
+    spec:
+      containers:
+      - name: app
+        image: {safe_name}:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {safe_name}-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {safe_name}
+  ports:
+  - port: 80
+    targetPort: 8000
+"""
+
+    readme_content = f"""# {project.name} — Live Production Deployment Guide
+
+Generated by TransformIQ Enterprise Engine.
+
+## 1. Quick Deploy to Render
+1. Go to https://dashboard.render.com/blueprints
+2. Connect your repository
+3. Render automatically picks up `render.yaml` and deploys your backend.
+
+## 2. Quick Deploy to Vercel
+1. Run `cd frontend && npx vercel`
+2. Follow prompts to deploy your high-performance frontend.
+
+## 3. Self-Hosted Docker Compose
+```bash
+docker-compose up -d --build
+```
+Your backend will be live on http://localhost:8000 and connected to PostgreSQL.
+"""
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        zip_file.writestr("Dockerfile", dockerfile_content)
+        zip_file.writestr("docker-compose.yml", docker_compose_content)
+        zip_file.writestr("render.yaml", render_yaml_content)
+        zip_file.writestr("vercel.json", vercel_json_content)
+        zip_file.writestr("k8s-deployment.yaml", k8s_content)
+        zip_file.writestr("README_DEPLOY.md", readme_content)
+
+    zip_buffer.seek(0)
+    export_dir = "./exports_generated"
+    os.makedirs(export_dir, exist_ok=True)
+    bundle_filename = f"{safe_name}_deployment_bundle.zip"
+    file_path = os.path.join(export_dir, bundle_filename)
+    
+    with open(file_path, "wb") as f:
+        f.write(zip_buffer.getvalue())
+
+    return FileResponse(
+        path=file_path,
+        media_type="application/zip",
+        filename=bundle_filename
     )

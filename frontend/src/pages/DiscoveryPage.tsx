@@ -24,6 +24,7 @@ import api from '../services/api';
 import { ChatMessage, Project, DocumentItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FormattedMessageContent } from '../components/common/FormattedMessageContent';
+import { VoiceInputButton } from '../components/common/VoiceInputButton';
 
 export const DiscoveryPage: React.FC = () => {
   const { id: projectId } = useParams<{ id: string }>();
@@ -520,13 +521,18 @@ export const DiscoveryPage: React.FC = () => {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ask discovery questions, describe systems, or request specific analysis..."
+              placeholder="Ask discovery questions, describe systems, or speak voice prompt..."
               className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <VoiceInputButton
+              onTranscript={(transcript) => {
+                setInputText((prev) => (prev ? `${prev} ${transcript}` : transcript));
+              }}
             />
             <button
               type="submit"
               disabled={isSending || !inputText.trim()}
-              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg disabled:opacity-50 transition"
+              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg disabled:opacity-50 transition flex items-center justify-center shrink-0"
             >
               <Send className="w-4 h-4" />
             </button>
