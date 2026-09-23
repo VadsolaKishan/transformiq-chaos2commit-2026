@@ -1,24 +1,26 @@
+import bcrypt
 import hashlib
 import hmac
 from datetime import datetime, timedelta
 from typing import Optional, Union, Any
 from jose import jwt, JWTError
-from passlib.context import CryptContext
 from app.config.settings import settings
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
-        return pwd_context.verify(plain_password, hashed_password)
-    except Exception:
+        if hashed_password and (hashed_password.startswith("$2a$") or hashed_password.startswith("$2b$") or hashed_password.startswith("$2y$")):
+            return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
         # Fallback SHA256 verification
         expected = hashlib.sha256((plain_password + settings.SECRET_KEY).encode()).hexdigest()
         return hmac.compare_digest(expected, hashed_password)
+    except Exception:
+        return False
 
 def get_password_hash(password: str) -> str:
     try:
-        return pwd_context.hash(password)
+        pwd_bytes = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(pwd_bytes, salt).decode('utf-8')
     except Exception:
         # Fallback SHA256
         return hashlib.sha256((password + settings.SECRET_KEY).encode()).hexdigest()
