@@ -89,14 +89,24 @@ export const AppLayout: React.FC = () => {
       try {
         const res: any = await api.get('/projects');
         if (res.success && res.data) {
-          setProjects(res.data);
-          const hasValidParam = params.id && params.id !== 'default' && res.data.some((p: Project) => p.id === params.id);
+          const uniqueProjects: Project[] = [];
+          const seenIds = new Set<string>();
+          const seenNames = new Set<string>();
+          for (const p of res.data) {
+            if (!seenIds.has(p.id) && !seenNames.has(p.name)) {
+              seenIds.add(p.id);
+              seenNames.add(p.name);
+              uniqueProjects.push(p);
+            }
+          }
+          setProjects(uniqueProjects);
+          const hasValidParam = params.id && params.id !== 'default' && uniqueProjects.some((p: Project) => p.id === params.id);
           if (hasValidParam) {
             setSelectedProjectId(params.id!);
-          } else if (res.data.length > 0) {
-            setSelectedProjectId(res.data[0].id);
+          } else if (uniqueProjects.length > 0) {
+            setSelectedProjectId(uniqueProjects[0].id);
             if (params.id === 'default' && location.pathname.includes('/projects/default')) {
-              navigate(location.pathname.replace('/projects/default', `/projects/${res.data[0].id}`), { replace: true });
+              navigate(location.pathname.replace('/projects/default', `/projects/${uniqueProjects[0].id}`), { replace: true });
             }
           }
         }

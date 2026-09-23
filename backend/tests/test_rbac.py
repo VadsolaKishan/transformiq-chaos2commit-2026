@@ -13,6 +13,11 @@ from app.models.user import User, UserRole
 from app.models.project import Project
 from app.config.database import AsyncSessionLocal
 from sqlalchemy.future import select
+from seed_rbac_demo import seed_rbac
+
+@pytest.fixture(autouse=True, scope="module")
+async def setup_rbac_data():
+    await seed_rbac()
 
 @pytest.mark.asyncio
 async def test_unauthenticated_request_rejected():
@@ -22,6 +27,7 @@ async def test_unauthenticated_request_rejected():
         response = await ac.get("/api/v1/projects")
         assert response.status_code == 401
         assert "detail" in response.json()
+
 
 @pytest.mark.asyncio
 async def test_invalid_jwt_rejected():

@@ -123,12 +123,18 @@ export const DiscoveryPage: React.FC = () => {
           setDocuments(dRes.data);
         }
 
-        // Initial welcome message
+        // Initial welcome message tailored to the selected project
+        const projName = pRes.data.name;
+        const industry = pRes.data.industry || 'Enterprise';
+        const problemBrief = pRes.data.business_problem
+          ? pRes.data.business_problem.slice(0, 180) + '...'
+          : 'Operational friction and legacy manual workflows.';
+
         const initialGreeting = language === 'hi'
-          ? `नमस्ते! मैं TransformIQ AI डिस्कवरी सहायक हूँ। मैंने आपके प्रोजेक्ट के व्यावसायिक संदर्भ का विश्लेषण किया है। क्या आप वर्तमान AS-IS प्रक्रियाओं और मुख्य बाधाओं पर चर्चा करना चाहते हैं?`
+          ? `नमस्ते! मैं TransformIQ AI डिस्कवरी सहायक हूँ। मैंने **${projName}** (${industry}) के व्यावसायिक संदर्भ और मुख्य चुनौतियों का विश्लेषण किया है।\n\n**मुख्य चुनौती**: ${problemBrief}\n\nक्या आप वर्तमान AS-IS प्रक्रियाओं और 8-Dimension गैप एनालिसिस पर चर्चा करना चाहते हैं?`
           : language === 'gu'
-            ? `નમસ્તે! હું TransformIQ AI ડિસ્કવરી સહાયક છું. મેં તમારા પ્રોજેક્ટના સંદર્ભનું વિશ્લેષણ કર્યું છે. શું તમે વર્તમાન પ્રક્રિયાઓ અને પડકારો વિશે ચર્ચા કરવા માંગો છો?`
-            : `Hello! I am your TransformIQ AI Transformation Companion. I have indexed your business problem and enterprise artifacts.\n\nKey Discovery Summary:\n• **High Triage Friction**: 4-8 hour manual review bottleneck.\n• **Integration Boundary**: Disconnected legacy SQL databases.\n• **AI Opportunities**: NLP intent classification & semantic RAG assistance.\n\nHow would you like to proceed with the transformation analysis?`;
+            ? `નમસ્તે! હું TransformIQ AI ડિસ્કવરી સહાયક છું. મેં **${projName}** (${industry}) ના વ્યવસાયિક સંદર્ભનું વિશ્લેષણ કર્યું છે.\n\n**મુખ્ય પડકાર**: ${problemBrief}\n\nશું તમે વર્તમાન પ્રક્રિયાઓ અને 8-Dimension ગેપ એનાલિસિસ વિશે ચર્ચા કરવા માંગો છો?`
+            : `Hello! I am your TransformIQ AI Transformation Companion. I have indexed the business problem and domain variables for **${projName}** (${industry}).\n\n**Challenge Overview**:\n• ${problemBrief}\n\n**Key Discovery Insights**:\n• **Process Modernization**: Transition from high-friction manual steps to automated workflows.\n• **Architecture & Security**: Event-driven API Gateway + PostgreSQL 3NF schema isolation.\n• **AI Opportunities**: Domain-tailored NLP ingestion, intent parsing, and RAG knowledge assistance.\n\nHow would you like to proceed with the transformation blueprint?`;
 
         setMessages([
           {

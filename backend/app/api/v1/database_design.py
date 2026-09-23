@@ -24,20 +24,33 @@ async def get_database_design(
     ent_res = await db.execute(select(DatabaseEntity).filter(DatabaseEntity.project_id == project.id))
     ents = ent_res.scalars().all()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
     if not ents:
-        return ApiResponse(
-            success=True,
-            data={
-                "overview": f"PostgreSQL schema for {project.name}",
-                "entities": [],
-                "sql_ddl": "-- Awaiting generation"
-            }
-        )
+        result = await orchestrator.generate_database_design(context_data)
+        for e in result.get("entities", []):
+            db.add(DatabaseEntity(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                name=e["name"],
+                description=e["description"],
+                fields=e["fields"],
+                relationships=e.get("relationships", [])
+            ))
+        await db.commit()
+        return ApiResponse(success=True, data=result, message="Database design auto-populated")
         
+    synth = await orchestrator.generate_database_design(context_data)
+    
     return ApiResponse(
         success=True,
         data={
-            "overview": f"Normalized Relational Schema & Vector Store for {project.name}. Optimized for PostgreSQL 16 + pgvector.",
+            "overview": synth.get("overview") or f"Normalized Relational Schema & Vector Store for {project.name}. Optimized for PostgreSQL 16 + pgvector.",
             "entities": [{
                 "id": e.id,
                 "name": e.name,
@@ -45,7 +58,7 @@ async def get_database_design(
                 "fields": e.fields,
                 "relationships": e.relationships
             } for e in ents],
-            "sql_ddl": "\n\n".join([f"-- Table: {e.name}\nCREATE TABLE {e.name.lower()} (\n" + ",\n".join([f"    {f['name']} {f['type'].upper()}{' PRIMARY KEY' if f.get('is_primary') else ''}" for f in e.fields]) + "\n);" for e in ents])
+            "sql_ddl": synth.get("sql_ddl") or "\n\n".join([f"-- Table: {e.name}\nCREATE TABLE {e.name.lower()} (\n" + ",\n".join([f"    {f['name']} {f['type'].upper()}{' PRIMARY KEY' if f.get('is_primary') else ''}" for f in e.fields]) + "\n);" for e in ents])
         }
     )
 
@@ -71,7 +84,7 @@ async def generate_database_design(
     for oe in old_ents.scalars().all():
         await db.delete(oe)
         
-    for e in result["entities"]:
+    for e in result.get("entities", []):
         db.add(DatabaseEntity(
             id=str(uuid.uuid4()),
             project_id=project.id,

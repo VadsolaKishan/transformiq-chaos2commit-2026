@@ -24,15 +24,17 @@ async def get_ux_design(
     wf_res = await db.execute(select(Wireframe).filter(Wireframe.project_id == project.id))
     wfs = wf_res.scalars().all()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
+    synth = await orchestrator.generate_ux_design(context_data)
+    
     if not wfs:
-        context_data = {
-            "name": project.name,
-            "industry": project.industry,
-            "business_problem": project.business_problem,
-            "business_objective": project.business_objective
-        }
-        gen_data = await orchestrator.generate_ux_design(context_data)
-        for w in gen_data.get("wireframes", []):
+        for w in synth.get("wireframes", []):
             wf_obj = Wireframe(
                 id=str(uuid.uuid4()),
                 project_id=project.id,
@@ -52,28 +54,9 @@ async def get_ux_design(
     return ApiResponse(
         success=True,
         data={
-            "ux_strategy": "High-density enterprise design system emphasizing zero-cognitive-friction, dark/light theme harmony, responsive layout, and instant explainability.",
-            "personas": [
-                {
-                    "name": "Elena Rostova",
-                    "role": "Chief Operating Officer / Executive Sponsor",
-                    "goals": ["Monitor transformation ROI", "Track SLA compliance across departments", "Identify operational bottlenecks early"],
-                    "pain_points": ["Static monthly reports", "Lack of real-time drill-down visibility"]
-                },
-                {
-                    "name": "Devin Clark",
-                    "role": "Frontline Operations Lead",
-                    "goals": ["Process flagged cases with minimal clicks", "Review AI suggestions quickly", "Manage agent shift queues"],
-                    "pain_points": ["Context switching between multiple legacy tools", "Repetitive manual categorization"]
-                }
-            ],
-            "user_journey_stages": [
-                {"stage": "1. Discovery & Ingestion", "description": "User enters business problem or uploads enterprise SOP/BRD document."},
-                {"stage": "2. Intelligence Generation", "description": "AI generates gap analysis, recommendations, and transformation score."},
-                {"stage": "3. Interactive Design", "description": "Architect refines React Flow HLD/LLD diagrams, ER schema, and API catalog."},
-                {"stage": "4. What-If Simulation", "description": "User tunes budget/team sliders to recalculate timeline and ROI."},
-                {"stage": "5. Blueprint Approval & Export", "description": "Executive reviews and exports one-click PDF, Word, Excel, or PPT reports."}
-            ],
+            "ux_strategy": synth.get("ux_strategy") or "High-density enterprise design system emphasizing zero-cognitive-friction.",
+            "personas": synth.get("personas", []),
+            "user_journey_stages": synth.get("user_journey_stages", []),
             "wireframes": [{
                 "id": w.id,
                 "screen_name": w.screen_name,
@@ -126,12 +109,12 @@ async def generate_ux_design(
         db=db,
         user=current_user,
         action="GENERATE_UX_DESIGN",
-        resource_type="UX_WIREFRAMES",
+        resource_type="UX_DESIGN",
         resource_id=project.id,
         project_id=project.id,
-        details=f"{current_user.full_name} generated {len(result['wireframes'])} interactive UI wireframes",
+        details=f"{current_user.full_name} generated UX Design wireframes and personas for {project.name}",
         request=request
     )
         
     await db.commit()
-    return ApiResponse(success=True, data=result, message="UX wireframes generated successfully")
+    return ApiResponse(success=True, data=result, message="UX design and wireframes generated successfully")

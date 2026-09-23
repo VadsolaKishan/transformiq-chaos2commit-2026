@@ -71,10 +71,10 @@ async def get_master_blueprint(
         "generated_at": datetime.utcnow().strftime("%B %d, %Y - %H:%M UTC"),
         "executive_summary": sol.executive_summary if sol else (project.business_problem or "Comprehensive digital transformation blueprint."),
         "business_problem": project.business_problem,
-        "objectives": [
-            f"Automate end-to-end processing for {project.industry} workflows.",
-            "Reduce turnaround time from 48h to under 15 minutes.",
-            "Ensure 99.9% compliance with SLA standards."
+        "objectives": [project.business_objective] if project.business_objective else [
+            f"Automate end-to-end processing for {project.name} in {project.industry}.",
+            "Reduce operational turnaround latency by >75%.",
+            "Ensure 99.9% compliance with enterprise SLA standards."
         ],
         "transformation_score": {
             "overall_score": score.overall_score if score else 88,
@@ -100,20 +100,20 @@ async def get_master_blueprint(
             "name": sol.name if sol else project.name,
             "tagline": sol.tagline if sol else "AI-Powered Enterprise Suite",
             "expected_roi": sol.expected_roi if sol else "340% ROI in 12 Months",
-            "technology_stack": sol.technology_stack if sol else {"Core": ["React", "FastAPI", "PostgreSQL", "Azure OpenAI"]},
-            "key_capabilities": sol.key_capabilities if sol else ["Multi-modal Ingestion", "NLP Triage", "Semantic RAG"],
+            "technology_stack": sol.technology_stack if sol else {"Core": ["React", "FastAPI", "PostgreSQL", "Gemini 3.6 Flash"]},
+            "key_capabilities": sol.key_capabilities if sol else ["Intelligent Ingestion", "Automated Workflows", "Telemetry Dashboard"],
             "recommendations_count": len(recs)
         },
         "architecture_summary": {
             "components_count": len(comps),
             "layers": list(set([c.layer for c in comps if c.layer])) if comps else ["Client", "AI Engine", "Database"],
-            "deployment": "Multi-Zone Kubernetes / Docker Swarm on Azure Container Apps"
+            "deployment": "Multi-Zone Kubernetes / Docker Swarm on Azure Container Apps / Render"
         },
         "process_summary": {
             "nodes_count": len(nodes),
-            "cycle_time_current": "48 Hours (Manual)",
-            "cycle_time_projected": "12 Minutes (AI-Powered)",
-            "efficiency_gain": "87.5% Reduction"
+            "cycle_time_current": "Multi-Day Manual Baseline",
+            "cycle_time_projected": "Real-Time Sub-Minute Processing",
+            "efficiency_gain": "75%+ Reduction"
         },
         "database_summary": {
             "entities_count": len(ents),
@@ -126,7 +126,7 @@ async def get_master_blueprint(
         },
         "ux_summary": {
             "wireframes_count": len(wfs),
-            "target_personas": ["Executive Leadership", "Frontline Operations Leads"]
+            "target_personas": ["Executive Leadership", "Operations Specialists"]
         },
         "roadmap_summary": {
             "total_duration_weeks": roadmap.total_duration_weeks if roadmap else 16,

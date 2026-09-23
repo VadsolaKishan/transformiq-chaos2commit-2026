@@ -24,22 +24,46 @@ async def get_api_catalog(
     api_res = await db.execute(select(ApiEndpoint).filter(ApiEndpoint.project_id == project.id))
     apis = api_res.scalars().all()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
     if not apis:
+        result = await orchestrator.generate_api_design(context_data)
+        for a in result.get("endpoints", []):
+            db.add(ApiEndpoint(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                path=a["path"],
+                method=a["method"],
+                summary=a["summary"],
+                description=a["description"],
+                request_schema=a.get("request_body"),
+                response_schema=a.get("response_body"),
+                auth_required=a.get("auth_required", True)
+            ))
+        await db.commit()
         return ApiResponse(
             success=True,
             data={
                 "openapi_version": "3.0.3",
-                "api_name": f"{project.name} Microservices API",
-                "endpoints_count": 0,
-                "endpoints": []
-            }
+                "api_name": result.get("api_title", f"{project.name} Microservices API"),
+                "endpoints_count": len(result.get("endpoints", [])),
+                "endpoints": result.get("endpoints", [])
+            },
+            message="API catalog auto-populated"
         )
         
+    synth = await orchestrator.generate_api_design(context_data)
+    
     return ApiResponse(
         success=True,
         data={
             "openapi_version": "3.0.3",
-            "api_name": f"{project.name} Microservices API",
+            "api_name": synth.get("api_title") or f"{project.name} Microservices API",
             "endpoints_count": len(apis),
             "endpoints": [{
                 "id": a.id,
@@ -76,7 +100,7 @@ async def generate_api_catalog(
     for oa in old_apis.scalars().all():
         await db.delete(oa)
         
-    for a in result["endpoints"]:
+    for a in result.get("endpoints", []):
         db.add(ApiEndpoint(
             id=str(uuid.uuid4()),
             project_id=project.id,
@@ -84,8 +108,8 @@ async def generate_api_catalog(
             method=a["method"],
             summary=a["summary"],
             description=a["description"],
-            request_schema=a.get("request_schema"),
-            response_schema=a.get("response_schema"),
+            request_schema=a.get("request_body"),
+            response_schema=a.get("response_body"),
             auth_required=a.get("auth_required", True)
         ))
         
@@ -96,9 +120,18 @@ async def generate_api_catalog(
         resource_type="API_CATALOG",
         resource_id=project.id,
         project_id=project.id,
-        details=f"{current_user.full_name} generated OpenAPI specifications with {len(result['endpoints'])} endpoints",
+        details=f"{current_user.full_name} generated OpenAPI specifications with {len(result.get('endpoints', []))} endpoints",
         request=request
     )
         
     await db.commit()
-    return ApiResponse(success=True, data=result, message="API catalog generated successfully")
+    return ApiResponse(
+        success=True,
+        data={
+            "openapi_version": "3.0.3",
+            "api_name": result.get("api_title", f"{project.name} Microservices API"),
+            "endpoints_count": len(result.get("endpoints", [])),
+            "endpoints": result.get("endpoints", [])
+        },
+        message="API catalog generated successfully"
+    )

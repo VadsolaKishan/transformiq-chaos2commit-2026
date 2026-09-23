@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class Token(BaseModel):
     access_token: str
@@ -26,15 +26,15 @@ class UserLogin(BaseModel):
     password: str
 
 class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     email: str
     full_name: str
     role: str
     is_active: bool
     created_at: datetime
-    
-    class Config:
-        from_attributes = True
+
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None

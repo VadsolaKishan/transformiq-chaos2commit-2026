@@ -24,17 +24,30 @@ async def get_gaps(
     gap_res = await db.execute(select(Gap).filter(Gap.project_id == project.id))
     gaps = gap_res.scalars().all()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
     if not gaps:
-        return ApiResponse(
-            success=True,
-            data={
-                "total_gaps_count": 0,
-                "critical_count": 0,
-                "high_count": 0,
-                "medium_count": 0,
-                "gaps": []
-            }
-        )
+        result = await orchestrator.generate_gap_analysis(context_data)
+        for g in result["gaps"]:
+            db.add(Gap(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                category=g["category"],
+                title=g["title"],
+                current_state=g["current_state"],
+                desired_state=g["desired_state"],
+                severity=g["severity"],
+                impact=g["impact"],
+                root_cause=g["root_cause"],
+                recommended_action=g["recommended_action"]
+            ))
+        await db.commit()
+        return ApiResponse(success=True, data=result, message="8-Dimension gaps auto-populated")
         
     crit = len([g for g in gaps if g.severity == "CRITICAL"])
     high = len([g for g in gaps if g.severity == "HIGH"])
@@ -43,6 +56,7 @@ async def get_gaps(
     return ApiResponse(
         success=True,
         data={
+            "summary": f"8-Dimension assessment for {project.name} in {project.industry}.",
             "total_gaps_count": len(gaps),
             "critical_count": crit,
             "high_count": high,
@@ -104,9 +118,9 @@ async def generate_gaps(
         resource_type="GAP_ANALYSIS",
         resource_id=project.id,
         project_id=project.id,
-        details=f"{current_user.full_name} generated 8-dimension gap matrix with {len(result['gaps'])} gaps",
+        details=f"{current_user.full_name} ({current_user.role}) executed 8-dimension gap analysis for {project.name}",
         request=request
     )
         
     await db.commit()
-    return ApiResponse(success=True, data=result, message="8-Dimension gap analysis generated successfully")
+    return ApiResponse(success=True, data=result, message="8-dimension gap analysis generated successfully")

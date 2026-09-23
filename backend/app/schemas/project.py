@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List, Dict, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class OrganizationBase(BaseModel):
     name: str
@@ -11,13 +11,12 @@ class OrganizationCreate(OrganizationBase):
     pass
 
 class OrganizationResponse(OrganizationBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     slug: str
     owner_id: str
     created_at: datetime
-    
-    class Config:
-        from_attributes = True
 
 class WorkspaceBase(BaseModel):
     name: str
@@ -27,12 +26,11 @@ class WorkspaceCreate(WorkspaceBase):
     organization_id: str
 
 class WorkspaceResponse(WorkspaceBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     organization_id: str
     created_at: datetime
-    
-    class Config:
-        from_attributes = True
 
 class ProjectBase(BaseModel):
     name: str
@@ -63,15 +61,15 @@ class ProjectUpdate(BaseModel):
     timeline_months: Optional[int] = None
 
 class ProjectResponse(ProjectBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     slug: str
     workspace_id: str
     status: str
     created_at: datetime
     updated_at: datetime
-    
-    class Config:
-        from_attributes = True
+
 
 class ApiResponse(BaseModel):
     success: bool = True

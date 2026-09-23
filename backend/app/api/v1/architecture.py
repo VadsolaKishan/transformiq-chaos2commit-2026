@@ -27,31 +27,53 @@ async def get_architecture(
     conn_res = await db.execute(select(ArchitectureConnection).filter(ArchitectureConnection.project_id == project.id))
     conns = conn_res.scalars().all()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
     if not comps:
-        return ApiResponse(
-            success=True,
-            data={
-                "hld_overview": f"Architecture for {project.name}",
-                "deployment_model": "Microservices Cloud Native",
-                "security_boundaries": ["Zero-Trust Network", "TLS 1.3 Ingress"],
-                "data_flow_summary": "Client -> API Gateway -> AI Engine -> PostgreSQL",
-                "components": [],
-                "connections": []
-            }
-        )
+        result = await orchestrator.generate_architecture(context_data)
+        for c in result.get("components", []):
+            db.add(ArchitectureComponent(
+                id=c["id"],
+                project_id=project.id,
+                name=c["name"],
+                layer=c["layer"],
+                tech_stack=c["tech_stack"],
+                description=c["description"],
+                responsibilities=c.get("responsibilities", []),
+                position_x=c.get("position_x", 100.0),
+                position_y=c.get("position_y", 100.0)
+            ))
+        for cn in result.get("connections", []):
+            db.add(ArchitectureConnection(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                source_component_id=cn["source"],
+                target_component_id=cn["target"],
+                protocol=cn["protocol"],
+                data_payload=cn.get("data_payload"),
+                is_async=cn.get("is_async", False)
+            ))
+        await db.commit()
+        return ApiResponse(success=True, data=result, message="Architecture auto-populated")
         
+    synth = await orchestrator.generate_architecture(context_data)
+    
     return ApiResponse(
         success=True,
         data={
-            "hld_overview": f"High-Level Architecture for {project.name}: Event-driven microservices pattern with API Gateway, FastAPI core, asynchronous AI inference, and PostgreSQL storage.",
-            "deployment_model": "Multi-Zone Kubernetes / Docker Swarm with Azure Container Apps or AWS ECS.",
-            "security_boundaries": [
-                "Public Ingress protected by Cloudflare WAF & TLS 1.3 Termination",
+            "hld_overview": synth.get("hld_overview") or f"High-Level Architecture for {project.name}.",
+            "deployment_model": synth.get("deployment_model") or "Multi-Zone Cloud Native Container Architecture.",
+            "security_boundaries": synth.get("security_boundaries") or [
+                "Public Ingress protected by TLS 1.3 Termination",
                 "API Gateway with JWT validation and Rate Limiting per tenant",
-                "Internal Service Mesh with mTLS and network isolation",
-                "Database and Storage encrypted with customer-managed keys (KMS)"
+                "Encrypted database and storage with customer-managed keys"
             ],
-            "data_flow_summary": "Inbound request -> API Gateway -> Auth check -> AI Engine Classifier -> Vector SOP Search -> PostgreSQL -> Webhook notification.",
+            "data_flow_summary": synth.get("data_flow_summary") or "Client -> API Gateway -> Core Service -> AI Engine -> PostgreSQL Database.",
             "components": [{
                 "id": c.id,
                 "name": c.name,
@@ -70,12 +92,11 @@ async def get_architecture(
                 "data_payload": cn.data_payload,
                 "is_async": cn.is_async
             } for cn in conns],
-            "lld_services": [
+            "lld_services": synth.get("lld_services", [
+                {"name": "CoreService", "purpose": "Handles business logic and orchestration."},
                 {"name": "AuthService", "purpose": "Handles JWT authentication and RBAC guards."},
-                {"name": "ContextService", "purpose": "Extracts and chunks enterprise document files."},
-                {"name": "AIOrchestratorService", "purpose": "Coordinates multi-agent reasoning and schema validation."},
-                {"name": "ExportService", "purpose": "Generates PDF, DOCX, XLSX, and PPTX reports."}
-            ]
+                {"name": "StorageService", "purpose": "Manages transactional state and persistence."}
+            ])
         }
     )
 
@@ -105,31 +126,26 @@ async def generate_architecture(
     for ocn in old_conns.scalars().all():
         await db.delete(ocn)
         
-    comp_id_map = {}
-    for c in result["components"]:
-        new_id = str(uuid.uuid4())
-        comp_id_map[c["id"]] = new_id
+    for c in result.get("components", []):
         db.add(ArchitectureComponent(
-            id=new_id,
+            id=c["id"],
             project_id=project.id,
             name=c["name"],
             layer=c["layer"],
             tech_stack=c["tech_stack"],
             description=c["description"],
-            responsibilities=c["responsibilities"],
-            position_x=c["position_x"],
-            position_y=c["position_y"]
+            responsibilities=c.get("responsibilities", []),
+            position_x=c.get("position_x", 100.0),
+            position_y=c.get("position_y", 100.0)
         ))
         
-    for cn in result["connections"]:
-        src_id = comp_id_map.get(cn["source"], cn["source"])
-        tgt_id = comp_id_map.get(cn["target"], cn["target"])
+    for cn in result.get("connections", []):
         db.add(ArchitectureConnection(
             id=str(uuid.uuid4()),
             project_id=project.id,
-            source_component_id=src_id,
-            target_component_id=tgt_id,
-            protocol=cn.get("protocol", "HTTPS/REST"),
+            source_component_id=cn["source"],
+            target_component_id=cn["target"],
+            protocol=cn["protocol"],
             data_payload=cn.get("data_payload"),
             is_async=cn.get("is_async", False)
         ))
@@ -141,42 +157,33 @@ async def generate_architecture(
         resource_type="ARCHITECTURE",
         resource_id=project.id,
         project_id=project.id,
-        details=f"{current_user.full_name} ({current_user.role}) generated solution architecture with {len(result['components'])} components",
+        details=f"{current_user.full_name} ({current_user.role}) generated solution architecture for {project.name}",
         request=request
     )
-    
+        
     await db.commit()
     return ApiResponse(success=True, data=result, message="Architecture generated successfully")
 
 @router.post("/project/{project_id}/save-layout", response_model=ApiResponse)
 async def save_architecture_layout(
     project_id: str,
-    request: Request,
-    nodes: List[Dict[str, Any]] = Body(...),
+    layout_data: List[Dict[str, Any]] = Body(...),
     project: Project = Depends(require_project_permission(Permission.ARCHITECTURE_EDIT)),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    for n in nodes:
-        node_id = n.get("id")
-        pos = n.get("position", {})
-        if node_id and pos:
-            comp_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.id == node_id, ArchitectureComponent.project_id == project.id))
-            comp = comp_res.scalars().first()
-            if comp:
-                comp.position_x = float(pos.get("x", comp.position_x))
-                comp.position_y = float(pos.get("y", comp.position_y))
-                
-    await record_audit_log(
-        db=db,
-        user=current_user,
-        action="UPDATE_ARCHITECTURE_LAYOUT",
-        resource_type="ARCHITECTURE_LAYOUT",
-        resource_id=project.id,
-        project_id=project.id,
-        details=f"{current_user.full_name} updated React Flow layout positions for {len(nodes)} components",
-        request=request
-    )
+    comp_res = await db.execute(select(ArchitectureComponent).filter(ArchitectureComponent.project_id == project.id))
+    comps = {c.id: c for c in comp_res.scalars().all()}
     
+    for item in layout_data:
+        c_id = item.get("id")
+        pos = item.get("position", {})
+        if c_id in comps and isinstance(pos, dict):
+            if "x" in pos:
+                comps[c_id].position_x = float(pos["x"])
+            if "y" in pos:
+                comps[c_id].position_y = float(pos["y"])
+                
     await db.commit()
-    return ApiResponse(success=True, message="Architecture diagram layout saved")
+    return ApiResponse(success=True, data={"saved_count": len(layout_data)}, message="Architecture layout saved successfully")
+

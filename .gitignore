@@ -61,5 +61,10 @@ Thumbs.db
 *.sqlite3
 scratch/
 uploads/
+**/uploads/
 exports_generated/
+**/exports_generated/
+test_reports/
+**/test_reports/
+
 

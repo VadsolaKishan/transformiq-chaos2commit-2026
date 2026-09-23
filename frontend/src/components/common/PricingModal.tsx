@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Sparkles,
@@ -26,6 +27,22 @@ export const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) =
   const [isSimulatingCheckout, setIsSimulatingCheckout] = useState(false);
   const [purchasedPlan, setPurchasedPlan] = useState<string | null>(null);
 
+  // Close on Escape key press & prevent background scroll when open
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSimulatePurchase = (planName: string) => {
@@ -36,8 +53,8 @@ export const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) =
       setTimeout(() => {
         setPurchasedPlan(null);
         onClose();
-      }, 2000);
-    }, 1200);
+      }, 1500);
+    }, 1000);
   };
 
   // Cost breakdown calculation
@@ -48,19 +65,26 @@ export const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) =
   const totalCost = (rawLlmCost + infraCost).toFixed(2);
   const retailPrice = (blueprintCount * 0.49).toFixed(2);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-5xl w-full p-6 sm:p-8 shadow-2xl relative my-8 max-h-[92vh] overflow-y-auto">
-        {/* Close Button */}
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-fadeIn"
+      onClick={onClose}
+    >
+      <div
+        className="bg-slate-900 border border-slate-700/90 rounded-3xl max-w-5xl w-full p-6 sm:p-8 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ring-1 ring-slate-700 shadow-blue-500/10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Top Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 transition"
+          aria-label="Close modal"
+          className="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition border border-slate-700 z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-8">
+        <div className="text-center max-w-2xl mx-auto mb-8 pt-2">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" />
             <span>Transparent & Justified Monetization</span>
@@ -103,7 +127,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) =
         )}
 
         {/* PRICING TIERS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* FREE TIER */}
           <div className="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition">
             <div>
@@ -282,6 +306,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) =
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -1,11 +1,16 @@
 from pathlib import Path
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ROOT_DIR = BASE_DIR.parent
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=str(BASE_DIR / ".env") if (BASE_DIR / ".env").exists() else ".env",
+        extra="allow"
+    )
+
     PROJECT_NAME: str = "TransformIQ — Business Transformation AI"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
@@ -44,10 +49,7 @@ class Settings(BaseSettings):
     # Storage
     UPLOAD_DIR: str = "./uploads"
     MAX_UPLOAD_SIZE_MB: int = 25
-    
-    class Config:
-        env_file = str(BASE_DIR / ".env") if (BASE_DIR / ".env").exists() else ".env"
-        extra = "allow"
+
 
 
 settings = Settings()

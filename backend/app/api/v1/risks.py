@@ -35,7 +35,7 @@ async def get_risks(
                 "id": r.id,
                 "category": r.category,
                 "title": r.title,
-                "description": r.description,
+                "description": r.description or r.title,
                 "probability": r.probability,
                 "impact": r.impact,
                 "severity": r.severity,
@@ -68,18 +68,22 @@ async def generate_risks(
     for ork in old_risks.scalars().all():
         await db.delete(ork)
         
-    for rk in result["risks"]:
+    for rk in result.get("risks", []):
+        title = rk.get("risk_title") or rk.get("title", "Project Risk")
+        mitigation = rk.get("mitigation") or rk.get("mitigation_strategy", "Standard mitigation protocols")
+        probability = rk.get("likelihood") or rk.get("probability", "MEDIUM")
+        impact = rk.get("impact", "HIGH")
         db.add(Risk(
             id=str(uuid.uuid4()),
             project_id=project.id,
-            category=rk["category"],
-            title=rk["title"],
-            description=rk["description"],
-            probability=rk["probability"],
-            impact=rk["impact"],
-            severity=rk["severity"],
-            mitigation_strategy=rk["mitigation_strategy"],
-            owner=rk["owner"]
+            category=rk.get("category", "Operational"),
+            title=title,
+            description=rk.get("description", title),
+            probability=probability,
+            impact=impact,
+            severity="HIGH" if impact == "HIGH" or probability == "HIGH" else "MEDIUM",
+            mitigation_strategy=mitigation,
+            owner=rk.get("owner", "Project Lead")
         ))
         
     await db.commit()

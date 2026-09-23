@@ -50,6 +50,10 @@ def normalize_database_url(url: str):
             ssl_ctx.verify_mode = ssl.CERT_NONE
             connect_args["ssl"] = ssl_ctx
 
+        # NeonDB serverless pooler recommended setting
+        connect_args["statement_cache_size"] = 0
+        connect_args["prepared_statement_cache_size"] = 0
+
     return url, connect_args
 
 db_url, db_connect_args = normalize_database_url(settings.DATABASE_URL)

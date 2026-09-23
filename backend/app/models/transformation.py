@@ -124,7 +124,7 @@ class Solution(Base):
     executive_summary = Column(Text, nullable=False)
     technology_stack = Column(JSON, default=dict)
     key_capabilities = Column(JSON, default=list)
-    expected_roi = Column(String(100), nullable=True)
+    expected_roi = Column(Text, nullable=True)
     implementation_approach = Column(Text, nullable=True)
     status = Column(String(50), default="ACTIVE")
     created_at = Column(DateTime, default=datetime.utcnow)

@@ -30,35 +30,76 @@ async def get_business_analysis(
     bp_res = await db.execute(select(BusinessProcess).filter(BusinessProcess.project_id == project.id))
     processes = bp_res.scalars().all()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
     if not reqs and not processes:
-        return ApiResponse(
-            success=True,
-            data={
-                "business_summary": project.business_problem or "No analysis generated yet.",
-                "objectives": [project.business_objective] if project.business_objective else [],
-                "kpis": [],
-                "as_is_process": [],
-                "functional_requirements": [],
-                "non_functional_requirements": [],
-                "stakeholders": []
-            }
-        )
+        result = await orchestrator.generate_business_analysis(context_data)
+        for r in result["functional_requirements"]:
+            db.add(Requirement(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                code=r["code"],
+                title=r["title"],
+                description=r["description"],
+                priority=r["priority"],
+                req_type=RequirementType.FUNCTIONAL.value,
+                source=r.get("source", "AI Business Analysis")
+            ))
+        for r in result["non_functional_requirements"]:
+            db.add(Requirement(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                code=r["code"],
+                title=r["title"],
+                description=r["description"],
+                priority=r["priority"],
+                req_type=RequirementType.NON_FUNCTIONAL.value,
+                source=r.get("source", "AI Business Analysis")
+            ))
+        for p in result["as_is_process"]:
+            db.add(BusinessProcess(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                step_number=p["step_number"],
+                activity=p["activity"],
+                actor=p["actor"],
+                system=p["system"],
+                duration=p["duration"],
+                is_bottleneck=p.get("is_bottleneck", False),
+                pain_points=p.get("pain_points")
+            ))
+        for s in result["stakeholders"]:
+            db.add(Stakeholder(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                name=s["name"],
+                role=s["role"],
+                department=s["department"],
+                influence=s["influence"],
+                interest=s["interest"],
+                key_concerns=s.get("key_concerns")
+            ))
+        await db.commit()
+        return ApiResponse(success=True, data=result, message="Business analysis auto-populated")
         
     func_reqs = [r for r in reqs if r.req_type == RequirementType.FUNCTIONAL.value]
     nfunc_reqs = [r for r in reqs if r.req_type == RequirementType.NON_FUNCTIONAL.value]
     
+    synth = await orchestrator.generate_business_analysis(context_data)
+    
     return ApiResponse(
         success=True,
         data={
-            "business_summary": f"Comprehensive operational baseline for {project.name} in {project.industry}.",
-            "objectives": [
-                f"Automate high-friction operations in {project.industry}.",
-                "Reduce operational cycle latency from 48h to under 15 minutes.",
-                "Improve stakeholder satisfaction and audit compliance to >99%."
-            ],
-            "kpis": [
-                "Cycle Turnaround Time (TAT) < 15 mins",
-                "Straight-Through Processing (STP) > 75%",
+            "business_summary": synth.get("business_summary") or f"Operational baseline for {project.name} in {project.industry}.",
+            "objectives": synth.get("objectives") or ([project.business_objective] if project.business_objective else []),
+            "kpis": synth.get("kpis") or [
+                "Cycle Turnaround Time < 15 mins",
+                "Automation Throughput > 75%",
                 "Error Rate Reduction > 85%"
             ],
             "as_is_process": [{
@@ -69,7 +110,7 @@ async def get_business_analysis(
                 "duration": p.duration,
                 "is_bottleneck": p.is_bottleneck,
                 "pain_points": p.pain_points
-            } for p in processes],
+            } for p in processes] if processes else synth.get("as_is_process", []),
             "functional_requirements": [{
                 "code": r.code,
                 "title": r.title,
@@ -77,7 +118,7 @@ async def get_business_analysis(
                 "priority": r.priority,
                 "req_type": r.req_type,
                 "source": r.source
-            } for r in func_reqs],
+            } for r in func_reqs] if func_reqs else synth.get("functional_requirements", []),
             "non_functional_requirements": [{
                 "code": r.code,
                 "title": r.title,
@@ -85,7 +126,7 @@ async def get_business_analysis(
                 "priority": r.priority,
                 "req_type": r.req_type,
                 "source": r.source
-            } for r in nfunc_reqs],
+            } for r in nfunc_reqs] if nfunc_reqs else synth.get("non_functional_requirements", []),
             "stakeholders": [{
                 "name": s.name,
                 "role": s.role,
@@ -93,7 +134,7 @@ async def get_business_analysis(
                 "influence": s.influence,
                 "interest": s.interest,
                 "key_concerns": s.key_concerns
-            } for s in stakeholders]
+            } for s in stakeholders] if stakeholders else synth.get("stakeholders", [])
         }
     )
 
@@ -128,7 +169,7 @@ async def generate_business_analysis(
             description=r["description"],
             priority=r["priority"],
             req_type=RequirementType.FUNCTIONAL.value,
-            source="AI Business Analysis"
+            source=r.get("source", "AI Business Analysis")
         ))
         
     for r in result["non_functional_requirements"]:
@@ -140,7 +181,7 @@ async def generate_business_analysis(
             description=r["description"],
             priority=r["priority"],
             req_type=RequirementType.NON_FUNCTIONAL.value,
-            source="AI Business Analysis"
+            source=r.get("source", "AI Business Analysis")
         ))
         
     # Clear & Save Processes
@@ -157,7 +198,7 @@ async def generate_business_analysis(
             actor=p["actor"],
             system=p["system"],
             duration=p["duration"],
-            is_bottleneck=p["is_bottleneck"],
+            is_bottleneck=p.get("is_bottleneck", False),
             pain_points=p.get("pain_points")
         ))
         

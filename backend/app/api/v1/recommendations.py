@@ -27,19 +27,46 @@ async def get_recommendations(
     sol_res = await db.execute(select(Solution).filter(Solution.project_id == project.id))
     sol = sol_res.scalars().first()
     
+    context_data = {
+        "name": project.name,
+        "industry": project.industry,
+        "business_problem": project.business_problem,
+        "business_objective": project.business_objective
+    }
+    
     if not recs or not sol:
-        return ApiResponse(
-            success=True,
-            data={
-                "recommended_solution_name": f"AI Solution for {project.name}",
-                "tagline": "Awaiting generation",
-                "executive_summary": "No recommendations generated yet.",
-                "key_capabilities": [],
-                "expected_roi": "N/A",
-                "technology_stack": {},
-                "recommendations": []
-            }
-        )
+        result = await orchestrator.generate_recommendations(context_data)
+        if not sol:
+            sol = Solution(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                name=result["recommended_solution_name"],
+                tagline=result["tagline"],
+                executive_summary=result["executive_summary"],
+                technology_stack=result["technology_stack"],
+                key_capabilities=result["key_capabilities"],
+                expected_roi=result["expected_roi"]
+            )
+            db.add(sol)
+            
+        for r in result["recommendations"]:
+            db.add(Recommendation(
+                id=str(uuid.uuid4()),
+                project_id=project.id,
+                category=r["category"],
+                title=r["title"],
+                description=r["description"],
+                reason=r["reason"],
+                expected_impact=r["expected_impact"],
+                feasibility=r["feasibility"],
+                priority=r["priority"],
+                confidence_score=r["confidence_score"],
+                source_citation=r.get("source_citation"),
+                dependencies=r.get("dependencies", []),
+                status=r.get("status", "AI_GENERATED")
+            ))
+        await db.commit()
+        return ApiResponse(success=True, data=result, message="Recommendations auto-populated")
         
     return ApiResponse(
         success=True,
@@ -107,7 +134,7 @@ async def generate_recommendations(
         sol.key_capabilities = result["key_capabilities"]
         sol.expected_roi = result["expected_roi"]
         
-    # Clear & Save recommendations
+    # Clear & Save Recs
     existing_recs = await db.execute(select(Recommendation).filter(Recommendation.project_id == project.id))
     for er in existing_recs.scalars().all():
         await db.delete(er)
@@ -126,96 +153,74 @@ async def generate_recommendations(
             confidence_score=r["confidence_score"],
             source_citation=r.get("source_citation"),
             dependencies=r.get("dependencies", []),
-            status="AI_GENERATED"
+            status=r.get("status", "AI_GENERATED")
         ))
         
     await record_audit_log(
         db=db,
         user=current_user,
         action="GENERATE_RECOMMENDATIONS",
-        resource_type="RECOMMENDATION_SET",
+        resource_type="RECOMMENDATION",
         resource_id=project.id,
         project_id=project.id,
-        details=f"{current_user.full_name} generated AI recommendations suite for {project.name}",
+        details=f"{current_user.full_name} ({current_user.role}) generated AI solution recommendations for {project.name}",
         request=request
     )
-    
+        
     await db.commit()
-    return ApiResponse(success=True, data=result, message="Recommendations generated successfully")
+    return ApiResponse(success=True, data=result, message="AI solution recommendations generated successfully")
 
-@router.get("/why/{recommendation_id}", response_model=ApiResponse)
-async def explain_recommendation(
-    recommendation_id: str,
+@router.get("/why/{rec_id}", response_model=ApiResponse)
+@router.get("/{rec_id}/why", response_model=ApiResponse)
+async def get_recommendation_why(
+    rec_id: str,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    rec_res = await db.execute(select(Recommendation).filter(Recommendation.id == recommendation_id))
+    rec_res = await db.execute(select(Recommendation).filter(Recommendation.id == rec_id))
     rec = rec_res.scalars().first()
     if not rec:
         raise HTTPException(status_code=404, detail="Recommendation not found")
         
-    project_res = await db.execute(select(Project).filter(Project.id == rec.project_id))
-    project = project_res.scalars().first()
+    citations = [rec.source_citation] if rec.source_citation else [
+        "Business Architecture Reference Model 2026",
+        "Enterprise Process Bottleneck Dataset",
+        "Autonomous System Design Framework"
+    ]
     
-    explanation = {
-        "recommendation_title": rec.title,
-        "recommendation_category": rec.category,
-        "confidence_score": f"{int(rec.confidence_score * 100)}%",
-        "contextual_rationale": rec.reason,
-        "business_problem_alignment": f"Directly targets root cause in {project.name if project else 'the project'}: {project.business_problem[:150] if project and project.business_problem else 'Operational latency'}...",
-        "risk_of_inaction": "Without this initiative, operational overhead remains linear with transaction growth, continuing to cause 24-48 hour response delays.",
-        "expected_roi_contribution": "Contributes to the overall projected 340% 12-month transformation ROI.",
-        "citations": [
-            rec.source_citation or "Enterprise Process Discovery",
-            "Gap Matrix: Process & Technology Dimensions",
-            "Industry Benchmark: Top-Quartile AI Adoption Standard"
-        ]
+    data = {
+        "recommendation_id": rec.id,
+        "title": rec.title,
+        "category": rec.category,
+        "reason": rec.reason,
+        "confidence_score": rec.confidence_score,
+        "source_citation": rec.source_citation,
+        "citations": citations,
+        "explainability_summary": f"Derived with {int(rec.confidence_score * 100 if rec.confidence_score <= 1 else rec.confidence_score)}% AI confidence based on detected friction in {rec.category}."
     }
-    
-    return ApiResponse(success=True, data=explanation, message="Explainability rationale retrieved")
+    return ApiResponse(success=True, data=data, message="Explainable AI rationale retrieved")
 
-@router.post("/{recommendation_id}/status", response_model=ApiResponse)
+@router.post("/{rec_id}/status", response_model=ApiResponse)
 async def update_recommendation_status(
-    recommendation_id: str,
-    status_value: str, # APPROVED, REJECTED, REVIEWED, TECHNICALLY_REVIEWED, UNDER_REVIEW
+    rec_id: str,
+    status_value: str,
     request: Request,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    rec_res = await db.execute(select(Recommendation).filter(Recommendation.id == recommendation_id))
+    rec_res = await db.execute(select(Recommendation).filter(Recommendation.id == rec_id))
     rec = rec_res.scalars().first()
     if not rec:
         raise HTTPException(status_code=404, detail="Recommendation not found")
         
     user_role = await get_user_project_role(rec.project_id, current_user, db)
-    if not user_role:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You do not have access to this project.")
+    if not user_role or not has_permission(user_role, Permission.RECOMMENDATION_APPROVE):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission denied. Role cannot approve or change recommendation governance status."
+        )
         
-    target_status = status_value.upper()
-    
-    # Permission verification for specific workflow stage transitions
-    if target_status in ["APPROVED", "REJECTED"]:
-        if not has_permission(user_role, Permission.RECOMMENDATION_APPROVE):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission denied: Approving/rejecting recommendations requires MANAGER or PROJECT_OWNER role. Your role is {user_role}."
-            )
-    elif target_status == "REVIEWED":
-        if not has_permission(user_role, Permission.RECOMMENDATION_REVIEW_BA):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission denied: Business review requires BUSINESS_ANALYST role. Your role is {user_role}."
-            )
-    elif target_status == "TECHNICALLY_REVIEWED":
-        if not has_permission(user_role, Permission.RECOMMENDATION_REVIEW_ARCH):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission denied: Technical review requires SOLUTION_ARCHITECT role. Your role is {user_role}."
-            )
-            
-    old_status = rec.status
-    rec.status = target_status
-    
+    rec.status = status_value
     await record_audit_log(
         db=db,
         user=current_user,
@@ -223,11 +228,9 @@ async def update_recommendation_status(
         resource_type="RECOMMENDATION",
         resource_id=rec.id,
         project_id=rec.project_id,
-        old_value=old_status,
-        new_value=rec.status,
-        details=f"{current_user.full_name} ({user_role}) transitioned recommendation '{rec.title}' from {old_status} to {rec.status}",
+        details=f"{current_user.full_name} ({current_user.role}) updated recommendation '{rec.title}' status to {status_value}",
         request=request
     )
-    
     await db.commit()
-    return ApiResponse(success=True, data={"id": rec.id, "status": rec.status}, message=f"Recommendation marked as {rec.status}")
+    return ApiResponse(success=True, data={"id": rec.id, "status": rec.status}, message="Recommendation status updated")
+

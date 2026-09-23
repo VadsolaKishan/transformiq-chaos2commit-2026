@@ -103,7 +103,17 @@ export const DashboardPage: React.FC = () => {
       try {
         const res: any = await api.get('/projects');
         if (res.success && res.data) {
-          setProjects(res.data);
+          const uniqueProjects: Project[] = [];
+          const seenIds = new Set<string>();
+          const seenNames = new Set<string>();
+          for (const p of res.data) {
+            if (!seenIds.has(p.id) && !seenNames.has(p.name)) {
+              seenIds.add(p.id);
+              seenNames.add(p.name);
+              uniqueProjects.push(p);
+            }
+          }
+          setProjects(uniqueProjects);
         }
       } catch (e) {
         console.error('Failed to load projects:', e);
