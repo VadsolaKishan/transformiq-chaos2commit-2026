@@ -283,11 +283,11 @@ export const ArchitecturePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleSaveLayout}
             disabled={isSaving}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
+            className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
           >
             <Save className="w-3.5 h-3.5 text-emerald-400" />
             <span>{isSaving ? 'Saving...' : 'Save Layout'}</span>
@@ -295,14 +295,14 @@ export const ArchitecturePage: React.FC = () => {
           <button
             onClick={handleRegenerate}
             disabled={isRegenerating}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
+            className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-blue-400 ${isRegenerating ? 'animate-spin' : ''}`} />
             <span>Regenerate</span>
           </button>
           <Link
             to={`/projects/${projectId}/process`}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-lg"
+            className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-lg"
           >
             <span>Next: BPMN Process</span>
             <ArrowRight className="w-4 h-4" />
@@ -311,7 +311,7 @@ export const ArchitecturePage: React.FC = () => {
       </div>
 
       {/* REACT FLOW CANVAS CONTAINER */}
-      <div className="h-[520px] rounded-2xl border border-slate-800 bg-slate-950/90 overflow-hidden relative shadow-2xl">
+      <div className="h-[400px] sm:h-[520px] rounded-2xl border border-slate-800 bg-slate-950/90 overflow-hidden relative shadow-2xl">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -321,15 +321,21 @@ export const ArchitecturePage: React.FC = () => {
           onNodeClick={onNodeClick}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
+          fitViewOptions={{ padding: 0.25, minZoom: 0.25, maxZoom: 1.1 }}
+          minZoom={0.2}
+          maxZoom={1.5}
         >
           <Background color="#1e293b" gap={20} />
-          <Controls showInteractive={false} />
+          <Controls showInteractive={false} className="hidden xs:block" />
         </ReactFlow>
+
+        <div className="absolute bottom-3 right-3 text-[10px] text-slate-400 bg-slate-900/80 border border-slate-800 px-2 py-1 rounded-lg backdrop-blur-xs pointer-events-none sm:hidden">
+          Pinch / Drag to explore
+        </div>
 
         {/* Selected Node Details Drawer */}
         {selectedNode && (
-          <div className="absolute top-4 right-4 w-80 bg-slate-900/95 border border-slate-700 rounded-2xl p-4 shadow-2xl text-xs z-10 backdrop-blur-md animate-fadeIn">
+          <div className="absolute inset-x-3 bottom-3 sm:inset-x-auto sm:top-4 sm:right-4 sm:w-80 bg-slate-900/95 border border-slate-700 rounded-2xl p-4 shadow-2xl text-xs z-20 backdrop-blur-md animate-fadeIn max-h-[60%] overflow-y-auto">
             <div className="flex items-center justify-between mb-2">
               <span className="font-bold uppercase tracking-wider text-blue-400">{selectedNode.layer}</span>
               <button

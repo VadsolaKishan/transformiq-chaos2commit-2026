@@ -64,23 +64,23 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   const style = variantStyles[variant];
 
   return (
-    <div className={`p-5 rounded-xl border ${style.border} ${style.bg} backdrop-blur-md relative overflow-hidden transition-all duration-200 hover:border-slate-600`}>
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t(title, title)}</p>
-          <h3 className="text-2xl font-bold text-slate-100 mt-1.5">{value}</h3>
-          {subtitle && <p className="text-xs text-slate-400 mt-1">{t(subtitle, subtitle)}</p>}
+    <div className={`p-3.5 sm:p-5 rounded-xl border ${style.border} ${style.bg} backdrop-blur-md relative overflow-hidden transition-all duration-200 hover:border-slate-600`}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 truncate">{t(title, title)}</p>
+          <h3 className="text-lg sm:text-2xl font-bold text-slate-100 mt-1 truncate">{value}</h3>
+          {subtitle && <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5 truncate">{t(subtitle, subtitle)}</p>}
         </div>
-        <div className={`p-3 rounded-lg ${style.iconBg}`}>
-          <Icon className="w-5 h-5" />
+        <div className={`p-2 sm:p-3 rounded-lg ${style.iconBg} shrink-0`}>
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
       </div>
       {trend && (
-        <div className="mt-3.5 pt-3 border-t border-slate-800/80 flex items-center text-xs">
-          <span className={`font-semibold ${trendPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
+        <div className="mt-2.5 sm:mt-3.5 pt-2 sm:pt-3 border-t border-slate-800/80 flex items-center text-[10px] sm:text-xs truncate">
+          <span className={`font-semibold shrink-0 ${trendPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
             {t(trend, trend)}
           </span>
-          <span className="text-slate-500 ml-1.5">{t('vs industry benchmark', 'vs industry benchmark')}</span>
+          <span className="text-slate-500 ml-1.5 truncate hidden xs:inline">{t('vs benchmark', 'vs benchmark')}</span>
         </div>
       )}
     </div>

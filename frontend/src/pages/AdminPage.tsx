@@ -210,33 +210,34 @@ export const AdminPage: React.FC = () => {
       )}
 
       {/* ADMIN PORTAL HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 backdrop-blur-xl shadow-xl">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 backdrop-blur-xl shadow-xl">
         <div>
           <div className="flex items-center space-x-2.5 mb-1">
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 text-white shadow-lg">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 text-white shadow-lg shrink-0">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl font-black text-white tracking-tight">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight">
                 {t('Enterprise Administration & Governance', 'Enterprise Administration & Governance')}
               </h1>
-              <p className="text-xs text-slate-400">
-                {t('platform_control_center', 'Chaos2Commit 2026 Platform Control Center • Centralized RBAC, Multi-Tenant Hierarchy & AI Telemetry')}
+              <p className="text-[11px] sm:text-xs text-slate-400">
+                {t('platform_control_center', 'Chaos2Commit 2026 Platform Control Center • Centralized RBAC & AI Telemetry')}
               </p>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={fetchAllData}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition border border-slate-700"
+            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition border border-slate-700 shrink-0"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
             <span>{t('sync', 'Sync')}</span>
           </button>
-          <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 flex items-center space-x-1">
+          <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 flex items-center space-x-1.5 shrink-0">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>{t('platform_status_healthy', 'Platform Status: Healthy (99.98%)')}</span>
+            <span className="sm:hidden">99.98% Healthy</span>
+            <span className="hidden sm:inline">{t('platform_status_healthy', 'Platform Status: Healthy (99.98%)')}</span>
           </span>
         </div>
       </div>
@@ -247,97 +248,97 @@ export const AdminPage: React.FC = () => {
       {activeTab === 'dashboard' && (
         <div className="space-y-6">
           {/* Top Stat Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center space-x-3.5">
-              <div className="p-3 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30">
-                <Users className="w-5 h-5" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3.5">
+              <div className="p-2 sm:p-3 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 w-fit shrink-0">
+                <Users className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('total_users', 'Total Users')}</span>
-                <h3 className="text-2xl font-black text-white">{metrics?.platform_summary.total_users || users.length || 7}</h3>
-                <span className="text-[10px] text-emerald-400 font-semibold">{t('all_7_roles_active', 'All 7 Roles Active')}</span>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center space-x-3.5">
-              <div className="p-3 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('organizations', 'Organizations')}</span>
-                <h3 className="text-2xl font-black text-white">{metrics?.platform_summary.total_organizations || 1}</h3>
-                <span className="text-[10px] text-slate-400">{t('multi_tenant_scoped', 'Multi-Tenant Scoped')}</span>
+              <div className="min-w-0">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block truncate">{t('total_users', 'Total Users')}</span>
+                <h3 className="text-xl sm:text-2xl font-black text-white">{metrics?.platform_summary.total_users || users.length || 7}</h3>
+                <span className="text-[10px] text-emerald-400 font-semibold block truncate">{t('all_7_roles_active', 'All 7 Roles Active')}</span>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center space-x-3.5">
-              <div className="p-3 rounded-lg bg-purple-600/20 text-purple-400 border border-purple-500/30">
-                <FolderKanban className="w-5 h-5" />
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3.5">
+              <div className="p-2 sm:p-3 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 w-fit shrink-0">
+                <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('initiatives', 'Initiatives')}</span>
-                <h3 className="text-2xl font-black text-white">{metrics?.platform_summary.total_projects || projects.length || 1}</h3>
-                <span className="text-[10px] text-purple-400 font-semibold">{t('13_pipeline_stages', '13 Pipeline Stages')}</span>
+              <div className="min-w-0">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block truncate">{t('organizations', 'Organizations')}</span>
+                <h3 className="text-xl sm:text-2xl font-black text-white">{metrics?.platform_summary.total_organizations || 1}</h3>
+                <span className="text-[10px] text-slate-400 block truncate">{t('multi_tenant_scoped', 'Multi-Tenant')}</span>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center space-x-3.5">
-              <div className="p-3 rounded-lg bg-amber-600/20 text-amber-400 border border-amber-500/30">
-                <Cpu className="w-5 h-5" />
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3.5">
+              <div className="p-2 sm:p-3 rounded-lg bg-purple-600/20 text-purple-400 border border-purple-500/30 w-fit shrink-0">
+                <FolderKanban className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('ai_invocations', 'AI Invocations')}</span>
-                <h3 className="text-2xl font-black text-white">{metrics?.ai_usage_analytics.total_ai_runs || 142}</h3>
-                <span className="text-[10px] text-amber-400 font-semibold">${metrics?.ai_usage_analytics.estimated_ai_cost_mtd_usd || '4.82'} {t('mtd_spend', 'MTD Spend')}</span>
+              <div className="min-w-0">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block truncate">{t('initiatives', 'Initiatives')}</span>
+                <h3 className="text-xl sm:text-2xl font-black text-white">{metrics?.platform_summary.total_projects || projects.length || 1}</h3>
+                <span className="text-[10px] text-purple-400 font-semibold block truncate">{t('13_pipeline_stages', '13 Stages')}</span>
+              </div>
+            </div>
+
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3.5">
+              <div className="p-2 sm:p-3 rounded-lg bg-amber-600/20 text-amber-400 border border-amber-500/30 w-fit shrink-0">
+                <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block truncate">{t('ai_invocations', 'AI Runs')}</span>
+                <h3 className="text-xl sm:text-2xl font-black text-white">{metrics?.ai_usage_analytics.total_ai_runs || 142}</h3>
+                <span className="text-[10px] text-amber-400 font-semibold block truncate">${metrics?.ai_usage_analytics.estimated_ai_cost_mtd_usd || '4.82'} MTD</span>
               </div>
             </div>
           </div>
 
           {/* Quick Overview Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {/* System Health & Architecture */}
-            <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 sm:space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <Activity className="w-4 h-4 text-emerald-400" />
                 <span>{t('security__rbac_enforcement_status', 'Security & RBAC Enforcement Status')}</span>
               </h3>
-              <div className="space-y-2.5 text-xs">
-                <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+              <div className="space-y-2 text-xs">
+                <div className="p-2.5 sm:p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="text-slate-300">{t('tenant_isolation_policy', 'Tenant Isolation Policy')}</span>
                   <span className="font-bold text-emerald-400 flex items-center space-x-1">
                     <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> ORGANIZATION_SCOPED
                   </span>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+                <div className="p-2.5 sm:p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="text-slate-300">{t('data_encryption_standard', 'Data Encryption Standard')}</span>
                   <span className="font-mono text-blue-400">AES-256 (At Rest) / TLS 1.3</span>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+                <div className="p-2.5 sm:p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="text-slate-300">{t('vector_search_engine', 'Vector Search Engine')}</span>
                   <span className="font-mono text-purple-400">PostgreSQL 16 + pgvector</span>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+                <div className="p-2.5 sm:p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="text-slate-300">{t('immutable_audit_logging', 'Immutable Audit Logging')}</span>
-                  <span className="font-bold text-emerald-400">ENABLED (Realtime Append-Only)</span>
+                  <span className="font-bold text-emerald-400">ENABLED (Append-Only)</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Admin Actions */}
-            <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 sm:space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <Zap className="w-4 h-4 text-amber-400" />
                 <span>{t('quick_administration_workflows', 'Quick Administration Workflows')}</span>
               </h3>
-              <div className="grid grid-cols-2 gap-2.5 text-xs">
+              <div className="grid grid-cols-2 gap-2 sm:gap-2.5 text-xs">
                 <button
                   onClick={() => setSearchParams({ tab: 'users' })}
                   className="p-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-left transition flex flex-col justify-between space-y-2 group"
                 >
                   <Users className="w-4 h-4 text-blue-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">{t('manage_users', 'Manage Users')}</span>
-                    <span className="text-[10px] text-slate-400">{t('assign_roles__status', 'Assign roles & status')}</span>
+                    <span className="font-bold text-slate-200 block truncate">{t('manage_users', 'Manage Users')}</span>
+                    <span className="text-[10px] text-slate-400 truncate block">{t('assign_roles__status', 'Assign roles & status')}</span>
                   </div>
                 </button>
 
@@ -347,8 +348,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <Building2 className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">{t('organization', 'Organization')}</span>
-                    <span className="text-[10px] text-slate-400">{t('profile__compliance', 'Profile & compliance')}</span>
+                    <span className="font-bold text-slate-200 block truncate">{t('organization', 'Organization')}</span>
+                    <span className="text-[10px] text-slate-400 truncate block">{t('profile__compliance', 'Profile & compliance')}</span>
                   </div>
                 </button>
 
@@ -358,8 +359,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <Bot className="w-4 h-4 text-purple-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">{t('ai_token_telemetry', 'AI Token Telemetry')}</span>
-                    <span className="text-[10px] text-slate-400">{t('monitor_model_spend', 'Monitor model spend')}</span>
+                    <span className="font-bold text-slate-200 block truncate">{t('ai_token_telemetry', 'AI Telemetry')}</span>
+                    <span className="text-[10px] text-slate-400 truncate block">{t('monitor_model_spend', 'Monitor model spend')}</span>
                   </div>
                 </button>
 
@@ -369,8 +370,8 @@ export const AdminPage: React.FC = () => {
                 >
                   <ScrollText className="w-4 h-4 text-amber-400 group-hover:scale-110 transition" />
                   <div>
-                    <span className="font-bold text-slate-200 block">{t('audit_trail', 'Audit Trail')}</span>
-                    <span className="text-[10px] text-slate-400">{t('review_security_logs', 'Review security logs')}</span>
+                    <span className="font-bold text-slate-200 block truncate">{t('audit_trail', 'Audit Trail')}</span>
+                    <span className="text-[10px] text-slate-400 truncate block">{t('review_security_logs', 'Review security logs')}</span>
                   </div>
                 </button>
               </div>
@@ -378,8 +379,8 @@ export const AdminPage: React.FC = () => {
           </div>
 
           {/* Recent Audit Stream */}
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+          <div className="p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 pb-3 border-b border-slate-800 gap-2">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <ScrollText className="w-4 h-4 text-blue-400" />
                 <span>{t('recent_platform_governance_events', 'Recent Platform Governance Events')}</span>
@@ -394,14 +395,16 @@ export const AdminPage: React.FC = () => {
             </div>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {(metrics?.recent_audit_events || auditLogs.slice(0, 5)).map((a: any) => (
-                <div key={a.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 mr-2">
-                      {a.action}
-                    </span>
-                    <span className="text-slate-300">{a.details || a.action}</span>
+                <div key={a.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4">
+                  <div className="min-w-0 space-y-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">
+                        {a.action}
+                      </span>
+                    </div>
+                    <p className="text-slate-300 text-[11px] break-words leading-relaxed">{a.details || a.action}</p>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono shrink-0 ml-4">
+                  <span className="text-[10px] text-slate-500 font-mono shrink-0 sm:ml-4">
                     {new Date(a.created_at).toLocaleTimeString()}
                   </span>
                 </div>
@@ -774,7 +777,7 @@ export const AdminPage: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'roles' && (
         <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div className="p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div className="pb-4 border-b border-slate-800">
               <h3 className="text-base font-bold text-white flex items-center space-x-2">
                 <Lock className="w-5 h-5 text-purple-400" />
@@ -785,7 +788,7 @@ export const AdminPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="mt-6 space-y-4">
+            <div className="mt-4 sm:mt-6 space-y-3 sm:space-y-4">
               {[
                 { role: 'ADMIN', color: 'text-rose-400 bg-rose-500/10 border-rose-500/30', desc: 'Platform telemetry, user provisioning, audit logging, tenant isolation.' },
                 { role: 'PROJECT_OWNER', color: 'text-amber-400 bg-amber-500/10 border-amber-500/30', desc: 'Full transformation ownership, team invitations, blueprint generation & approval.' },
@@ -797,15 +800,17 @@ export const AdminPage: React.FC = () => {
               ].map((r) => {
                 const perms = rolesMatrix?.matrix?.[r.role] || [];
                 return (
-                  <div key={r.role} className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
+                  <div key={r.role} className="p-3.5 sm:p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className={`px-2.5 py-1 rounded-md text-xs font-bold border ${r.color}`}>
                           {r.role}
                         </span>
-                        <span className="text-xs text-slate-300 font-medium">{r.desc}</span>
+                        <span className="text-[11px] text-slate-400 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800">
+                          {perms.length} Permissions
+                        </span>
                       </div>
-                      <span className="text-[11px] text-slate-400 font-mono">{perms.length} Permissions</span>
+                      <p className="text-xs text-slate-300 font-medium leading-relaxed">{r.desc}</p>
                     </div>
                     <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-800/80">
                       {perms.map((p: string) => (
@@ -1075,7 +1080,7 @@ export const AdminPage: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'integrations' && (
         <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div className="p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div className="pb-4 border-b border-slate-800">
               <h3 className="text-base font-bold text-white flex items-center space-x-2">
                 <Plug className="w-5 h-5 text-blue-400" />
@@ -1086,19 +1091,19 @@ export const AdminPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {integrations.map((item) => (
-                <div key={item.key} className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                <div key={item.key} className="p-3.5 sm:p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-white text-sm">{item.name}</span>
-                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold shrink-0">
                         {item.status}
                       </span>
                     </div>
-                    <p className="text-slate-400">{item.category} • Health: {item.health}</p>
+                    <p className="text-slate-400 text-[11px]">{item.category} • Health: {item.health}</p>
                   </div>
-                  <span className="px-3 py-1 rounded bg-slate-800 text-slate-300 font-semibold text-[11px]">
+                  <span className="px-3 py-1 rounded bg-slate-800 text-slate-300 font-semibold text-[11px] w-fit shrink-0">
                     {t('connected', 'Connected')}
                   </span>
                 </div>

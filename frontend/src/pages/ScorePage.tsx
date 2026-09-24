@@ -94,18 +94,18 @@ export const ScorePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleRecalculate}
             disabled={isRecalculating}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-2"
+            className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-2"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${isRecalculating ? 'animate-spin' : ''}`} />
             <span>{isRecalculating ? 'Calculating...' : 'Recalculate Score'}</span>
           </button>
           <Link
             to={`/projects/${projectId}/blueprint`}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-lg"
+            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-lg"
           >
             <span>Next: Master Blueprint</span>
             <ArrowRight className="w-4 h-4" />
@@ -114,15 +114,15 @@ export const ScorePage: React.FC = () => {
       </div>
 
       {/* OVERALL SCORE HERO */}
-      <div className="p-8 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/80 to-blue-950/40 border border-emerald-500/30 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="p-4 sm:p-8 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/80 to-blue-950/40 border border-emerald-500/30 backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8">
         <div>
           <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 flex items-center mb-1">
             <Award className="w-4 h-4 mr-1.5" /> Overall Transformation Score
           </span>
-          <div className="flex items-baseline space-x-3 mt-1">
-            <h2 className="text-5xl sm:text-6xl font-black text-white">{data?.overall_score || 88}</h2>
-            <span className="text-xl text-slate-400 font-bold">/ 100</span>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 ml-2">
+          <div className="flex flex-wrap items-baseline gap-2.5 mt-1">
+            <h2 className="text-4xl sm:text-6xl font-black text-white">{data?.overall_score || 88}</h2>
+            <span className="text-lg sm:text-xl text-slate-400 font-bold">/ 100</span>
+            <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300">
               Top Quartile (Implementation Ready)
             </span>
           </div>

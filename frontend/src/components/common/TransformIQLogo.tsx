@@ -33,7 +33,7 @@ export const TransformIQLogo: React.FC<LogoProps> = ({
   };
 
   return (
-    <div className={`flex items-center space-x-3 ${className}`}>
+    <div className={`flex items-center space-x-2 sm:space-x-3 ${className}`}>
       {/* High-Tech Vector Hexagonal Mark */}
       <div className={`relative ${iconSizes[size]} shrink-0 group`}>
         {/* Ambient Glow */}
@@ -89,7 +89,7 @@ export const TransformIQLogo: React.FC<LogoProps> = ({
 
       {/* Typography & Brand Meta */}
       <div className="flex flex-col text-left">
-        <div className="flex items-center space-x-1.5">
+        <div className="flex items-center space-x-1 sm:space-x-1.5">
           <span className={`font-black ${textSizes[size]} tracking-tight text-white leading-none`}>
             Transform<span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent">IQ</span>
           </span>
@@ -98,7 +98,7 @@ export const TransformIQLogo: React.FC<LogoProps> = ({
           </span>
         </div>
         {showSubtitle && (
-          <span className="text-[10px] text-slate-400 font-medium tracking-wide mt-0.5">
+          <span className="text-[10px] text-slate-400 font-medium tracking-wide mt-0.5 hidden sm:block">
             Chaos → Context → Blueprint
           </span>
         )}

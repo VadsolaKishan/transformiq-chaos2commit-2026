@@ -72,19 +72,19 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans text-slate-100 selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-3.5 sm:p-6 relative overflow-hidden font-sans text-slate-100 selection:bg-blue-600 selection:text-white">
       {/* Dynamic Ambient Background Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[650px] bg-gradient-to-tr from-blue-600/15 via-cyan-500/10 to-indigo-600/15 blur-3xl pointer-events-none rounded-full" />
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-emerald-500/10 blur-3xl pointer-events-none rounded-full" />
 
-      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative z-10">
+      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 backdrop-blur-2xl shadow-2xl relative z-10">
         {/* Header with Logo */}
-        <div className="flex flex-col items-center text-center mb-8">
-          <Link to="/" className="mb-4 hover:opacity-95 transition-opacity">
-            <TransformIQLogo size="lg" showSubtitle />
+        <div className="flex flex-col items-center text-center mb-6 sm:mb-8">
+          <Link to="/" className="mb-3 sm:mb-4 hover:opacity-95 transition-opacity">
+            <TransformIQLogo size="md" showSubtitle />
           </Link>
           
-          <h2 className="text-xl font-extrabold text-white tracking-tight">
+          <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
             {step === 'request' && 'Reset Your Password'}
             {step === 'verify' && 'Enter Verification Code'}
             {step === 'success' && 'Password Reset Complete'}

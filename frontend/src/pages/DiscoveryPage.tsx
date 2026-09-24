@@ -268,24 +268,24 @@ export const DiscoveryPage: React.FC = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-6.5rem)] flex flex-col md:flex-row gap-6 animate-fadeIn max-w-7xl mx-auto">
+    <div className="min-h-[calc(100vh-6.5rem)] md:h-[calc(100vh-6.5rem)] flex flex-col md:flex-row gap-4 sm:gap-6 animate-fadeIn max-w-7xl mx-auto">
       {/* LEFT: CONTEXT & DOCUMENTS SIDEBAR */}
-      <div className="w-full md:w-80 flex flex-col gap-4 shrink-0">
+      <div className="w-full md:w-80 flex flex-col gap-3 sm:gap-4 shrink-0">
         {/* Project Context Summary */}
-        <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
           <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-blue-400 mb-2">
             <Compass className="w-4 h-4" />
             <span>Project Scope Context</span>
           </div>
           <h3 className="text-sm font-bold text-white truncate">{project?.name}</h3>
-          <p className="text-[11px] text-slate-400 mt-1 leading-relaxed line-clamp-4">
+          <p className="text-[11px] text-slate-400 mt-1 leading-relaxed line-clamp-3 sm:line-clamp-4">
             {project?.business_problem || 'Analyzing enterprise business challenge...'}
           </p>
 
           <div className="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-[11px]">
             <div>
               <span className="text-slate-500 block">Vertical</span>
-              <span className="text-slate-300 font-semibold">{project?.industry}</span>
+              <span className="text-slate-300 font-semibold truncate block">{project?.industry}</span>
             </div>
             <div>
               <span className="text-slate-500 block">Readiness</span>
@@ -295,7 +295,7 @@ export const DiscoveryPage: React.FC = () => {
         </div>
 
         {/* Ingested Documents */}
-        <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 flex-1 overflow-y-auto">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-900/70 border border-slate-800 md:flex-1 max-h-72 md:max-h-none overflow-y-auto">
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center">
               <FileText className="w-3.5 h-3.5 text-emerald-400 mr-1.5" />
@@ -355,7 +355,7 @@ export const DiscoveryPage: React.FC = () => {
             {documents.map((d) => (
               <div key={d.id} className="p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/60 text-xs">
                 <div className="flex items-center justify-between font-semibold text-slate-200">
-                  <span className="truncate max-w-[170px]" title={d.filename}>{d.filename}</span>
+                  <span className="truncate max-w-[150px] sm:max-w-[170px]" title={d.filename}>{d.filename}</span>
                   <span className={`text-[10px] uppercase font-mono px-1 rounded ${
                     d.file_type === 'url' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-blue-500/20 text-blue-300'
                   }`}>
@@ -386,28 +386,28 @@ export const DiscoveryPage: React.FC = () => {
       </div>
 
       {/* RIGHT: INTERACTIVE CHAT COMPANION */}
-      <div className="flex-1 flex flex-col bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl">
+      <div className="min-h-[480px] md:min-h-0 flex-1 flex flex-col bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl">
         {/* Chat Header */}
-        <div className="px-6 py-4 border-b border-slate-800 bg-slate-950/40 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-emerald-400 flex items-center justify-center text-white shadow-md">
-              <Bot className="w-5 h-5" />
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 bg-slate-950/40 flex items-center justify-between">
+          <div className="flex items-center space-x-2.5 sm:space-x-3">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-emerald-400 flex items-center justify-center text-white shadow-md shrink-0">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center">
+              <h3 className="text-xs sm:text-sm font-bold text-white flex items-center">
                 AI Discovery Companion
                 <span className="ml-2 w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               </h3>
-              <p className="text-[11px] text-slate-400">Continuous context learner & requirement synthesizer</p>
+              <p className="text-[10px] sm:text-[11px] text-slate-400 hidden xs:block">Continuous context learner & requirement synthesizer</p>
             </div>
           </div>
-          <span className="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono">
-            Lang: {language.toUpperCase()}
+          <span className="text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded bg-slate-800 text-slate-300 font-mono shrink-0">
+            {language.toUpperCase()}
           </span>
         </div>
 
         {/* Message Log */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6 space-y-3.5 sm:space-y-4">
           {messages.map((msg, idx) => {
             const isUser = msg.role === 'user';
             return (

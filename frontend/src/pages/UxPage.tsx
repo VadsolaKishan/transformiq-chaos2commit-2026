@@ -328,16 +328,16 @@ export const ${activeWireframe.screen_name.replace(/[^a-zA-Z0-9]/g, '')}Screen: 
 
         {/* DEVICE FRAME CONTAINER */}
         {activeWireframe && (
-          <div className="flex justify-center py-4">
+          <div className="flex justify-center py-2 sm:py-4 overflow-x-auto max-w-full">
             <div
-              className={`transition-all duration-300 shadow-2xl rounded-3xl overflow-hidden border-4 ${themeStyles.border} ${themeStyles.bg} ${
+              className={`transition-all duration-300 shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden border-2 sm:border-4 ${themeStyles.border} ${themeStyles.bg} ${
                 selectedDevice === 'desktop'
-                  ? 'w-full min-h-[460px]'
+                  ? 'w-full min-h-[420px]'
                   : selectedDevice === 'tablet'
-                  ? 'w-[720px] min-h-[480px]'
+                  ? 'w-full max-w-[720px] min-h-[440px]'
                   : selectedDevice === 'ios'
-                  ? 'w-[375px] min-h-[640px] rounded-[48px] border-8 border-slate-800 relative ring-1 ring-slate-700'
-                  : 'w-[380px] min-h-[620px] rounded-[36px] border-8 border-slate-800 relative ring-1 ring-slate-700'
+                  ? 'w-full max-w-[375px] min-h-[560px] rounded-[32px] sm:rounded-[48px] border-4 sm:border-8 border-slate-800 relative ring-1 ring-slate-700'
+                  : 'w-full max-w-[380px] min-h-[560px] rounded-[28px] sm:rounded-[36px] border-4 sm:border-8 border-slate-800 relative ring-1 ring-slate-700'
               }`}
             >
               {/* iPhone Dynamic Island / Android Camera cutout */}

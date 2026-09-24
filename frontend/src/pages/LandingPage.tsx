@@ -25,26 +25,26 @@ export const LandingPage: React.FC = () => {
       <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-emerald-500/10 blur-3xl pointer-events-none" />
 
       {/* HEADER */}
-      <header className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-10">
-        <Link to="/" className="hover:opacity-95 transition-opacity">
-          <TransformIQLogo size="md" showSubtitle />
+      <header className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between relative z-10 gap-2">
+        <Link to="/" className="hover:opacity-95 transition-opacity shrink-0">
+          <TransformIQLogo size="sm" showSubtitle={false} className="sm:hidden" />
+          <TransformIQLogo size="md" showSubtitle className="hidden sm:flex" />
         </Link>
 
-
-        <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-amber-400 font-medium">
+        <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
+          <div className="hidden lg:flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-amber-400 font-medium">
             <Flame className="w-3.5 h-3.5" />
             <span>Chaos2Commit Hackathon 2026</span>
           </div>
           <Link
             to="/login"
-            className="text-sm font-semibold text-slate-300 hover:text-white px-3 py-2 transition"
+            className="text-xs sm:text-sm font-semibold text-slate-300 hover:text-white px-2.5 sm:px-3 py-1.5 sm:py-2 transition"
           >
             Sign In
           </Link>
           <Link
             to="/register"
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 hover:from-blue-500 hover:to-emerald-400 text-white font-bold text-sm shadow-lg shadow-blue-600/25 transition transform hover:-translate-y-0.5"
+            className="px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 hover:from-blue-500 hover:to-emerald-400 text-white font-bold text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition transform hover:-translate-y-0.5"
           >
             Get Started
           </Link>

@@ -79,7 +79,7 @@ export const CollaborationPage: React.FC = () => {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex items-center space-x-2 bg-slate-900 p-1 rounded-xl border border-slate-800">
+        <div className="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
           <button
             onClick={() => setActiveTab('comments')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition ${

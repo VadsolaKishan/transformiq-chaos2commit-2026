@@ -158,28 +158,28 @@ export const DashboardPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8 animate-fadeIn max-w-7xl mx-auto">
+    <div className="space-y-6 sm:space-y-8 animate-fadeIn max-w-7xl mx-auto">
       {/* ROLE-AWARE PERSPECTIVE BANNER */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900/80 to-indigo-950/60 border border-blue-500/30 shadow-xl relative overflow-hidden">
+      <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900/80 to-indigo-950/60 border border-blue-500/30 shadow-xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="flex items-center space-x-2 mb-1.5">
-              <span className="text-[11px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40">
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40">
                 {t(roleInfo.badge, roleInfo.badge)}
               </span>
-              <span className="text-xs text-slate-400">
+              <span className="text-[11px] sm:text-xs text-slate-400">
                 {t('Active User', 'Active User')}: <strong className="text-white">{user?.full_name || 'Enterprise User'}</strong>
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white">
               {t(roleInfo.title, roleInfo.title)}
             </h1>
-            <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+            <p className="text-[11px] sm:text-xs text-slate-300 mt-1 max-w-2xl">
               {t(roleInfo.subtitle, roleInfo.subtitle)}
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             {role === 'ADMIN' && (
               <Link
                 to="/admin"

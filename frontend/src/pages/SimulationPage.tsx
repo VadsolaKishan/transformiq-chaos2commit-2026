@@ -197,7 +197,7 @@ export const SimulationPage: React.FC = () => {
           {/* Lever 4: AI Adoption Mode */}
           <div>
             <label className="block text-xs font-bold text-slate-200 mb-2">AI Adoption Aggressiveness</label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {['LOW', 'MEDIUM', 'HIGH', 'AGGRESSIVE'].map((lvl) => (
                 <button
                   key={lvl}

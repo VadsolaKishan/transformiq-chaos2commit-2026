@@ -288,11 +288,11 @@ export const ProcessPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleSaveLayout}
             disabled={isSaving}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
+            className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
           >
             <Save className="w-3.5 h-3.5 text-emerald-400" />
             <span>{isSaving ? 'Saving...' : 'Save Layout'}</span>
@@ -300,14 +300,14 @@ export const ProcessPage: React.FC = () => {
           <button
             onClick={handleRegenerate}
             disabled={isRegenerating}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
+            className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-purple-400 ${isRegenerating ? 'animate-spin' : ''}`} />
             <span>Regenerate</span>
           </button>
           <Link
             to={`/projects/${projectId}/database`}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-lg"
+            className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-lg"
           >
             <span>Next: Database & ER</span>
             <ArrowRight className="w-4 h-4" />
@@ -316,9 +316,9 @@ export const ProcessPage: React.FC = () => {
       </div>
 
       {/* LATENCY REDUCTION BANNER */}
-      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center space-x-3">
-          <div className="p-2.5 rounded-lg bg-purple-500/10 text-purple-400">
+          <div className="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0">
             <TrendingDown className="w-5 h-5" />
           </div>
           <div>
@@ -329,13 +329,13 @@ export const ProcessPage: React.FC = () => {
             </p>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+        <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
           ⚡ {procData?.efficiency_gain || '87.5% Efficiency Gain'}
         </span>
       </div>
 
       {/* REACT FLOW BPMN CANVAS */}
-      <div className="h-[520px] rounded-2xl border border-slate-800 bg-slate-950/90 overflow-hidden relative shadow-2xl">
+      <div className="h-[400px] sm:h-[520px] rounded-2xl border border-slate-800 bg-slate-950/90 overflow-hidden relative shadow-2xl">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -343,11 +343,17 @@ export const ProcessPage: React.FC = () => {
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
+          fitViewOptions={{ padding: 0.25, minZoom: 0.25, maxZoom: 1.1 }}
+          minZoom={0.2}
+          maxZoom={1.5}
         >
           <Background color="#1e293b" gap={20} />
-          <Controls showInteractive={false} />
+          <Controls showInteractive={false} className="hidden xs:block" />
         </ReactFlow>
+
+        <div className="absolute bottom-3 right-3 text-[10px] text-slate-400 bg-slate-900/80 border border-slate-800 px-2 py-1 rounded-lg backdrop-blur-xs pointer-events-none sm:hidden">
+          Pinch / Drag to explore
+        </div>
       </div>
 
       {/* SWIMLANES SUMMARY */}
