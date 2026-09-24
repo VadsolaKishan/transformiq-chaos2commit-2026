@@ -34,12 +34,19 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Ensure table schemas exist without forced dummy data
-    logger.info("Verifying database schema...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all, checkfirst=True)
-        
-    logger.info("TransformIQ Backend Engine ready with clean database.")
+    # Startup: Ensure table schemas exist without blocking server readiness
+    async def init_db():
+        try:
+            logger.info("Verifying database schema...")
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all, checkfirst=True)
+            logger.info("TransformIQ Backend Engine ready with clean database.")
+        except Exception as e:
+            logger.warning(f"Database schema check notice: {e}")
+
+    import asyncio
+    asyncio.create_task(init_db())
+    logger.info("TransformIQ Backend Engine startup initialized.")
     yield
     # Shutdown
     await engine.dispose()
