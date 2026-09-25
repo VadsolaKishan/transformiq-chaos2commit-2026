@@ -3,10 +3,11 @@
 # 🚀 TransformIQ — Autonomous AI Transformation OS & Solution Builder
 ### *From Business Chaos to Verifiable, Implementation-Ready Architecture, Code & Enterprise Blueprints*
 
-[![Chaos2Commit 2026](https://img.shields.io/badge/Hackathon-Chaos2Commit_2026-6366f1?style=for-the-badge)](https://github.com/ThummarDarshan/TransformIQ)
-[![AI Track](https://img.shields.io/badge/Track-AI-10b981?style=for-the-badge)](https://github.com/ThummarDarshan/TransformIQ)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_Python_3.10+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React 18](https://img.shields.io/badge/Frontend-React_18_TypeScript_Vite-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
+[![Chaos2Commit 2026](https://img.shields.io/badge/Hackathon-Chaos2Commit_2026-6366f1?style=for-the-badge)](https://github.com/VadsolaKishan/transformiq-chaos2commit-2026)
+[![AI Track](https://img.shields.io/badge/Track-AI-10b981?style=for-the-badge)](https://github.com/VadsolaKishan/transformiq-chaos2commit-2026)
+[![Frontend Live](https://img.shields.io/badge/Frontend-Vercel_Live-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://transformiq-chaos2commit-2026.vercel.app/)
+[![Backend Live](https://img.shields.io/badge/Backend-FastAPI_Cloud-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://transformiq-9dda8cc0.fastapicloud.dev)
+[![API Docs](https://img.shields.io/badge/Swagger-API_Docs-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://transformiq-9dda8cc0.fastapicloud.dev/docs)
 [![PostgreSQL](https://img.shields.io/badge/Database-Neon_PostgreSQL_16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
 [![Gemini](https://img.shields.io/badge/AI_Engine-Google_Gemini_3.6_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
 [![Tests Passing](https://img.shields.io/badge/Tests-Passed_100%25-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
@@ -25,9 +26,10 @@
 | **Track** | **AI** |
 | **Team Lead** | **Darshan Thummar** ([`darshantce.059@gmail.com`](mailto:darshantce.059@gmail.com)) |
 | **Team Members** | **Shreeja Upadhyay**, **Kishan Vadsola**, **Vishv Undavia** |
-| **Backend Deployment** | **Render Web Service** (FastAPI + Asyncpg + Neon PostgreSQL) |
-| **Frontend Deployment** | **Vercel Edge** (React 18 + TypeScript + Vite + TailwindCSS) |
-| **Repository** | [`https://github.com/ThummarDarshan/TransformIQ`](https://github.com/ThummarDarshan/TransformIQ) |
+| **Live Frontend App** | [**https://transformiq-chaos2commit-2026.vercel.app/**](https://transformiq-chaos2commit-2026.vercel.app/) |
+| **Live Backend API** | [**https://transformiq-9dda8cc0.fastapicloud.dev**](https://transformiq-9dda8cc0.fastapicloud.dev) |
+| **Interactive API Docs** | [**https://transformiq-9dda8cc0.fastapicloud.dev/docs**](https://transformiq-9dda8cc0.fastapicloud.dev/docs) |
+| **Repository** | [`https://github.com/VadsolaKishan/transformiq-chaos2commit-2026`](https://github.com/VadsolaKishan/transformiq-chaos2commit-2026) |
 
 ---
 
@@ -44,7 +46,7 @@
 7. [Enterprise Security, RBAC & Governance](#7-enterprise-security-rbac--governance)
 8. [Technology Stack](#8-technology-stack)
 9. [Local Quick Start & Execution Guide](#9-local-quick-start--execution-guide)
-10. [Cloud Deployment Guide (Render, Vercel & Neon)](#10-cloud-deployment-guide-render-vercel--neon)
+10. [Cloud Deployment Guide (FastAPI Cloud, Vercel & Neon)](#10-cloud-deployment-guide-fastapi-cloud-vercel--neon)
 11. [REST API Catalog](#11-rest-api-catalog)
 12. [Automated Testing & Security Validation](#12-automated-testing--security-validation)
 13. [Pre-Seeded 1-Click Evaluation Accounts](#13-pre-seeded-1-click-evaluation-accounts)
@@ -651,6 +653,14 @@ graph LR
 
 ---
 
+### Step 0: Clone the Repository
+```bash
+git clone https://github.com/VadsolaKishan/transformiq-chaos2commit-2026.git
+cd transformiq-chaos2commit-2026
+```
+
+---
+
 ### Step 1: Backend Setup
 Open a terminal in the project root:
 
@@ -695,50 +705,58 @@ npm run dev
 
 ---
 
-## 10. Cloud Deployment Guide (Render, Vercel & Neon)
+## 10. Cloud Deployment Guide (FastAPI Cloud, Vercel & Neon)
 
 TransformIQ is architected for instant, decoupled production deployment:
 
 ```
-┌────────────────────────────────────────────────────────┐
-│                   VERCEL (Frontend)                    │
-│   React 18 + Vite + TypeScript (Global Edge CDN)       │
-│   Live URL: https://transformiq.vercel.app             │
-└──────────────────────────┬─────────────────────────────┘
-                           │ HTTPS / JSON REST API
-                           ▼
-┌────────────────────────────────────────────────────────┐
-│                   RENDER (Backend)                     │
-│   FastAPI + Uvicorn + Python 3.10+ (Web Service)       │
-│   Live URL: https://transformiq-backend.onrender.com   │
-└──────────────────────────┬─────────────────────────────┘
-                           │ Async PostgreSQL (asyncpg)
-                           ▼
-┌────────────────────────────────────────────────────────┐
-│                   NEON (Database)                      │
-│   Serverless PostgreSQL 16 + pgvector                  │
-└────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                       VERCEL (Frontend)                         │
+│   React 18 + Vite + TypeScript (Global Edge CDN)                │
+│   Live URL: https://transformiq-chaos2commit-2026.vercel.app/   │
+└────────────────────────────────┬────────────────────────────────┘
+                                 │ HTTPS / JSON REST API
+                                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                FASTAPI CLOUD PLATFORM (Backend)                 │
+│   FastAPI + Uvicorn + Python 3.10+ (Cloud Microservice)         │
+│   Live URL: https://transformiq-9dda8cc0.fastapicloud.dev      │
+│   Swagger Docs: https://transformiq-9dda8cc0.fastapicloud.dev/docs
+└────────────────────────────────┬────────────────────────────────┘
+                                 │ Async PostgreSQL (asyncpg)
+                                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       NEON (Database)                           │
+│   Serverless PostgreSQL 16 + pgvector                           │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### 🅰️ Backend on Render
-1. Connect repository to [Render Dashboard](https://dashboard.render.com).
-2. Create **Web Service** → Root Directory: `backend`.
-3. Build Command: `pip install -r requirements.txt`.
-4. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
-5. Environment Variables:
-   - `ENVIRONMENT=production`
-   - `DATABASE_URL=postgresql://<user>:<password>@<neon-host>/neondb?sslmode=require`
-   - `JWT_SECRET=your-secret-key-32-chars`
-   - `AI_PROVIDER=auto`
-   - `GEMINI_API_KEY=your-gemini-api-key`
-   - `GEMINI_MODEL=gemini-3.6-flash`
+### 🅰️ Backend on FastAPI Cloud Platform
+- **Live Base API**: [`https://transformiq-9dda8cc0.fastapicloud.dev`](https://transformiq-9dda8cc0.fastapicloud.dev)
+- **Interactive Swagger UI**: [`https://transformiq-9dda8cc0.fastapicloud.dev/docs`](https://transformiq-9dda8cc0.fastapicloud.dev/docs)
+- **ReDoc Interactive Docs**: [`https://transformiq-9dda8cc0.fastapicloud.dev/redoc`](https://transformiq-9dda8cc0.fastapicloud.dev/redoc)
+- **Service Health Check**: [`https://transformiq-9dda8cc0.fastapicloud.dev/health`](https://transformiq-9dda8cc0.fastapicloud.dev/health)
+
+#### Configuration & Environment Variables:
+- `ENVIRONMENT=production`
+- `DATABASE_URL=postgresql+asyncpg://<user>:<password>@<neon-host>/neondb?sslmode=require`
+- `JWT_SECRET=your-secret-key-32-chars`
+- `AI_PROVIDER=auto`
+- `GEMINI_API_KEY=your-gemini-api-key`
+- `GEMINI_MODEL=gemini-3.6-flash`
+
+---
 
 ### 🅱️ Frontend on Vercel
+- **Live Production URL**: [`https://transformiq-chaos2commit-2026.vercel.app/`](https://transformiq-chaos2commit-2026.vercel.app/)
+- **GitHub Repository**: [`https://github.com/VadsolaKishan/transformiq-chaos2commit-2026`](https://github.com/VadsolaKishan/transformiq-chaos2commit-2026)
+
+#### Vercel Deployment Settings:
 1. Import repository to [Vercel Dashboard](https://vercel.com/new).
 2. Framework Preset: `Vite`, Root Directory: `frontend`.
-3. Build Command: `npm run build`, Output: `dist`.
+3. Build Command: `npm run build`, Output Directory: `dist`.
 4. Environment Variable:
-   - `VITE_API_URL=https://transformiq-backend.onrender.com/api/v1`
+   - `VITE_API_URL=https://transformiq-9dda8cc0.fastapicloud.dev/api/v1`
 
 ---
 
