@@ -1,32 +1,33 @@
 <div align="center">
 
-# 🚀 TransformIQ — AI Solution Builder & Transformation OS
-### *From Business Chaos to Verifiable, Implementation-Ready Architecture & Blueprints*
+# 🚀 TransformIQ — Autonomous AI Transformation OS & Solution Builder
+### *From Business Chaos to Verifiable, Implementation-Ready Architecture, Code & Enterprise Blueprints*
 
-[![Chaos2Commit 2026](https://img.shields.io/badge/Hackathon-Chaos2Commit_2026-6366f1?style=for-the-badge)](https://github.com/VadsolaKishan/transformiq-chaos2commit-2026)
-[![AI Track](https://img.shields.io/badge/Track-AI-10b981?style=for-the-badge)](https://github.com/VadsolaKishan/transformiq-chaos2commit-2026)
+[![Chaos2Commit 2026](https://img.shields.io/badge/Hackathon-Chaos2Commit_2026-6366f1?style=for-the-badge)](https://github.com/ThummarDarshan/TransformIQ)
+[![AI Track](https://img.shields.io/badge/Track-AI-10b981?style=for-the-badge)](https://github.com/ThummarDarshan/TransformIQ)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_Python_3.10+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React 18](https://img.shields.io/badge/Frontend-React_18_TypeScript_Vite-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
-[![Render Backend](https://img.shields.io/badge/Deployed-Render_Web_Service-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com)
-[![Vercel Frontend](https://img.shields.io/badge/Deployed-Vercel_Edge-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
-[![Tests Passing](https://img.shields.io/badge/Tests-88%2F88_Passed_100%25-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
+[![PostgreSQL](https://img.shields.io/badge/Database-Neon_PostgreSQL_16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
+[![Gemini](https://img.shields.io/badge/AI_Engine-Google_Gemini_3.6_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
+[![Tests Passing](https://img.shields.io/badge/Tests-Passed_100%25-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
 
 <p align="center">
-  <strong>An end-to-end Enterprise AI Transformation Operating System</strong> that ingests messy business prompts, URLs, SOPs, BRDs, and audio transcripts, and automatically generates gap analyses, explainable AI recommendations, interactive React Flow architectures, BPMN workflows, PostgreSQL schemas, OpenAPI specs, UI mockups, dynamic what-if ROI simulations, and exportable enterprise blueprints in seconds.
+  <strong>TransformIQ</strong> is an enterprise-grade AI Transformation Operating System that takes messy business requirements, documents (PDF/DOCX/PPTX), live URLs, and voice transcripts, and autonomously generates <strong>8-dimension gap analyses, explainable AI solutions, interactive React Flow architectures, BPMN workflows, PostgreSQL DDL schemas, OpenAPI 3.0 contracts, UI wireframes, dynamic what-if ROI simulations, exportable enterprise documents</strong>, and a <strong>self-correcting autonomous code generation ReAct agent with live preview and Git rollback</strong>.
 </p>
 
 ---
 
 ### 🏆 Chaos2Commit Hackathon 2026 Submission
 
-| Field | Value |
+| Field | Details |
 | :--- | :--- |
 | **Team Name** | **Eat-Code-Sleep** |
 | **Track** | **AI** |
-| **Team Lead** | **Darshan Thummar** — [`darshantce.059@gmail.com`](mailto:darshantce.059@gmail.com) |
-| **Members** | **Shreeja Upadhyay**, **Kishan Vadsola**, **Vishv Undavia** |
-| **Backend Deployment** | **Render Web Service** (FastAPI + Async Python + Neon Postgres / SQLite) |
-| **Frontend Deployment** | **Vercel Edge Platform** (React 18 + TypeScript + Vite + TailwindCSS) |
+| **Team Lead** | **Darshan Thummar** ([`darshantce.059@gmail.com`](mailto:darshantce.059@gmail.com)) |
+| **Team Members** | **Shreeja Upadhyay**, **Kishan Vadsola**, **Vishv Undavia** |
+| **Backend Deployment** | **Render Web Service** (FastAPI + Asyncpg + Neon PostgreSQL) |
+| **Frontend Deployment** | **Vercel Edge** (React 18 + TypeScript + Vite + TailwindCSS) |
+| **Repository** | [`https://github.com/ThummarDarshan/TransformIQ`](https://github.com/ThummarDarshan/TransformIQ) |
 
 ---
 
@@ -34,132 +35,509 @@
 
 ## 📌 Table of Contents
 
-1. [Executive Summary & Problem Solved](#1-executive-summary--problem-solved)
-2. [Product Architecture & End-to-End Pipeline](#2-product-architecture--end-to-end-pipeline)
-3. [Core Feature Breakdown & Innovation Highlights](#3-core-feature-breakdown--innovation-highlights)
-4. [Technology Stack](#4-technology-stack)
-5. [Live Cloud Deployment Guide (Render & Vercel)](#5-live-cloud-deployment-guide-render--vercel)
-6. [Local Quick Start & Execution](#6-local-quick-start--execution)
-7. [Automated Testing & Security Validation](#7-automated-testing--security-validation)
-8. [Enterprise RBAC & 1-Click Evaluation Accounts](#8-enterprise-rbac--1-click-evaluation-accounts)
-9. [Pre-Seeded Flagship Demo Scenario](#9-pre-seeded-flagship-demo-scenario)
-10. [Chaos2Commit Hackathon Compliance Checklist](#10-chaos2commit-hackathon-compliance-checklist)
+1. [Executive Summary & Problem Statement](#1-executive-summary--problem-statement)
+2. [End-to-End System Architecture](#2-end-to-end-system-architecture)
+3. [Database Entity Relationship (ER) Diagram](#3-database-entity-relationship-er-diagram)
+4. [Autonomous AI Code Generator (ReAct Loop)](#4-autonomous-ai-code-generator-react-loop)
+5. [Transformation Pipeline Lifecycle & Sequence Flow](#5-transformation-pipeline-lifecycle--sequence-flow)
+6. [Core Feature Breakdown & Innovations](#6-core-feature-breakdown--innovations)
+7. [Enterprise Security, RBAC & Governance](#7-enterprise-security-rbac--governance)
+8. [Technology Stack](#8-technology-stack)
+9. [Local Quick Start & Execution Guide](#9-local-quick-start--execution-guide)
+10. [Cloud Deployment Guide (Render, Vercel & Neon)](#10-cloud-deployment-guide-render-vercel--neon)
+11. [REST API Catalog](#11-rest-api-catalog)
+12. [Automated Testing & Security Validation](#12-automated-testing--security-validation)
+13. [Pre-Seeded 1-Click Evaluation Accounts](#13-pre-seeded-1-click-evaluation-accounts)
+14. [Hackathon Compliance Matrix](#14-hackathon-compliance-matrix)
 
 ---
 
-## 1. Executive Summary & Problem Solved
+## 1. Executive Summary & Problem Statement
 
 ### 💥 The Problem: Enterprise Transformation is Broken
-Traditional enterprise consulting and technical architecture discovery is **slow, manual, and cost-prohibitive**:
-- **Months of Discovery**: Teams spend 3–6 months conducting stakeholder interviews, reading unstructured documents, and mapping legacy systems.
-- **Disconnected Deliverables**: Business analysts write Word documents, architects build static Visio diagrams, developers draft OpenAPI specs, and PMs build Excel ROI models—leading to communication silos and conflicting specifications.
-- **Black-Box AI**: Typical AI tools output superficial text without structured data schemas, explainable rationale, or verifiable architecture diagrams.
-- **Cost**: Enterprises spend $250,000 to $1,500,000+ per transformation initiative on high-friction consulting engagements.
+Traditional enterprise consulting and technical architecture discovery is **slow, high-friction, siloed, and cost-prohibitive**:
+- **Months of Discovery**: Teams spend 3–6 months conducting stakeholder interviews, reading unstructured documents, and manually mapping legacy architectures.
+- **Disconnected Deliverables**: Business analysts write Word documents, architects build static Visio diagrams, developers draft OpenAPI specs, and PMs build Excel ROI models—creating communication silos and stale specifications.
+- **Black-Box AI**: Generic LLMs produce superficial text without verifiable data schemas, explainable rationale, executable code, or interactive architecture diagrams.
+- **High Financial Cost**: Enterprises spend $250,000 to $1,500,000+ per transformation initiative with high failure rates.
 
 ### 💡 The Solution: TransformIQ
-**TransformIQ** acts as your autonomous **AI Business Consultant + Business Analyst + Solution Architect + Product Strategist** in a unified, collaborative platform.
+**TransformIQ** combines an autonomous **AI Business Consultant + Business Analyst + Solution Architect + Fullstack Engineer + Product Strategist** into a unified, collaborative platform.
 
-```text
-┌─────────────────────────────┐       ┌──────────────────────────────┐       ┌─────────────────────────────┐
-│       BUSINESS CHAOS        │  ──►  │    TRANSFORMIQ AI ENGINE     │  ──►  │  PRODUCTION-READY SYSTEM   │
-│ • Unstructured Prompts      │       │ • Multimodal Ingestion (RAG) │       │ • Interactive React Flow HLD│
-│ • PDFs, Word Docs, PPTXs    │       │ • 8-Dimension Gap Matrix     │       │ • BPMN Cycle Time Workflows │
-│ • Live URLs & Systems       │       │ • Explainable AI ("Why?")    │       │ • PostgreSQL Schema & DDL   │
-│ • Voice & Multi-lingual Text│       │ • What-If ROI Simulator      │       │ • OpenAPI 3.0 REST Specs    │
-│   (English, Hindi, Gujarati)│       │ • Human-in-the-Loop Gov      │       │ • Real PDF/DOCX/XLSX/PPTX   │
-└─────────────────────────────┘       └──────────────────────────────┘       └─────────────────────────────┘
+```
+┌──────────────────────────────────────┐       ┌──────────────────────────────────────┐       ┌──────────────────────────────────────┐
+│            BUSINESS CHAOS            │  ──►  │        TRANSFORMIQ AI ENGINE         │  ──►  │      PRODUCTION-READY ARTIFACTS      │
+│ • Messy Prompts & Transcripts        │       │ • Multimodal Ingestion (RAG)         │       │ • Interactive React Flow HLD Canvas  │
+│ • PDFs, Word Docs (.docx), PPTX      │       │ • 8-Dimension Gap Matrix             │       │ • BPMN Cycle Time Workflows          │
+│ • Live System URLs & Web Pages       │       │ • Explainable AI ("Why this?")       │       │ • PostgreSQL Schema & DDL Scripts    │
+│ • Voice & Multi-lingual Input        │       │ • Dynamic What-If ROI Simulator      │       │ • OpenAPI 3.0 REST Specs             │
+│   (English, Hindi, Gujarati)         │       │ • Autonomous ReAct Code Builder      │       │ • Real PDF, DOCX, XLSX, PPTX Exports │
+└──────────────────────────────────────┘       └──────────────────────────────────────┘       └──────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Product Architecture & End-to-End Pipeline
+## 2. End-to-End System Architecture
 
-```
-  [ BUSINESS PROMPT / DOCUMENT / URL / VOICE ]
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 1. INGESTION & CONTEXT ENGINE (RAG) │
-    │    • pypdf, python-docx, python-pptx │
-    │    • Multilingual (EN, HI, GU)       │
-    └──────────────────┬───────────────────┘
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 2. DISCOVERY & BUSINESS ANALYSIS     │
-    │    • Dynamic clarify questions       │
-    │    • AS-IS current state extraction  │
-    └──────────────────┬───────────────────┘
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 3. 8-DIMENSION GAP MATRIX            │
-    │    • Process, Tech, AI, Data, People,│
-    │      Security, Automation, Integrate │
-    └──────────────────┬───────────────────┘
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 4. EXPLAINABLE AI RECOMMENDATIONS    │
-    │    • Deep rationale & source cites   │
-    │    • Effort vs. Impact prioritization│
-    └──────────────────┬───────────────────┘
-                       │
-         ┌─────────────┴─────────────┐
-         ▼                           ▼
-┌──────────────────┐       ┌──────────────────┐
-│ 5. ARCHITECTURE  │       │ 6. BPMN PROCESS  │
-│ • Interactive HLD│       │ • Swimlanes      │
-│ • React Flow     │       │ • Cycle Times    │
-│ • Save Layouts   │       │ • Bottlenecks    │
-└────────┬─────────┘       └────────┬─────────┘
-         │                          │
-         └─────────────┬────────────┘
-                       │
-         ┌─────────────┼─────────────┐
-         ▼             ▼             ▼
-┌────────────────┐ ┌────────────────┐ ┌────────────────┐
-│ 7. DB DESIGN   │ │ 8. API CATALOG │ │ 9. AI UX &     │
-│ • Postgres ERD │ │ • OpenAPI 3.0  │ │    WIREFRAMES  │
-│ • SQL DDL Code │ │ • Payloads/Auth│ │ • UI Mockups   │
-└────────┬───────┘ └────────┬───────┘ └────────┬───────┘
-         │                  │                  │
-         └─────────────┬────┴──────────────────┘
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 10. WHAT-IF SIMULATION ENGINE        │
-    │    • Adjust Automation %, Team, Budget│
-    │    • Real-time ROI & Payback timeline│
-    └──────────────────┬───────────────────┘
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 11. MATURITY SCORECARD & GOVERNANCE  │
-    │    • 6-dimension benchmark score     │
-    │    • Review / Approve / Reject state │
-    └──────────────────┬───────────────────┘
-                       │
-                       ▼
-    ┌──────────────────────────────────────┐
-    │ 12. ENTERPRISE EXPORT ENGINE         │
-    │    • PDF (ReportLab styled tables)   │
-    │    • Word (DOCX specs)               │
-    │    • Excel (XLSX multi-tab workbook) │
-    │    • PowerPoint (PPTX slides)        │
-    └──────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph ClientLayer["🖥️ Frontend Client (React 18 + TypeScript + Vite)"]
+        UI["Modern Glassmorphic UI / TailwindCSS"]
+        ReactFlow["Interactive React Flow (HLD & BPMN Canvas)"]
+        AppBuilderUI["Autonomous App Builder & Live Preview"]
+        StateManagement["TanStack React Query & Axios Client"]
+        SSEListener["Server-Sent Events (SSE) Telemetry Stream"]
+    end
+
+    subgraph SecurityGateway["🛡️ Security & API Gateway (FastAPI 0.110+)"]
+        AuthMiddleware["JWT Bearer Authentication & 7-Role RBAC"]
+        RateLimiter["IP / Token Sliding Window Rate Limiter"]
+        SSRFValidator["SSRF Guard & Domain Whitelist Validator"]
+        OWASPHeaders["OWASP ASVS Headers (HSTS, CSP, Frame Guards)"]
+    end
+
+    subgraph CoreServices["⚙️ Backend Service Orchestration"]
+        DiscoveryService["Discovery & Business Analysis Service"]
+        GapEngine["8-Dimension Gap & Recommendation Engine"]
+        ArchService["Architecture & Workflow Visualizer Service"]
+        DesignService["PostgreSQL DDL & OpenAPI 3.0 Generator"]
+        SimulationEngine["Dynamic What-If ROI Simulation Engine"]
+        ExportService["Multi-Format Export Engine (ReportLab / openpyxl / docx / pptx)"]
+        AppBuilderService["App Builder Pipeline & Git Version Controller"]
+    end
+
+    subgraph AIAgents["🧠 AI & Autonomous Agent Subsystem"]
+        Provider["Unified LLM Provider (Gemini 3.6 Flash / OpenAI / Local Heuristic)"]
+        Chatbot["Context Relevance Chatbot (Technical / Project Dual Mode)"]
+        ToolAgent["Autonomous ReAct Code Agent (File Tools & Loop)"]
+        DebuggingAgent["Automated Self-Correction & Repair Agent"]
+        DocRAG["Document RAG & Multi-Format Extractor"]
+    end
+
+    subgraph DataStorage["💾 Data & Execution Layer"]
+        NeonDB[("Neon Serverless PostgreSQL 16 / SQLite")]
+        Storage["Local / S3 Workspace Storage & Uploads"]
+        PreviewServer["Dynamic Dev Preview Sandbox (:8001)"]
+        GitEngine["Local Git Repository Engine (.git commit/rollback)"]
+    end
+
+    %% Connections
+    UI --> StateManagement
+    AppBuilderUI --> SSEListener
+    StateManagement --> SecurityGateway
+    SSEListener --> SecurityGateway
+
+    SecurityGateway --> CoreServices
+    CoreServices --> AIAgents
+    AIAgents --> Provider
+
+    CoreServices --> DataStorage
+    ToolAgent --> GitEngine
+    ToolAgent --> Storage
+    AppBuilderService --> PreviewServer
 ```
 
 ---
 
-## 3. Core Feature Breakdown & Innovation Highlights
+## 3. Database Entity Relationship (ER) Diagram
 
-### 🧠 1. Multilingual & Multimodal Document Ingestion
-- Ingest documents in **PDF, Word (.docx), PowerPoint (.pptx), Markdown, and Plain Text** formats.
-- **Multilingual Support**: Ingest and interact in **English**, **Hindi (हिन्दी)**, and **Gujarati (ગુજરાતી)** with instant localized discovery questionnaires.
+The following comprehensive Mermaid ER Diagram models all relational tables, primary keys, foreign key constraints, and 1-to-many / many-to-many associations in TransformIQ:
+
+```mermaid
+erDiagram
+    ORGANIZATIONS ||--o{ WORKSPACES : contains
+    WORKSPACES ||--o{ PROJECTS : contains
+    ORGANIZATIONS ||--o{ USERS : belongs_to
+    PROJECTS ||--o{ PROJECT_MEMBERS : assigns
+    USERS ||--o{ PROJECT_MEMBERS : assigned_as
+
+    PROJECTS ||--o| BUSINESS_CONTEXTS : has
+    PROJECTS ||--o{ DOCUMENTS : contains
+    DOCUMENTS ||--o{ DOCUMENT_CHUNKS : splits_into
+
+    PROJECTS ||--o{ REQUIREMENTS : specifies
+    PROJECTS ||--o{ STAKEHOLDERS : identifies
+    PROJECTS ||--o{ BUSINESS_PROCESSES : analyzes
+    PROJECTS ||--o{ GAPS : discovers
+    PROJECTS ||--o{ RECOMMENDATIONS : provides
+    PROJECTS ||--o| SOLUTIONS : designs
+
+    PROJECTS ||--o{ ARCHITECTURE_COMPONENTS : contains
+    ARCHITECTURE_COMPONENTS ||--o{ ARCHITECTURE_CONNECTIONS : source_of
+    ARCHITECTURE_COMPONENTS ||--o{ ARCHITECTURE_CONNECTIONS : target_of
+
+    PROJECTS ||--o{ WORKFLOW_NODES : models
+    WORKFLOW_NODES ||--o{ WORKFLOW_EDGES : routes_from
+    WORKFLOW_NODES ||--o{ WORKFLOW_EDGES : routes_to
+
+    PROJECTS ||--o{ DATABASE_ENTITIES : defines
+    PROJECTS ||--o{ API_ENDPOINTS : publishes
+    PROJECTS ||--o{ WIREFRAMES : prototypes
+
+    PROJECTS ||--o{ ROADMAPS : schedules
+    PROJECTS ||--o{ ESTIMATES : budgets
+    PROJECTS ||--o{ RISKS : tracks
+    PROJECTS ||--o{ TRANSFORMATION_SCORES : scores
+    PROJECTS ||--o{ SIMULATION_SCENARIOS : simulates
+
+    PROJECTS ||--o{ CONVERSATIONS : hosts
+    CONVERSATIONS ||--o{ MESSAGES : contains
+    PROJECTS ||--o{ APPROVALS : governs
+    PROJECTS ||--o{ COMMENTS : discusses
+    PROJECTS ||--o{ VERSIONS : snapshots
+    PROJECTS ||--o{ AUDIT_LOGS : records
+    PROJECTS ||--o{ EXPORT_JOBS : exports
+    PROJECTS ||--o{ APP_BUILDER_SESSIONS : generates
+
+    ORGANIZATIONS {
+        string id PK
+        string name
+        string slug
+        string tier
+        datetime created_at
+    }
+
+    USERS {
+        string id PK
+        string email UK
+        string full_name
+        string role
+        string hashed_password
+        boolean is_active
+        datetime created_at
+    }
+
+    WORKSPACES {
+        string id PK
+        string organization_id FK
+        string name
+        string description
+        datetime created_at
+    }
+
+    PROJECTS {
+        string id PK
+        string workspace_id FK
+        string name
+        string industry
+        string business_problem
+        string business_objective
+        string status
+        datetime created_at
+    }
+
+    BUSINESS_CONTEXTS {
+        string id PK
+        string project_id FK
+        string current_state_description
+        string target_state_vision
+        json key_pain_points
+        json target_kpis
+        json compliance_requirements
+    }
+
+    DOCUMENTS {
+        string id PK
+        string project_id FK
+        string filename
+        string file_type
+        string file_size
+        string file_path
+        string processing_status
+    }
+
+    DOCUMENT_CHUNKS {
+        string id PK
+        string document_id FK
+        text chunk_text
+        int chunk_index
+        json metadata
+    }
+
+    REQUIREMENTS {
+        string id PK
+        string project_id FK
+        string code
+        string title
+        string req_type
+        string priority
+        text description
+    }
+
+    STAKEHOLDERS {
+        string id PK
+        string project_id FK
+        string name
+        string role
+        string department
+        string influence
+        string interest
+    }
+
+    GAPS {
+        string id PK
+        string project_id FK
+        string category
+        string title
+        text current_state
+        text desired_state
+        string severity
+        string impact
+        text recommended_action
+    }
+
+    RECOMMENDATIONS {
+        string id PK
+        string project_id FK
+        string category
+        string title
+        text description
+        text reason
+        string expected_impact
+        string priority
+        float confidence_score
+        string status
+    }
+
+    SOLUTIONS {
+        string id PK
+        string project_id FK
+        string name
+        string tagline
+        text executive_summary
+        json technology_stack
+        json key_capabilities
+        string expected_roi
+    }
+
+    ARCHITECTURE_COMPONENTS {
+        string id PK
+        string project_id FK
+        string name
+        string layer
+        string tech_stack
+        text description
+        float position_x
+        float position_y
+    }
+
+    ARCHITECTURE_CONNECTIONS {
+        string id PK
+        string project_id FK
+        string source_component_id FK
+        string target_component_id FK
+        string protocol
+        string data_payload
+        boolean is_async
+    }
+
+    WORKFLOW_NODES {
+        string id PK
+        string project_id FK
+        string node_key
+        string node_type
+        string label
+        string actor
+        string system
+        float position_x
+        float position_y
+    }
+
+    WORKFLOW_EDGES {
+        string id PK
+        string project_id FK
+        string source_node_key
+        string target_node_key
+        string label
+        string condition
+    }
+
+    DATABASE_ENTITIES {
+        string id PK
+        string project_id FK
+        string name
+        text description
+        json fields_data
+        json relationships_data
+        json indexes
+    }
+
+    API_ENDPOINTS {
+        string id PK
+        string project_id FK
+        string method
+        string path
+        string summary
+        text description
+        boolean auth_required
+        json request_body
+        json response_body
+    }
+
+    WIREFRAMES {
+        string id PK
+        string project_id FK
+        string screen_name
+        string purpose
+        string target_users
+        string layout_type
+        json components_json
+    }
+
+    ROADMAPS {
+        string id PK
+        string project_id FK
+        string name
+        int total_duration_weeks
+        json phases
+    }
+
+    ESTIMATES {
+        string id PK
+        string project_id FK
+        int total_estimated_hours
+        float total_estimated_cost
+        string currency
+        int duration_months
+        json roles_breakdown
+        float infrastructure_cost
+        float ai_api_cost_monthly
+    }
+
+    RISKS {
+        string id PK
+        string project_id FK
+        string category
+        string title
+        text description
+        string probability
+        string impact
+        string severity
+        text mitigation_strategy
+        string owner
+        string status
+    }
+
+    TRANSFORMATION_SCORES {
+        string id PK
+        string project_id FK
+        int overall_score
+        int ai_readiness
+        int automation_potential
+        int data_readiness
+        int business_impact
+        int technical_feasibility
+        json dimensions
+    }
+
+    SIMULATION_SCENARIOS {
+        string id PK
+        string project_id FK
+        string name
+        int automation_level
+        int team_size
+        float budget
+        int timeline_months
+        float expected_roi_percentage
+        float efficiency_gain_percentage
+    }
+
+    APP_BUILDER_SESSIONS {
+        string id PK
+        string project_id FK
+        string name
+        string app_type
+        string status
+        string workspace_path
+        int preview_port
+        string git_current_commit
+    }
+```
+
+---
+
+## 4. Autonomous AI Code Generator (ReAct Loop)
+
+TransformIQ includes an **Autonomous ReAct (Reasoning + Action) Code Generation Agent**. When given an approved architecture blueprint or feature prompt (e.g. *"Build an ATS portal"* or *"Add JWT auth and dark mode"*), it executes an autonomous file inspection, generation, testing, and Git version control loop:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 👤 Solution Architect / User
+    participant SSE as 📡 SSE Stream Broadcaster
+    participant Agent as 🤖 ToolUsingCodeAgent (ReAct)
+    participant LLM as 🧠 Gemini 3.6 Flash / LLM Provider
+    participant FS as 📁 Workspace File Manager
+    participant Git as 🌳 Local Git Engine
+    participant Runner as ⚡ Dynamic Sandbox Server
+
+    User->>Agent: Trigger Code Generation / "Add Feature"
+    Agent->>SSE: Broadcast `AGENT_START` + Initial Plan
+    
+    loop ReAct Autonomous Loop (Up to 15 Iterations)
+        Agent->>LLM: Send Conversation State + Workspace Tools Spec
+        LLM-->>Agent: Action Decision: {thought, action: TOOL_CALL, tool_name, args}
+        Agent->>SSE: Broadcast `THINK/PLAN` Step
+        
+        alt Tool: list_files()
+            Agent->>FS: Inspect Workspace Directory Structure
+            FS-->>Agent: File Tree Hierarchy
+        else Tool: read_file(path)
+            Agent->>FS: Read Existing Logic & Functions
+            FS-->>Agent: File Code Content
+        else Tool: update_file(path, content) / create_file()
+            Agent->>FS: Patch Code (Preserves Unaffected Logic)
+            FS-->>Agent: File Write Success
+        end
+        
+        Agent->>SSE: Broadcast `TOOL_EXECUTION` + File Diff
+    end
+
+    Agent->>Git: Commit Changes (SHA-1 Checksum)
+    Agent->>Runner: Spawn / Reload Sandbox Dev Server (:8001)
+    Runner-->>User: Live Interactive Web App Preview
+    
+    opt User Rejects or Test Fails
+        User->>Git: Trigger 1-Click Rollback (`git reset --hard`)
+        Git-->>FS: Restore Previous Clean State
+    end
+```
+
+---
+
+## 5. Transformation Pipeline Lifecycle & Sequence Flow
+
+```mermaid
+flowchart TD
+    A["📥 1. MULTIMODAL INGESTION<br/>Prompts, PDFs, DOCX, PPTX, URLs, Audio"] --> B["🔍 2. DISCOVERY & CONTEXT ANALYSIS<br/>Extract AS-IS processes, pain points & KPIs"]
+    B --> C["⚡ 3. 8-DIMENSION GAP MATRIX<br/>Process, Tech, AI, Data, Security, People, Automation, Integration"]
+    C --> D["💡 4. EXPLAINABLE AI RECOMMENDATIONS<br/>Prioritized recommendations with 'Why this?' rationale"]
+    
+    D --> E1["📐 5A. REACT FLOW ARCHITECTURE<br/>Visual HLD with drag-and-drop & layout saves"]
+    D --> E2["🔄 5B. BPMN PROCESS INTELLIGENCE<br/>Swimlanes, cycle times, bottleneck metrics"]
+    
+    E1 --> F1["💾 6A. POSTGRESQL SCHEMA DDL<br/>Foreign keys, indices, migration scripts"]
+    E1 --> F2["🔌 6B. OPENAPI 3.0 SPECIFICATION<br/>REST endpoints, payloads, auth schemas"]
+    E2 --> F3["🎨 6C. AI UX & WIREFRAME MOCKUPS<br/>Rendered interactive screen prototypes"]
+    
+    F1 & F2 & F3 --> G["📊 7. DYNAMIC WHAT-IF ROI SIMULATOR<br/>Adjust Automation %, Team & Budget in real-time"]
+    G --> H["🏆 8. TRANSFORMATION SCORECARD<br/>6-dimension radar benchmark score"]
+    H --> I["🗳️ 9. HUMAN-IN-THE-LOOP GOVERNANCE<br/>Role-based review, approval & sign-off"]
+    
+    I --> J1["📄 10A. REAL ENTERPRISE EXPORTERS<br/>PDF, Word (.docx), Excel (.xlsx), PPTX"]
+    I --> J2["🚀 10B. AUTONOMOUS CODE BUILDER<br/>Fullstack working application with Live Preview"]
+```
+
+---
+
+## 6. Core Feature Breakdown & Innovations
+
+### 🧠 1. Multilingual & Multimodal Document Ingestion (RAG)
+- Ingest documents in **PDF, Word (.docx), PowerPoint (.pptx), Markdown, and Plain Text**.
+- **Multilingual Support**: Ingest and interact natively in **English**, **Hindi (हिन्दी)**, and **Gujarati (ગુજરાતી)** with instant localized discovery questionnaires.
 - Contextual Retrieval-Augmented Generation (RAG) partitions domain context, SOPs, and compliance rules directly into the AI prompt pipeline.
 
-### 🔍 2. 8-Dimension Gap Analysis
+### 🔍 2. 8-Dimension Gap Analysis Matrix
 Automated detection of systemic vulnerabilities and bottlenecks across 8 critical pillars:
 1. **Process Bottlenecks**: Cycle time delays, redundant review loops.
 2. **Technology Debt**: Monoliths, end-of-life frameworks, lack of caching.
@@ -177,17 +555,14 @@ Every architectural decision and recommendation provides an **Explainable Ration
 - Trade-off analysis (Build vs. Buy, Latency vs. Throughput).
 
 ### 📐 4. Interactive React Flow Architecture & BPMN Process Intelligence
-- **Solution Architecture**: Visual High-Level Design (HLD) with drag-and-drop nodes, reactive edges, sub-system categorization, and **persistent canvas layout saves**.
+- **Solution Architecture**: Visual High-Level Design (HLD) with custom nodes, reactive edges, sub-system categorization, and **persistent canvas layout saves**.
 - **Process Intelligence Designer**: Full BPMN workflow with swimlane actors, cycle time badges, decision trees, and bottleneck indicators.
 
 ### 💾 5. Database Schema (DDL) & OpenAPI 3.0 REST Catalog
-- Generates **PostgreSQL ER diagrams** with foreign keys, indexes, and ready-to-run **SQL DDL scripts**.
+- Generates **PostgreSQL ER schemas** with foreign keys, indexes, and ready-to-run **SQL DDL scripts**.
 - Generates full **OpenAPI 3.0 / Swagger specifications** with request bodies, response codes, and authentication schemas.
 
-### 🎨 6. AI UX & Interactive Wireframe Mockups
-- User personas, journey mapping, and rendered interactive UI prototypes directly within the platform.
-
-### 📈 7. Dynamic What-If Simulation Engine
+### 📈 6. Dynamic What-If Simulation Engine
 - Interactive sliders for **Automation Level (%)**, **Team Size**, **Budget ($)**, **Timeline (Months)**, and **AI Adoption Tier**.
 - Instant mathematical projection of:
   - **Expected Net ROI (%)**
@@ -195,7 +570,7 @@ Every architectural decision and recommendation provides an **Explainable Ration
   - **Payback Period (Months)**
   - **Residual Risk Level**
 
-### 📄 8. Real Multi-Format File Exporters
+### 📄 7. Real Multi-Format File Exporters
 Zero placeholder mock downloads—generates authentic, fully-styled enterprise artifacts:
 - **PDF**: Built with `ReportLab` featuring cover pages, metrics summary, and styled tables.
 - **Word (.docx)**: Comprehensive technical specification document.
@@ -204,42 +579,138 @@ Zero placeholder mock downloads—generates authentic, fully-styled enterprise a
 
 ---
 
-## 4. Technology Stack
+## 7. Enterprise Security, RBAC & Governance
+
+TransformIQ implements strict enterprise authorization across **7 specialized transformation roles**:
+
+```mermaid
+graph LR
+    subgraph Roles["👥 7 Specialized Roles"]
+        Admin["👑 ADMIN"]
+        Owner["🎯 PROJECT OWNER"]
+        Analyst["📊 BUSINESS ANALYST"]
+        Architect["🏛️ SOLUTION ARCHITECT"]
+        Manager["👔 MANAGER"]
+        Member["👷 MEMBER"]
+        Viewer["👁️ VIEWER"]
+    end
+
+    subgraph Scopes["🔐 Permission Scopes"]
+        S_Admin["Workspace Settings, Audit Logs, AI Tokens"]
+        S_Owner["Full Project Lifecycle & Team Assignment"]
+        S_Analyst["Discovery, Problem Definition & Gaps"]
+        S_Architect["React Flow HLD, BPMN, DDL & APIs"]
+        S_Manager["What-If Simulations & Approvals"]
+        S_Member["Task Execution & Discussion"]
+        S_Viewer["Read-Only Blueprint Inspection"]
+    end
+
+    Admin --> S_Admin
+    Owner --> S_Owner
+    Analyst --> S_Analyst
+    Architect --> S_Architect
+    Manager --> S_Manager
+    Member --> S_Member
+    Viewer --> S_Viewer
+```
+
+### Security Hardening Measures:
+- **JWT Token Authentication**: HS256 algorithm with configurable expiration.
+- **SSRF Guard**: Strict validation against private IPs (`10.0.0.0/8`, `127.0.0.0/8`, `169.254.0.0/16`, `192.168.0.0/16`) and DNS rebinding protections.
+- **Rate Limiting**: Sliding window in-memory limiter protecting auth and AI endpoints.
+- **OWASP ASVS HTTP Headers**: HSTS, Content-Security-Policy, X-Frame-Options (`DENY`), X-Content-Type-Options (`nosniff`).
+
+---
+
+## 8. Technology Stack
 
 ### Frontend
-- **Framework**: React 18 with TypeScript & Vite
-- **Styling**: Tailwind CSS, Lucide Icons, Glassmorphic Enterprise Design
-- **Diagrams**: React Flow (`@xyflow/react`) for interactive Architecture & BPMN workflows
-- **Charts**: Recharts (Radar maturity scorecards, latency comparisons)
-- **Routing & State**: React Router v6, TanStack Query, Axios
+- **Core**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Lucide Icons, Glassmorphism
+- **Interactive Canvases**: React Flow (`@xyflow/react`) for Architecture and BPMN Diagrams
+- **Visualizations**: Recharts (Radar maturity scorecards, latency comparisons)
+- **Data & Routing**: React Router v6, TanStack Query, Axios
 - **Localization**: Custom i18n supporting English, Hindi (हिन्दी), and Gujarati (ગુજરાતી)
 
 ### Backend
 - **Framework**: FastAPI (Python 3.10+) with Pydantic v2 validation
-- **Database & ORM**: SQLAlchemy 2.0 Async (PostgreSQL with asyncpg on Neon / zero-config SQLite)
-- **Security & Multi-Tenancy**: JWT Bearer authentication, PBKDF2/Bcrypt password hashing, Role-Based Access Control (RBAC) across 7 enterprise roles.
-- **Document Extractors**: `pypdf`, `python-docx`, `python-pptx`
-- **AI Orchestrator**: Multi-agent engine supporting Google Gemini, OpenAI GPT-4o, Azure OpenAI, and offline Contextual Smart Generation.
+- **Database & ORM**: SQLAlchemy 2.0 Async (PostgreSQL with `asyncpg` on Neon / SQLite `aiosqlite`)
+- **AI Providers**: Google Gemini 3.6 Flash, OpenAI GPT-4o, Azure OpenAI, Contextual Smart Engine
+- **Document Extractors**: `pypdf`, `python-docx`, `python-pptx`, `beautifulsoup4`
 - **Exporters**: `reportlab`, `python-docx`, `openpyxl`, `python-pptx`
+- **Testing**: `pytest`, `pytest-asyncio`, `httpx`
 
 ---
 
-## 5. Live Cloud Deployment Guide (Render & Vercel)
+## 9. Local Quick Start & Execution Guide
 
-TransformIQ is architected for instant, decoupled production deployment with **Render** hosting the FastAPI Backend and **Vercel** hosting the React Frontend.
+### Prerequisites
+- **Python**: 3.10 or higher
+- **Node.js**: 18 or higher (with npm)
+- **Git**: Installed
+
+---
+
+### Step 1: Backend Setup
+Open a terminal in the project root:
+
+```powershell
+cd backend
+
+# 1. Create and activate a Python virtual environment (optional but recommended)
+python -m venv venv
+.\venv\Scripts\activate   # Windows
+# source venv/bin/activate # Linux/macOS
+
+# 2. Install backend dependencies
+pip install -r requirements.txt
+
+# 3. Configure backend environment
+# The .env file is pre-configured for Neon PostgreSQL or local SQLite:
+# (Copy .env.example to .env if creating a fresh copy)
+cp .env.example .env
+
+# 4. Start the FastAPI development server
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+- **Backend API**: [`http://localhost:8000`](http://localhost:8000)
+- **Swagger Documentation**: [`http://localhost:8000/docs`](http://localhost:8000/docs)
+- **Health Endpoint**: [`http://localhost:8000/health`](http://localhost:8000/health)
+
+---
+
+### Step 2: Frontend Setup
+Open a second terminal in the project root:
+
+```powershell
+cd frontend
+
+# 1. Install frontend packages
+npm install
+
+# 2. Start the Vite React development server
+npm run dev
+```
+- **Frontend App**: [`http://localhost:5173`](http://localhost:5173)
+
+---
+
+## 10. Cloud Deployment Guide (Render, Vercel & Neon)
+
+TransformIQ is architected for instant, decoupled production deployment:
 
 ```
 ┌────────────────────────────────────────────────────────┐
 │                   VERCEL (Frontend)                    │
 │   React 18 + Vite + TypeScript (Global Edge CDN)       │
-│   URL: https://transformiq.vercel.app                  │
+│   Live URL: https://transformiq.vercel.app             │
 └──────────────────────────┬─────────────────────────────┘
                            │ HTTPS / JSON REST API
                            ▼
 ┌────────────────────────────────────────────────────────┐
 │                   RENDER (Backend)                     │
 │   FastAPI + Uvicorn + Python 3.10+ (Web Service)       │
-│   URL: https://transformiq-backend.onrender.com        │
+│   Live URL: https://transformiq-backend.onrender.com   │
 └──────────────────────────┬─────────────────────────────┘
                            │ Async PostgreSQL (asyncpg)
                            ▼
@@ -249,184 +720,118 @@ TransformIQ is architected for instant, decoupled production deployment with **R
 └────────────────────────────────────────────────────────┘
 ```
 
-### 🅰️ Backend Deployment on Render
+### 🅰️ Backend on Render
+1. Connect repository to [Render Dashboard](https://dashboard.render.com).
+2. Create **Web Service** → Root Directory: `backend`.
+3. Build Command: `pip install -r requirements.txt`.
+4. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
+5. Environment Variables:
+   - `ENVIRONMENT=production`
+   - `DATABASE_URL=postgresql://<user>:<password>@<neon-host>/neondb?sslmode=require`
+   - `JWT_SECRET=your-secret-key-32-chars`
+   - `AI_PROVIDER=auto`
+   - `GEMINI_API_KEY=your-gemini-api-key`
+   - `GEMINI_MODEL=gemini-3.6-flash`
 
-1. **Connect GitHub Repository** on [Render Dashboard](https://dashboard.render.com).
-2. Click **New +** → **Web Service** and select your repository.
-3. Configure the service settings:
-   - **Name**: `transformiq-backend`
-   - **Region**: Oregon (US West) or Frankfurt (EU)
-   - **Root Directory**: `backend`
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-   - **Health Check Path**: `/health`
-4. Set the **Environment Variables** in Render:
-
-| Variable | Recommended Value / Description |
-| :--- | :--- |
-| `PYTHON_VERSION` | `3.10.11` |
-| `ENVIRONMENT` | `production` |
-| `DATABASE_URL` | `postgresql+asyncpg://<user>:<password>@<neon-host>/<dbname>?ssl=require` |
-| `SECRET_KEY` | *(Click 'Generate' on Render for a 64-character secret)* |
-| `JWT_SECRET` | *(Random 32+ character string)* |
-| `AI_PROVIDER` | `auto` *(or `gemini`, `openai`)* |
-| `GEMINI_API_KEY` | *(Your Google Gemini API Key if using Gemini)* |
-| `CORS_ORIGINS` | `https://your-frontend.vercel.app,http://localhost:5173` |
-
-> 💡 **Infrastructure as Code**: The repository includes [`render.yaml`](file:///d:/Project/TransformIQ/render.yaml). You can also click **Blueprints** on Render and select `render.yaml` for 1-click provisioning!
+### 🅱️ Frontend on Vercel
+1. Import repository to [Vercel Dashboard](https://vercel.com/new).
+2. Framework Preset: `Vite`, Root Directory: `frontend`.
+3. Build Command: `npm run build`, Output: `dist`.
+4. Environment Variable:
+   - `VITE_API_URL=https://transformiq-backend.onrender.com/api/v1`
 
 ---
 
-### 🅱️ Frontend Deployment on Vercel
+## 11. REST API Catalog
 
-1. **Import Project** on [Vercel Dashboard](https://vercel.com/new).
-2. Select your `transformiq-chaos2commit-2026` repository.
-3. Configure Project Settings:
-   - **Framework Preset**: `Vite`
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-   - **Install Command**: `npm install`
-4. Set the **Environment Variables** in Vercel:
-
-| Variable | Value | Description |
-| :--- | :--- | :--- |
-| `VITE_API_BASE_URL` | `https://transformiq-backend.onrender.com` | Your live Render backend URL |
-
-5. **SPA Routing**: The included [`frontend/vercel.json`](file:///d:/Project/TransformIQ/frontend/vercel.json) automatically handles SPA route rewrites for `react-router-dom`:
-```json
-{
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
-}
-```
-6. Click **Deploy**. Your frontend is now live globally on Vercel Edge!
+| Module | Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| **Auth** | `POST` | `/api/v1/auth/login` | User login & JWT token issuance |
+| **Auth** | `POST` | `/api/v1/auth/register` | User account registration |
+| **Auth** | `GET` | `/api/v1/auth/me` | Current authenticated user profile |
+| **Projects** | `GET` | `/api/v1/projects` | List projects in workspace |
+| **Projects** | `POST` | `/api/v1/projects` | Create new transformation project |
+| **Documents** | `POST` | `/api/v1/documents/upload` | Upload & extract PDF/DOCX/PPTX |
+| **Documents** | `POST` | `/api/v1/documents/crawl-url` | SSRF-validated web content crawler |
+| **Discovery** | `POST` | `/api/v1/discovery/{id}/generate` | Generate AS-IS analysis & questionnaire |
+| **Gaps** | `GET` | `/api/v1/gaps/{id}` | Fetch 8-dimension gap matrix |
+| **Architecture** | `GET` | `/api/v1/architecture/{id}` | Fetch React Flow components & links |
+| **Architecture** | `PUT` | `/api/v1/architecture/{id}/layout` | Save customized canvas layout |
+| **Processes** | `GET` | `/api/v1/processes/{id}` | Fetch BPMN workflow nodes & edges |
+| **Database** | `GET` | `/api/v1/database-design/{id}` | Fetch ER entities & SQL DDL |
+| **APIs** | `GET` | `/api/v1/apis/{id}` | Fetch OpenAPI 3.0 endpoint catalog |
+| **UX Design** | `GET` | `/api/v1/ux-design/{id}` | Fetch wireframes & UI prototypes |
+| **Simulations** | `POST` | `/api/v1/simulations/{id}/what-if` | Calculate real-time what-if ROI |
+| **Scores** | `GET` | `/api/v1/scores/{id}` | Transformation maturity radar score |
+| **App Builder** | `POST` | `/api/v1/app-builder/projects` | Initialize autonomous code build session |
+| **App Builder** | `GET` | `/api/v1/app-builder/sessions/{id}/events` | Real-time SSE telemetry stream |
+| **App Builder** | `POST` | `/api/v1/app-builder/sessions/{id}/agent-loop` | Autonomous ReAct code agent step |
+| **Exports** | `GET` | `/api/v1/exports/{id}/{format}` | Generate PDF, DOCX, XLSX, or PPTX |
 
 ---
 
-## 6. Local Quick Start & Execution
+## 12. Automated Testing & Security Validation
 
-### Prerequisites
-- Python 3.10+
-- Node.js 18+ and npm
-
-### 1. Clone & Set Up Backend
-```bash
-git clone https://github.com/VadsolaKishan/transformiq-chaos2commit-2026.git
-cd transformiq-chaos2commit-2026/backend
-
-# Create virtual environment (optional but recommended)
-python -m venv venv
-# Windows:
-.\venv\Scripts\activate
-# Linux/macOS:
-# source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start FastAPI server
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-- Interactive API Docs (Swagger): [http://localhost:8000/docs](http://localhost:8000/docs)
-- Interactive API Docs (Redoc): [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- Health Check: [http://localhost:8000/health](http://localhost:8000/health)
-
-### 2. Set Up & Start Frontend
-```bash
-cd ../frontend
-
-# Install dependencies
-npm install
-
-# Start Vite dev server
-npm run dev
-```
-- Access the web application at [http://localhost:5173](http://localhost:5173)
-
----
-
-## 7. Automated Testing & Security Validation
-
-The repository features comprehensive test suites covering unit logic, integration flows, and Role-Based Access Control:
+TransformIQ includes extensive test coverage spanning security audits, API route tests, RBAC guards, and autonomous agents:
 
 ```bash
-# 1. Run the RBAC & API Pytest Suite (14 tests)
+# Run the complete test suite
 cd backend
 pytest -v
 
-# 2. Run the Full Integration Master Test Suite (74 tests)
-python tests/test_master_suite.py
-
-# 3. Verify Frontend TypeScript Compilation & Production Build
-cd ../frontend
-npm run build
+# Run specific test modules
+pytest tests/test_security_audit.py
+pytest tests/test_api.py
+pytest tests/test_rbac.py
+pytest tests/test_general_purpose_chatbot.py
+pytest tests/test_code_generation_agent.py
+pytest tests/test_incremental_modification.py
+pytest tests/test_version_control.py
 ```
 
 ### ✅ Test Suite Results:
-- **Pytest RBAC Suite**: `14 passed in ~1.4s` (100% pass rate)
-- **Master Suite**: `74 passed in ~5.2s` (100% pass rate)
-- **Frontend Build**: Zero errors (`tsc -b && vite build` exits with code 0)
+- **Security Audit & Injection Protection**: `16 passed (100%)`
+- **RBAC & Authorization Matrix**: `9 passed (100%)`
+- **Context Relevance Chatbot**: `16 passed (100%)`
+- **Autonomous Agent & Version Control**: `5 passed (100%)`
+- **Frontend TypeScript Build**: `0 errors, 2650 modules transformed`
 
 ---
 
-## 8. Enterprise RBAC & 1-Click Evaluation Accounts
+## 13. Pre-Seeded 1-Click Evaluation Accounts
 
-TransformIQ implements strict enterprise authorization across **7 specialized transformation roles**.
+On initial startup, TransformIQ auto-seeds default test accounts for seamless role testing:
 
-| Role | Login Email | Password | Primary Scope & Permissions |
+| Role | Email | Password | Primary Capabilities |
 | :--- | :--- | :--- | :--- |
-| 👑 **ADMIN** | `admin@transformiq.local` | `TransformIQ@2026` | Workspace configuration, user management, audit logs, AI token usage analytics. |
-| 🎯 **PROJECT OWNER** | `owner@transformiq.local` | `TransformIQ@2026` | Full lifecycle management: discovery, requirements, architecture, and team assignment. |
-| 📊 **BUSINESS ANALYST** | `analyst@transformiq.local` | `TransformIQ@2026` | Problem analysis, stakeholder interviews, requirement mapping, and 8-dimension gap matrix. |
-| 🏛️ **SOLUTION ARCHITECT** | `architect@transformiq.local` | `TransformIQ@2026` | React Flow architecture, BPMN workflows, PostgreSQL schema DDL, and OpenAPI 3.0 contracts. |
-| 👔 **MANAGER** | `manager@transformiq.local` | `TransformIQ@2026` | What-If simulation modeling, ROI evaluation, risk management, and blueprint approvals. |
-| 👷 **MEMBER** | `member@transformiq.local` | `TransformIQ@2026` | Task execution, discussion participation, and document review. |
-| 👁️ **VIEWER** | `viewer@transformiq.local` | `TransformIQ@2026` | Read-only access to approved blueprints, architecture diagrams, and maturity metrics. |
+| 👑 **ADMIN** | `admin@transformiq.local` | `TransformIQ@2026` | System settings, user administration, token analytics, audit logs |
+| 🎯 **PROJECT OWNER** | `owner@transformiq.local` | `TransformIQ@2026` | Full project lifecycle, scope approval, team assignment |
+| 📊 **BUSINESS ANALYST** | `analyst@transformiq.local` | `TransformIQ@2026` | Problem discovery, stakeholder analysis, 8-dimension gap matrix |
+| 🏛️ **SOLUTION ARCHITECT** | `architect@transformiq.local` | `TransformIQ@2026` | React Flow architecture, BPMN workflows, PostgreSQL DDL, OpenAPI |
+| 👔 **MANAGER** | `manager@transformiq.local` | `TransformIQ@2026` | What-if simulation modeling, risk management, blueprint approvals |
+| 👷 **MEMBER** | `member@transformiq.local` | `TransformIQ@2026` | Requirement reviews, discussion comments, task execution |
+| 👁️ **VIEWER** | `viewer@transformiq.local` | `TransformIQ@2026` | Read-only inspection of approved blueprints and architecture |
 
-> ⚡ **Judge Quick-Switch Feature**: Click the **"ROLE: ..."** badge in the top navigation bar when logged in to switch instantly between any role without retyping credentials!
-
----
-
-## 9. Pre-Seeded Flagship Demo Scenario
-
-TransformIQ automatically seeds an enterprise flagship project on initial startup for zero-friction evaluation:
-
-- **Enterprise**: **Apex Global Retail & Logistics**
-- **Business Chaos**: Global e-commerce retailer receives **45,000+ customer complaints** monthly across email, web forms, and voice. Manual reading causes a **48-hour triage backlog**, an **18% misrouting rate**, and **$420,000** in annual wasted administrative costs.
-- **TransformIQ Generated Solution**:
-  1. **Omnichannel Ingestion Gateway**: Webhook and REST API connectors.
-  2. **NLP Triage & Sentiment Microservice**: Instant classification and priority routing.
-  3. **SOP Knowledge Grounding (RAG)**: Automated draft responses grounded in company policies.
-  4. **Human-in-the-Loop Review Queue**: Confidence threshold gating (< 85% flagged to human agents).
-  5. **BPMN Transformation**: Cycle time reduced from **48 Hours to 12 Minutes** (99.5% acceleration).
-  6. **Financial ROI**: **340% 12-Month Net ROI** with payback achieved in 3.4 months.
+> ⚡ **Quick Role Switcher**: Click the **"ROLE: ..."** dropdown badge in the navigation bar when logged in to switch instantly between any role without re-entering credentials!
 
 ---
 
-## 10. Chaos2Commit Hackathon Compliance Checklist
+## 14. Hackathon Compliance Matrix
 
-| Hackathon Requirement | TransformIQ Implementation | Status |
+| Chaos2Commit Requirement | TransformIQ Implementation | Status |
 | :--- | :--- | :---: |
-| **Real Frontend & Backend Architecture** | Decoupled React 18 + TypeScript (Vercel) & FastAPI (Render) | ✅ **100% Complete** |
-| **Business Chaos Ingestion** | Ingestion of raw text prompts, URLs, and multi-format docs (PDF, Word, PPTX) | ✅ **100% Complete** |
-| **8-Dimension Gap Analysis** | Process, Tech, AI, Data, People, Security, Automation, Integration | ✅ **100% Complete** |
-| **Explainable AI ("Why?")** | Dedicated explainability modal on every recommendation with citations | ✅ **100% Complete** |
-| **Interactive Solution Architecture** | React Flow canvas with custom nodes, connections, and layout save | ✅ **100% Complete** |
-| **BPMN Process Intelligence** | React Flow workflow with swimlanes, cycle times, and decision trees | ✅ **100% Complete** |
-| **Database & API Designer** | PostgreSQL ER tables, SQL DDL generation, and OpenAPI 3.0 spec | ✅ **100% Complete** |
-| **AI UX & Wireframe Mockups** | Personas, user journeys, and rendered interactive UI prototypes | ✅ **100% Complete** |
-| **Dynamic What-If Simulation** | Live recalculation of ROI, cost, effort, timeline, and risk level | ✅ **100% Complete** |
-| **Transformation Maturity Score** | Proprietary 6-dimension benchmark with radar chart visualization | ✅ **100% Complete** |
-| **Human-in-the-Loop Governance** | Approval workflow (`DRAFT`, `UNDER_REVIEW`, `APPROVED`, `REJECTED`) | ✅ **100% Complete** |
-| **Real Multi-Format Exports** | Real PDF (ReportLab), Word (DOCX), Excel (XLSX), PowerPoint (PPTX) | ✅ **100% Complete** |
-| **Multilingual Support** | English, Hindi (हिन्दी), and Gujarati (ગુજરાતી) UI localization | ✅ **100% Complete** |
-| **Enterprise Security & RBAC** | 7-role RBAC matrix, JWT tokens, tenant isolation, and audit logs | ✅ **100% Complete** |
+| **Decoupled Architecture** | React 18 + Vite (Frontend) & FastAPI Async (Backend) | ✅ **100% Complete** |
+| **Business Chaos Ingestion** | Raw prompts, URLs, voice transcripts, PDF, Word, PPTX | ✅ **100% Complete** |
+| **8-Dimension Gap Matrix** | Process, Tech, AI, Data, People, Security, Automation, Integration | ✅ **100% Complete** |
+| **Explainable AI ("Why?")** | Dedicated explainability rationale on all recommendations | ✅ **100% Complete** |
+| **Interactive HLD Architecture** | React Flow canvas with custom nodes, reactive edges, layout save | ✅ **100% Complete** |
+| **BPMN Process Intelligence** | Swimlane actors, cycle times, bottleneck badges | ✅ **100% Complete** |
+| **Database & API Designer** | PostgreSQL ER diagrams, SQL DDL generation, OpenAPI 3.0 | ✅ **100% Complete** |
+| **Dynamic What-If Simulator** | Real-time calculation of ROI %, effort hours, payback months | ✅ **100% Complete** |
+| **Autonomous Code Builder** | ReAct tool-using agent, live sandbox preview, Git rollbacks | ✅ **100% Complete** |
+| **Multi-Format Real Exporters** | PDF (ReportLab), Word (DOCX), Excel (XLSX), PowerPoint (PPTX) | ✅ **100% Complete** |
+| **Multilingual Support** | English, Hindi (हिन्दी), Gujarati (ગુજરાતી) | ✅ **100% Complete** |
+| **Enterprise Security & RBAC** | 7-role RBAC, SSRF guards, rate limiting, OWASP headers | ✅ **100% Complete** |
 
 ---
 
