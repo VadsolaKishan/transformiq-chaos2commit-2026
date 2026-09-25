@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     
     # Google Gemini (Free tier with generous quota at https://aistudio.google.com)
     GEMINI_API_KEY: Optional[str] = None
-    GEMINI_MODEL: str = "gemini-3.6-flash"  # or gemini-3.5-flash-lite, gemini-3.5-flash
+    GEMINI_MODEL: str = "gemini-3.5-flash-lite"
     
     # OpenAI Configuration (Optional)
     OPENAI_API_KEY: Optional[str] = None

@@ -9,6 +9,7 @@ from app.auth.deps import get_current_user, require_project_permission, record_a
 from app.auth.permissions import Permission
 from app.models.user import User
 from app.models.project import Project, BusinessContext
+from app.models.collaboration import Conversation, Message
 from app.models.transformation import Question
 from app.schemas.project import ApiResponse
 from app.ai.orchestrator import orchestrator
@@ -71,6 +72,209 @@ class ChatRequest(BaseModel):
     conversation_id: Optional[str] = None
     language: Optional[str] = "en"
 
+@router.get("/project/{project_id}/conversations", response_model=ApiResponse)
+async def get_project_conversations(
+    project_id: str,
+    project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """List all saved chat conversation threads for this project (like ChatGPT sidebar)."""
+    conv_res = await db.execute(
+        select(Conversation)
+        .filter(Conversation.project_id == project.id, Conversation.module == "DISCOVERY")
+        .order_by(Conversation.created_at.desc())
+    )
+    conversations = conv_res.scalars().all()
+    
+    results = []
+    for c in conversations:
+        # Get messages count and last message preview
+        msg_res = await db.execute(
+            select(Message)
+            .filter(Message.conversation_id == c.id)
+            .order_by(Message.created_at.asc())
+        )
+        msgs = msg_res.scalars().all()
+        last_msg = msgs[-1].content if msgs else ""
+        
+        results.append({
+            "id": c.id,
+            "title": c.title or "Discovery Chat",
+            "created_at": c.created_at.isoformat() if c.created_at else None,
+            "message_count": len(msgs),
+            "preview": last_msg[:80] + "..." if len(last_msg) > 80 else last_msg
+        })
+        
+    return ApiResponse(
+        success=True,
+        data=results,
+        message=f"Retrieved {len(results)} conversations"
+    )
+
+@router.get("/project/{project_id}/conversation/{conversation_id}", response_model=ApiResponse)
+async def get_single_conversation(
+    project_id: str,
+    conversation_id: str,
+    project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Retrieve messages for a specific conversation session."""
+    conv_res = await db.execute(
+        select(Conversation).filter(Conversation.id == conversation_id, Conversation.project_id == project.id)
+    )
+    conv = conv_res.scalars().first()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+        
+    msg_res = await db.execute(
+        select(Message).filter(Message.conversation_id == conv.id).order_by(Message.created_at.asc())
+    )
+    db_messages = msg_res.scalars().all()
+    
+    return ApiResponse(
+        success=True,
+        data={
+            "conversation_id": conv.id,
+            "title": conv.title,
+            "messages": [
+                {
+                    "id": m.id,
+                    "role": m.role,
+                    "content": m.content,
+                    "suggested_actions": m.suggested_actions or [],
+                    "created_at": m.created_at.isoformat() if m.created_at else None
+                }
+                for m in db_messages
+            ]
+        },
+        message="Conversation loaded"
+    )
+
+@router.post("/project/{project_id}/conversation", response_model=ApiResponse)
+async def create_new_conversation(
+    project_id: str,
+    title: Optional[str] = Body(None, embed=True),
+    project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Create a new chat conversation session thread."""
+    new_id = str(uuid.uuid4())
+    conv = Conversation(
+        id=new_id,
+        project_id=project.id,
+        title=title or f"New Discovery Chat",
+        module="DISCOVERY"
+    )
+    db.add(conv)
+    await db.commit()
+    
+    return ApiResponse(
+        success=True,
+        data={"id": conv.id, "title": conv.title, "created_at": conv.created_at.isoformat() if conv.created_at else None},
+        message="New conversation session created"
+    )
+
+@router.delete("/project/{project_id}/conversation/{conversation_id}", response_model=ApiResponse)
+async def delete_conversation(
+    project_id: str,
+    conversation_id: str,
+    project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete a specific conversation session thread."""
+    conv_res = await db.execute(
+        select(Conversation).filter(Conversation.id == conversation_id, Conversation.project_id == project.id)
+    )
+    conv = conv_res.scalars().first()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+        
+    await db.delete(conv)
+    await db.commit()
+    
+    return ApiResponse(
+        success=True,
+        data={"deleted": True, "conversation_id": conversation_id},
+        message="Conversation deleted"
+    )
+
+@router.get("/project/{project_id}/chat/history", response_model=ApiResponse)
+async def get_chat_history(
+    project_id: str,
+    project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Retrieve the active conversation and all past messages for this project."""
+    conv_res = await db.execute(
+        select(Conversation)
+        .filter(Conversation.project_id == project.id, Conversation.module == "DISCOVERY")
+        .order_by(Conversation.created_at.desc())
+    )
+    conv = conv_res.scalars().first()
+    
+    if not conv:
+        return ApiResponse(
+            success=True,
+            data={"conversation_id": None, "title": "Discovery Session", "messages": []},
+            message="No existing chat history found"
+        )
+    
+    msg_res = await db.execute(
+        select(Message)
+        .filter(Message.conversation_id == conv.id)
+        .order_by(Message.created_at.asc())
+    )
+    db_messages = msg_res.scalars().all()
+    
+    formatted_messages = [
+        {
+            "id": m.id,
+            "role": m.role,
+            "content": m.content,
+            "suggested_actions": m.suggested_actions or [],
+            "created_at": m.created_at.isoformat() if m.created_at else None
+        }
+        for m in db_messages
+    ]
+    
+    return ApiResponse(
+        success=True,
+        data={
+            "conversation_id": conv.id,
+            "title": conv.title,
+            "messages": formatted_messages
+        },
+        message=f"Loaded {len(formatted_messages)} chat messages"
+    )
+
+@router.delete("/project/{project_id}/chat/history", response_model=ApiResponse)
+async def clear_chat_history(
+    project_id: str,
+    project: Project = Depends(require_project_permission(Permission.DISCOVERY_CHAT)),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Clear chat conversation history for this project."""
+    conv_res = await db.execute(
+        select(Conversation)
+        .filter(Conversation.project_id == project.id, Conversation.module == "DISCOVERY")
+    )
+    conversations = conv_res.scalars().all()
+    for c in conversations:
+        await db.delete(c)
+    await db.commit()
+    
+    return ApiResponse(
+        success=True,
+        data={"cleared": True},
+        message="Chat history cleared successfully"
+    )
+
 @router.post("/project/{project_id}/chat", response_model=ApiResponse)
 async def chat_with_ai_companion(
     project_id: str,
@@ -90,14 +294,61 @@ async def chat_with_ai_companion(
         f"Business Objectives: {project.business_objective or 'Streamline processes and achieve autonomous straight-through processing'}\n"
         f"Business Context Summary: {context_text[:1200]}"
     )
+
+    # 1. Find or create persistent conversation
+    conv = None
+    if req.conversation_id:
+        conv_res = await db.execute(
+            select(Conversation).filter(Conversation.id == req.conversation_id, Conversation.project_id == project.id)
+        )
+        conv = conv_res.scalars().first()
     
+    if not conv:
+        conv_res = await db.execute(
+            select(Conversation)
+            .filter(Conversation.project_id == project.id, Conversation.module == "DISCOVERY")
+            .order_by(Conversation.created_at.desc())
+        )
+        conv = conv_res.scalars().first()
+        
+    if not conv:
+        # Title summarizing user's first query
+        clean_title = req.message.strip().split("\n")[0][:40]
+        if len(req.message.strip()) > 40:
+            clean_title += "..."
+        conv = Conversation(
+            id=req.conversation_id or str(uuid.uuid4()),
+            project_id=project.id,
+            title=clean_title or f"{project.name} Chat",
+            module="DISCOVERY"
+        )
+        db.add(conv)
+        await db.flush()
+    else:
+        # If conversation has generic placeholder title, update it to the user's topic
+        if conv.title in ["New Discovery Chat", "AI Discovery Session", "Discovery Session", f"{project.name} Discovery Session", f"{project.name} Discovery Chat"]:
+            clean_title = req.message.strip().split("\n")[0][:40]
+            if len(req.message.strip()) > 40:
+                clean_title += "..."
+            conv.title = clean_title
+
+    # 2. Persist User message
+    user_msg_id = str(uuid.uuid4())
+    user_msg = Message(
+        id=user_msg_id,
+        conversation_id=conv.id,
+        role="user",
+        content=req.message,
+        suggested_actions=[]
+    )
+    db.add(user_msg)
+    
+    # 3. Call AI Companion
     ai_reply = await orchestrator.chat_companion(
         message=req.message,
         project_context=project_context,
         language=req.language or "en"
     )
-    
-    conv_id = req.conversation_id or str(uuid.uuid4())
     
     suggested_actions = [
         "Analyze AS-IS process flow & bottlenecks",
@@ -106,14 +357,29 @@ async def chat_with_ai_companion(
         "Calculate TransformIQ readiness score"
     ]
     
+    # 4. Persist AI Assistant reply
+    assistant_msg_id = str(uuid.uuid4())
+    assistant_msg = Message(
+        id=assistant_msg_id,
+        conversation_id=conv.id,
+        role="assistant",
+        content=ai_reply,
+        suggested_actions=suggested_actions
+    )
+    db.add(assistant_msg)
+    
+    await db.commit()
+    
     return ApiResponse(
         success=True,
         data={
+            "id": assistant_msg_id,
             "message": ai_reply,
             "reply": ai_reply,
-            "conversation_id": conv_id,
+            "conversation_id": conv.id,
+            "conversation_title": conv.title,
             "project_id": project.id,
             "suggested_actions": suggested_actions
         },
-        message="AI Companion response generated"
+        message="AI Companion response generated and saved"
     )

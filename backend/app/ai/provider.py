@@ -39,16 +39,20 @@ class GeminiProvider(AIProvider):
 
         models_to_try = [
             model_override or self.model,
-            "gemini-1.5-flash",
-            "gemini-2.0-flash",
-            "gemini-flash-latest"
+            "gemini-3.5-flash-lite",
+            "gemini-3.1-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-3.6-flash",
+            "gemini-flash-lite-latest",
+            "gemini-flash-latest",
+            "gemma-4-26b-a4b-it"
         ]
         # Remove duplicates while preserving order
         seen = set()
         models = [m for m in models_to_try if not (m in seen or seen.add(m))]
 
         last_err = None
-        async with httpx.AsyncClient(timeout=3.0) as client:
+        async with httpx.AsyncClient(timeout=20.0) as client:
             for m in models:
                 url = f"{self.base_url}/models/{m}:generateContent?key={self.api_key}"
                 try:
