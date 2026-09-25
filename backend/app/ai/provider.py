@@ -30,7 +30,7 @@ class GeminiProvider(AIProvider):
     """Google Gemini AI Provider with generous free tier access."""
     def __init__(self):
         self.api_key = settings.GEMINI_API_KEY
-        self.model = settings.GEMINI_MODEL or "gemini-3.6-flash"
+        self.model = settings.GEMINI_MODEL or "gemini-3.5-flash-lite"
         self.base_url = "https://generativelanguage.googleapis.com/v1beta"
 
     async def _call_gemini(self, payload: Dict[str, Any], model_override: Optional[str] = None) -> Dict[str, Any]:

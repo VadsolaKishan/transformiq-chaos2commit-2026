@@ -9,7 +9,7 @@
 [![Backend Live](https://img.shields.io/badge/Backend-FastAPI_Cloud-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://transformiq-9dda8cc0.fastapicloud.dev)
 [![API Docs](https://img.shields.io/badge/Swagger-API_Docs-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://transformiq-9dda8cc0.fastapicloud.dev/docs)
 [![PostgreSQL](https://img.shields.io/badge/Database-Neon_PostgreSQL_16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
-[![Gemini](https://img.shields.io/badge/AI_Engine-Google_Gemini_3.6_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
+[![Gemini](https://img.shields.io/badge/AI_Engine-Google_Gemini_3.5_Flash_Lite-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
 [![Tests Passing](https://img.shields.io/badge/Tests-Passed_100%25-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
 
 <p align="center">
@@ -109,7 +109,7 @@ graph TB
     end
 
     subgraph AIAgents["🧠 AI & Autonomous Agent Subsystem"]
-        Provider["Unified LLM Provider (Gemini 3.6 Flash / OpenAI / Local Heuristic)"]
+        Provider["Unified LLM Provider (Gemini 3.5 Flash Lite / OpenAI / Local Heuristic)"]
         Chatbot["Context Relevance Chatbot (Technical / Project Dual Mode)"]
         ToolAgent["Autonomous ReAct Code Agent (File Tools & Loop)"]
         DebuggingAgent["Automated Self-Correction & Repair Agent"]
@@ -468,7 +468,7 @@ sequenceDiagram
     actor User as 👤 Solution Architect / User
     participant SSE as 📡 SSE Stream Broadcaster
     participant Agent as 🤖 ToolUsingCodeAgent (ReAct)
-    participant LLM as 🧠 Gemini 3.6 Flash / LLM Provider
+    participant LLM as 🧠 Gemini 3.5 Flash Lite / LLM Provider
     participant FS as 📁 Workspace File Manager
     participant Git as 🌳 Local Git Engine
     participant Runner as ⚡ Dynamic Sandbox Server
@@ -637,7 +637,7 @@ graph LR
 ### Backend
 - **Framework**: FastAPI (Python 3.10+) with Pydantic v2 validation
 - **Database & ORM**: SQLAlchemy 2.0 Async (PostgreSQL with `asyncpg` on Neon / SQLite `aiosqlite`)
-- **AI Providers**: Google Gemini 3.6 Flash, OpenAI GPT-4o, Azure OpenAI, Contextual Smart Engine
+- **AI Providers**: Google Gemini 3.5 Flash Lite, OpenAI GPT-4o, Azure OpenAI, Contextual Smart Engine
 - **Document Extractors**: `pypdf`, `python-docx`, `python-pptx`, `beautifulsoup4`
 - **Exporters**: `reportlab`, `python-docx`, `openpyxl`, `python-pptx`
 - **Testing**: `pytest`, `pytest-asyncio`, `httpx`
@@ -743,7 +743,7 @@ TransformIQ is architected for instant, decoupled production deployment:
 - `JWT_SECRET=your-secret-key-32-chars`
 - `AI_PROVIDER=auto`
 - `GEMINI_API_KEY=your-gemini-api-key`
-- `GEMINI_MODEL=gemini-3.6-flash`
+- `GEMINI_MODEL=gemini-3.5-flash-lite`
 
 ---
 

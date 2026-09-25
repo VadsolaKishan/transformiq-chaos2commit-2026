@@ -256,7 +256,7 @@ def build_contextual_recommendations(ctx: Dict[str, Any]) -> Dict[str, Any]:
             "technology_stack": {
                 "Frontend": ["React 18", "TypeScript", "Tailwind CSS", "Lucide Icons", "Vite"],
                 "Backend": ["FastAPI", "Python 3.10+", "Pydantic v2", "SQLAlchemy AsyncPG"],
-                "AI & NLP": ["Gemini 3.6 Flash / PyPDF2", "Sentence Transformers", "pgvector Semantic Search"],
+                "AI & NLP": ["Gemini 3.5 Flash Lite / PyPDF2", "Sentence Transformers", "pgvector Semantic Search"],
                 "Database & Cache": ["PostgreSQL 16", "Redis 7.2"],
                 "DevOps & Security": ["Docker", "Render / Azure Container Apps", "JWT RBAC", "AES-256"]
             },
@@ -288,7 +288,7 @@ def build_contextual_recommendations(ctx: Dict[str, Any]) -> Dict[str, Any]:
             "technology_stack": {
                 "Frontend": ["React 18", "TypeScript", "Tailwind CSS", "Vite", "PWA Offline"],
                 "Backend": ["FastAPI", "Python 3.10+", "Celery Background Workers", "SQLAlchemy Async"],
-                "Event Bus & AI": ["Redis 7.2 Pub/Sub", "Gemini 3.6 Flash", "Scikit-Learn Velocity Model"],
+                "Event Bus & AI": ["Redis 7.2 Pub/Sub", "Gemini 3.5 Flash Lite", "Scikit-Learn Velocity Model"],
                 "Database & Cache": ["PostgreSQL 16", "Redis Cache", "IndexedDB Client Store"],
                 "DevOps": ["Docker Swarm", "Kubernetes", "Prometheus Telemetry"]
             },
@@ -319,7 +319,7 @@ def build_contextual_recommendations(ctx: Dict[str, Any]) -> Dict[str, Any]:
             "technology_stack": {
                 "Frontend": ["React 18", "TypeScript", "Tailwind CSS", "React Flow", "Recharts"],
                 "Backend": ["FastAPI", "Python 3.10+", "Pydantic v2", "SQLAlchemy 2.0 Async"],
-                "AI & ML": ["Gemini 3.6 Flash", "Sentence Transformers", "pgvector RAG"],
+                "AI & ML": ["Gemini 3.5 Flash Lite", "Sentence Transformers", "pgvector RAG"],
                 "Database & Cache": ["PostgreSQL 16", "Redis 7.2"],
                 "Cloud & DevOps": ["Docker", "Azure Container Apps / Render", "GitHub Actions"]
             },
@@ -354,7 +354,7 @@ def build_contextual_architecture(ctx: Dict[str, Any]) -> Dict[str, Any]:
                 {"id": "comp-hr-portal", "name": "Recruiter ATS & Client Portal", "layer": "Client", "tech_stack": "React 18, TypeScript, Tailwind CSS, Vite", "description": "Responsive web app for candidate management, interview scheduling, and client onboarding.", "responsibilities": ["Candidate pipeline", "Attendance logging", "Client onboarding forms", "Job board"], "position_x": 50.0, "position_y": 150.0},
                 {"id": "comp-hr-gateway", "name": "API Gateway & Auth Guard", "layer": "API_Gateway", "tech_stack": "FastAPI, JWT, RBAC Guard", "description": "Validates user session tokens and routes recruitment API requests.", "responsibilities": ["JWT verification", "Rate limiting", "CORS management"], "position_x": 300.0, "position_y": 150.0},
                 {"id": "comp-hr-core", "name": "ATS & Recruitment Service", "layer": "Application_Services", "tech_stack": "Python 3.10, FastAPI, SQLAlchemy Async", "description": "Manages candidate records, job requisitions, recruiter attendance, and placement contracts.", "responsibilities": ["Candidate deduplication", "Attendance tracking", "Client onboarding lifecycle"], "position_x": 550.0, "position_y": 80.0},
-                {"id": "comp-hr-ai", "name": "AI Resume Parsing & Matching", "layer": "AI_Engine", "tech_stack": "Gemini 3.6 Flash, Sentence Transformers", "description": "Extracts structured data from PDF/DOCX resumes and calculates candidate-job match score.", "responsibilities": ["Resume text extraction", "Skill ontology mapping", "Semantic profile ranking"], "position_x": 550.0, "position_y": 280.0},
+                {"id": "comp-hr-ai", "name": "AI Resume Parsing & Matching", "layer": "AI_Engine", "tech_stack": "Gemini 3.5 Flash Lite, Sentence Transformers", "description": "Extracts structured data from PDF/DOCX resumes and calculates candidate-job match score.", "responsibilities": ["Resume text extraction", "Skill ontology mapping", "Semantic profile ranking"], "position_x": 550.0, "position_y": 280.0},
                 {"id": "comp-hr-db", "name": "PostgreSQL Relational Storage", "layer": "Data_Storage", "tech_stack": "PostgreSQL 16, pgvector", "description": "Stores candidate profiles, client accounts, recruiter attendance logs, and job openings.", "responsibilities": ["3NF transactional data", "ACID guarantees", "Vector candidate embeddings"], "position_x": 800.0, "position_y": 80.0},
                 {"id": "comp-hr-notify", "name": "Email & WhatsApp Notification Dispatcher", "layer": "External_Integrations", "tech_stack": "SendGrid / SMTP, Twilio API", "description": "Sends interview invitations, onboarding notifications, and placement confirmations.", "responsibilities": ["Automated email alerts", "Client notification triggers"], "position_x": 1050.0, "position_y": 180.0}
             ],
@@ -389,7 +389,7 @@ def build_contextual_architecture(ctx: Dict[str, Any]) -> Dict[str, Any]:
                 {"id": "comp-ret-core", "name": "Inventory & Order Engine", "layer": "Application_Services", "tech_stack": "Python 3.10, FastAPI, Celery", "description": "Manages multi-warehouse stock counts, stock transfers, and omni-channel order routing.", "responsibilities": ["Real-time inventory locks", "Stock transfer workflows", "Omni order fulfillment"], "position_x": 550.0, "position_y": 80.0},
                 {"id": "comp-ret-event", "name": "Event Bus & Redis Cache", "layer": "Data_Storage", "tech_stack": "Redis 7.2 Pub/Sub, Streams", "description": "Sub-millisecond event streamer broadcasting stock deductions to all channels.", "responsibilities": ["Real-time stock broadcast", "Lock management", "Pub/Sub dispatch"], "position_x": 550.0, "position_y": 280.0},
                 {"id": "comp-ret-db", "name": "Master PostgreSQL Inventory Ledger", "layer": "Data_Storage", "tech_stack": "PostgreSQL 16, TimescaleDB / Audit", "description": "Stores inventory items, warehouses, store terminals, orders, and transfer logs.", "responsibilities": ["ACID transaction logging", "Pessimistic locking", "Stock history"], "position_x": 800.0, "position_y": 80.0},
-                {"id": "comp-ret-ai", "name": "Predictive Replenishment AI", "layer": "AI_Engine", "tech_stack": "Gemini 3.6 Flash / ML Forecast", "description": "Analyzes sales velocity and triggers automated stock replenishment.", "responsibilities": ["Demand prediction", "Automated purchase order generation"], "position_x": 1050.0, "position_y": 180.0}
+                {"id": "comp-ret-ai", "name": "Predictive Replenishment AI", "layer": "AI_Engine", "tech_stack": "Gemini 3.5 Flash Lite / ML Forecast", "description": "Analyzes sales velocity and triggers automated stock replenishment.", "responsibilities": ["Demand prediction", "Automated purchase order generation"], "position_x": 1050.0, "position_y": 180.0}
             ],
             "connections": [
                 {"source": "comp-ret-pos", "target": "comp-ret-gateway", "protocol": "WebSocket / HTTPS", "data_payload": "POS Transaction Event", "is_async": False},
@@ -420,7 +420,7 @@ def build_contextual_architecture(ctx: Dict[str, Any]) -> Dict[str, Any]:
                 {"id": "comp-client", "name": "Web & Mobile Clients", "layer": "Client", "tech_stack": "React 18, TypeScript, Tailwind CSS, Vite", "description": "Responsive SPA providing executive dashboards, discovery chat, and visual design tools.", "responsibilities": ["User interaction", "State management", "React Flow diagrams", "Real-time updates"], "position_x": 50.0, "position_y": 150.0},
                 {"id": "comp-gateway", "name": "API Gateway & Auth", "layer": "API_Gateway", "tech_stack": "FastAPI, JWT, RBAC Guard", "description": "Single entry point handling SSL termination, rate limiting, and tenant token validation.", "responsibilities": ["Authentication", "CORS policy", "Tenant routing", "Request logging"], "position_x": 300.0, "position_y": 150.0},
                 {"id": "comp-core-service", "name": "Transformation Core Service", "layer": "Application_Services", "tech_stack": "Python 3.10, FastAPI, SQLAlchemy 2.0 Async", "description": "Orchestrates project state, business analysis, gap detection, and blueprint generation.", "responsibilities": ["Project lifecycle", "State synchronization", "Business logic", "Export generation"], "position_x": 550.0, "position_y": 80.0},
-                {"id": "comp-ai-engine", "name": "AI Intelligence Engine", "layer": "AI_Engine", "tech_stack": "Gemini 3.6 Flash, LangChain, RAG", "description": "Executes domain classification, sentiment scoring, and multi-agent reasoning.", "responsibilities": ["Text classification", "Contextual RAG", "Structured schema validation", "Explainability"], "position_x": 550.0, "position_y": 280.0},
+                {"id": "comp-ai-engine", "name": "AI Intelligence Engine", "layer": "AI_Engine", "tech_stack": "Gemini 3.5 Flash Lite, LangChain, RAG", "description": "Executes domain classification, sentiment scoring, and multi-agent reasoning.", "responsibilities": ["Text classification", "Contextual RAG", "Structured schema validation", "Explainability"], "position_x": 550.0, "position_y": 280.0},
                 {"id": "comp-db", "name": "Relational Storage (PostgreSQL)", "layer": "Data_Storage", "tech_stack": "PostgreSQL 16, pgvector, SQLAlchemy", "description": "Stores tenants, projects, models, schemas, audit logs, and vector embeddings.", "responsibilities": ["ACID transactions", "Multi-tenancy isolation", "Vector similarity search", "Audit history"], "position_x": 800.0, "position_y": 80.0},
                 {"id": "comp-cache", "name": "Cache & Event Bus", "layer": "Data_Storage", "tech_stack": "Redis 7.2 / RabbitMQ", "description": "Caches session data and delivers asynchronous event notifications.", "responsibilities": ["Response caching", "Job queues", "Real-time pub/sub"], "position_x": 800.0, "position_y": 280.0},
                 {"id": "comp-integrations", "name": "Enterprise Integrations", "layer": "External_Integrations", "tech_stack": "REST Webhooks, ERP/CRM Connectors", "description": "Connects seamlessly with external ticketing, CRM, and corporate email servers.", "responsibilities": ["Outbound webhooks", "Email dispatch", "ERP synchronization"], "position_x": 1050.0, "position_y": 180.0}
@@ -457,7 +457,7 @@ def build_contextual_process_workflow(ctx: Dict[str, Any]) -> Dict[str, Any]:
             "swimlanes": ["Candidate / Applicant", "AI Resume & Matching Engine", "Internal Recruiter", "Enterprise Client Company"],
             "nodes": [
                 {"id": "node-hr-1", "node_key": "START_APPLY", "node_type": "start", "label": "Candidate Submits Resume", "description": "Candidate uploads CV via web portal or email.", "actor": "Candidate / Applicant", "system": "Public Career Portal", "input_data": "Resume PDF / DOCX", "output_data": "Raw resume document", "swimlane": "Candidate / Applicant", "position_x": 50.0, "position_y": 100.0},
-                {"id": "node-hr-2", "node_key": "AI_PARSE", "node_type": "ai_task", "label": "AI Resume Parsing & OCR", "description": "Extract contact info, skills, education, and years of experience into structured profile.", "actor": "AI Resume & Matching Engine", "system": "Gemini 3.6 Flash Parser", "input_data": "Raw resume document", "output_data": "Structured Candidate JSON", "swimlane": "AI Resume & Matching Engine", "position_x": 260.0, "position_y": 100.0},
+                {"id": "node-hr-2", "node_key": "AI_PARSE", "node_type": "ai_task", "label": "AI Resume Parsing & OCR", "description": "Extract contact info, skills, education, and years of experience into structured profile.", "actor": "AI Resume & Matching Engine", "system": "Gemini 3.5 Flash Lite Parser", "input_data": "Raw resume document", "output_data": "Structured Candidate JSON", "swimlane": "AI Resume & Matching Engine", "position_x": 260.0, "position_y": 100.0},
                 {"id": "node-hr-3", "node_key": "AI_MATCH", "node_type": "ai_task", "label": "Semantic Match Against Open Jobs", "description": "Compute similarity score between candidate skills and active client job openings.", "actor": "AI Resume & Matching Engine", "system": "pgvector Semantic Matcher", "input_data": "Structured Candidate JSON", "output_data": "Top 3 Matched Requisitions & Match %", "swimlane": "AI Resume & Matching Engine", "position_x": 480.0, "position_y": 100.0},
                 {"id": "node-hr-4", "node_key": "RECRUITER_SCREEN", "node_type": "human_review", "label": "Recruiter Phone Screen & Validation", "description": "Assigned recruiter conducts 15-minute phone screening and logs attendance/notes.", "actor": "Internal Recruiter", "system": "ATS Recruiter Hub", "input_data": "Matched candidate profile", "output_data": "Screening Status: SHORTLISTED / REJECTED", "swimlane": "Internal Recruiter", "position_x": 700.0, "position_y": 280.0},
                 {"id": "node-hr-5", "node_key": "CLIENT_REVIEW", "node_type": "decision", "label": "Client Interview & Offer Decision", "description": "Client reviews shortlisted profile in portal and conducts final technical interview.", "actor": "Enterprise Client Company", "system": "Client Onboarding Portal", "input_data": "Shortlisted candidate profile", "output_data": "Offer Extended / Next Candidate", "swimlane": "Enterprise Client Company", "position_x": 940.0, "position_y": 420.0},
@@ -1275,7 +1275,7 @@ def build_contextual_score(ctx: Dict[str, Any]) -> Dict[str, Any]:
             ],
             "strategic_recommendations": [
                 "Deploy unified PostgreSQL ATS schema with email/phone deduplication index.",
-                "Integrate Gemini 3.6 Flash resume parsing pipeline for sub-2s candidate ingestion.",
+                "Integrate Gemini 3.5 Flash Lite resume parsing pipeline for sub-2s candidate ingestion.",
                 "Launch public career website with client digital contract onboarding."
             ],
             "dimensions": [

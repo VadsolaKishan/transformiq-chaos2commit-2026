@@ -100,7 +100,7 @@ async def get_master_blueprint(
             "name": sol.name if sol else project.name,
             "tagline": sol.tagline if sol else "AI-Powered Enterprise Suite",
             "expected_roi": sol.expected_roi if sol else "340% ROI in 12 Months",
-            "technology_stack": sol.technology_stack if sol else {"Core": ["React", "FastAPI", "PostgreSQL", "Gemini 3.6 Flash"]},
+            "technology_stack": sol.technology_stack if sol else {"Core": ["React", "FastAPI", "PostgreSQL", "Gemini 3.5 Flash Lite"]},
             "key_capabilities": sol.key_capabilities if sol else ["Intelligent Ingestion", "Automated Workflows", "Telemetry Dashboard"],
             "recommendations_count": len(recs)
         },

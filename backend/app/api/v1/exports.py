@@ -260,7 +260,7 @@ services:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgrespassword@{safe_name}-db:5432/{safe_name}_db
       - JWT_SECRET=transformiq-prod-jwt-secret-key-replace-in-production
       - AI_PROVIDER=auto
-      - GEMINI_MODEL=gemini-3.6-flash
+      - GEMINI_MODEL=gemini-3.5-flash-lite
     depends_on:
       - {safe_name}-db
     restart: unless-stopped
@@ -305,7 +305,7 @@ volumes:
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-3.6-flash
+        value: gemini-3.5-flash-lite
 """
 
     vercel_json_content = """{
